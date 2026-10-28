@@ -1,0 +1,1114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d0c0a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Croupier Table">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+:root { box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+body { margin: 0; font: 14px -apple-system, BlinkMacSystemFont, sans-serif; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+</style>
+<title>Croupier Pro Table</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto+Condensed:wght@500;700&family=Roboto:wght@400;500;700&display=swap">
+<style>
+/* Layout (версия 35, 27.10): две вкладки QUICK | FIELD. В FIELD поле занимает всё свободное место, клавиатуры нет — она во всплывающем окне.
+   Номинал цветного жетона, Max, язык и логотип — в настройках (касание логотипа). Узкая колонка до 420 px; низкое широкое окно — две колонки. */
+:root {
+  --bg: #0d0c0a;
+  --panel: #17140f;
+  --panel-hi: #2a2214;
+  --line: #3a3122;
+  --gold: #d9b45a;
+  --gold-hi: #f1d488;
+  --on-gold: #1c1406;
+  --fg: #efe8d6;
+  --muted: #a39878;
+  --red: #a3142a;
+  --black: #121212;
+  --green: #10884a;
+  --warn: #ff8a6b;
+  --btn: #d9b45a;          /* золотые кнопки */
+  --res-top: #221b0e;      /* верх табло */
+  --sep: rgba(217,180,90,.25);
+  --chipbtn: #2a1a1e; --chipbtn-line: rgba(255,255,255,.45);
+  --cash-fg: #ffffff;
+  --dash: #4a3a22; --dash2: #2b2418;
+  --cbtn: #1f2a1c; --disp: #0b0a08;
+  --f-serif: "Noto Serif", Georgia, "Times New Roman", serif;
+  --f-num: "Roboto Condensed", "Arial Narrow", system-ui, sans-serif;
+  --f-body: Roboto, system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+/* v67: светлая тема (Nustatymai → Tema). Поле рулетки (красный, чёрный, зелёный, золото) — без изменений. */
+html.light {
+  --bg: #e9e4d8; --panel: #fbf8f1; --panel-hi: #efe6d2; --line: #cdbf9f;
+  --gold: #a07a1c; --gold-hi: #84600e; --on-gold: #1c1406; --fg: #1f1a12; --muted: #6b604c; --warn: #c2410c;
+  --btn: #d9b45a; --res-top: #f6eedb; --sep: rgba(160,122,28,.35);
+  --chipbtn: #f4e6e2; --chipbtn-line: rgba(0,0,0,.35); --cash-fg: #15120c;
+  --dash: #cdbf9f; --dash2: #e2d9c4; --cbtn: #eef2e8; --disp: #fffdf8;
+  color-scheme: light;
+}
+html, body { background: var(--bg); color: var(--fg); }
+body {
+  font-family: var(--f-body);
+  font-size: 14px;
+  padding-left: max(10px, env(safe-area-inset-left, 0px));
+  padding-right: max(10px, env(safe-area-inset-right, 0px));
+  padding-block: 6px 8px;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+button, select { font: inherit; color: inherit; cursor: pointer; touch-action: manipulation; }
+button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 2px; }
+.num { font-family: var(--f-num); font-variant-numeric: lining-nums tabular-nums; }
+
+.app { max-width: 420px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; }
+@media (min-height: 600px) {
+  html, body { height: 100%; }
+  body { overflow: hidden; }
+  .app { height: 100%; }
+  .cpanel { flex: 1; min-height: 0; }
+  .board-wrap { flex: 1; min-height: 0; display: flex; }
+  .board-wrap svg { height: 100%; }
+  /* v62: клавиши CALC — по 50 px, лишнее место отдаём табло. */
+  /* v63: табло CALC — по содержимому (как в LAYOUT), остаток — строкам и клавишам. */
+  .app.isq .result { flex: none; padding-block: 12px; }
+  .app.isq .quick { flex: 1 1 0; min-height: min-content; }
+  .app.isq .qrow { flex: 1 1 0; min-height: 40px; max-height: 66px; }
+  .app.isq .keys { flex: 1.9 1 0; min-height: 0; grid-auto-rows: minmax(44px, 1fr); }
+  .app.isq .keys button { height: auto; }
+  /* v56: поле на всю ширину, высота — по ширине (задаёт fitCells); всё остальное место — табло. */
+  .app:not(.isq) .cpanel { flex: 0 0 auto; }
+  .app:not(.isq) .result { flex: 1 1 auto; min-height: 0; align-content: start; overflow: hidden; }
+}
+/* Низкое широкое окно: слева поле (или строки QUICK), справа шапка, ответ, кнопки. */
+@media (min-width: 600px) and (max-height: 599px) {
+  html, body { height: 100%; }
+  body { overflow: hidden; }
+  .app { max-width: 900px; height: 100%; display: grid; gap: 6px 10px;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr auto;
+    grid-template-areas: "board top" "board result" "board keys" "board bottom"; }
+  .top { grid-area: top; } .result { grid-area: result; } .keys { grid-area: keys; min-height: 0; } .bottom { grid-area: bottom; }
+  .cpanel, .quick { grid-area: board; min-height: 0; }
+  .app:not(.isq) .cpanel { flex: 1; } .app:not(.isq) .result { flex: none; align-content: start; }
+  .board-wrap { flex: 1; min-height: 0; display: flex; } .board-wrap svg { height: 100%; }
+  .app.isq .keys { grid-auto-rows: minmax(36px, 1fr); }
+  .app.isq .keys button { height: auto; }
+}
+
+/* ---------- Шапка: логотип (= настройки) · Number · вкладки ---------- */
+.top { display: flex; gap: 6px; align-items: stretch; height: 46px; }
+.logo { position: relative; flex: 0 0 auto; width: 64px; padding: 2px; border-radius: 8px; border: 1px solid var(--line); background: #0f1d4a; display: grid; place-items: center; overflow: hidden; }
+.logo-txt { font-family: var(--f-serif); font-size: 11.5px; line-height: 1.05; font-weight: 700; color: var(--gold); text-align: center; }
+.logo img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+.logo .gear { position: absolute; right: 2px; bottom: 1px; font-size: 11px; line-height: 1; color: var(--gold-hi); opacity: .85; }
+.win { flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; width: 62px; padding: 0 2px; border-radius: 8px; border: 1px solid var(--gold); background: var(--panel); }
+.win .l { font-size: 8.5px; letter-spacing: .6px; text-transform: uppercase; color: var(--muted); font-weight: 700; line-height: 1; }
+.win .v { font-size: 25px; font-weight: 700; color: var(--gold-hi); line-height: 1; }
+.app.isq .win { display: none; }
+.seg { flex: 1; display: flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { flex: 1; background: transparent; border: 0; font-weight: 700; font-size: 15px; letter-spacing: .5px; color: var(--muted); text-transform: uppercase; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--btn); color: var(--on-gold); }
+
+/* ---------- Поле ---------- */
+.cpanel { display: flex; flex-direction: column; }
+.board-wrap { background: transparent; }
+.board-wrap svg { overflow: visible; display: block; width: 100%; max-width: 100%; user-select: none; -webkit-user-select: none; touch-action: manipulation; -webkit-touch-callout: none; }
+
+/* ---------- QUICK ---------- */
+.app.isq .top { order: -2; }
+.app.isq .result { order: -1; }
+.quick { display: flex; flex-direction: column; gap: 4px; }
+.qrow { display: flex; align-items: center; gap: 10px; min-height: 49px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel); text-align: left; }
+.qrow[aria-pressed="true"] { background: var(--panel-hi); border: 2px solid var(--gold-hi); }
+.qrow .nm { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 8px; }
+.qrow .nm b { font-size: 17px; }
+.qrow .nm span { font-size: 13px; color: var(--muted); }
+.qrow .cnt { font-size: 28px; font-weight: 700; color: var(--gold-hi); min-width: 60px; text-align: right; }
+.qrow .sum { font-size: 16px; font-weight: 700; min-width: 64px; text-align: right; }
+.keys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+.keys button { height: 52px; font-size: 26px; font-weight: 700; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; font-family: var(--f-num); }
+.keys button:active { background: var(--panel-hi); }
+.keys .fn { font-size: 16px; color: var(--muted); font-family: var(--f-body); }
+
+
+/* ---------- Ответ ---------- */
+.result { position: relative; background: linear-gradient(180deg, var(--res-top), var(--panel)); border: 1px solid var(--gold); border-radius: 10px; padding: 18px 12px 18px; display: grid; gap: 8px; }
+.bd-btn { flex: 0 0 auto; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line); background: transparent; color: var(--muted); font: 700 14px var(--f-body); padding: 0; }
+.result .cols { display: grid; grid-template-columns: 1fr; gap: 0; }
+/* Chips и Cash — две строки на всю ширину: слева подпись, справа крупное число. */
+.result .cell { min-width: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; column-gap: 10px; }
+.result .cell .big { text-align: right; }
+.result .cell .rest { grid-column: 2; text-align: right; margin-top: -4px; }
+.result .cash { border-top: 1px solid var(--sep); }
+/* v63: табло CALC такое же, как в LAYOUT (две строки, подпись слева, крупное число справа).
+   На невысоком экране (< 720 px) — компактно, Chips и Cash рядом, чтобы влезли строки и клавиши. */
+@media (max-height: 719px) {
+  .app.isq .result { padding: 8px 12px; }
+  .app.isq .result .cols { grid-template-columns: 1fr 1fr; column-gap: 12px; }
+  .app.isq .result .cell { grid-template-columns: minmax(0, 1fr); }
+  .app.isq .result .head { flex-direction: row; align-items: center; }
+  .app.isq .result .cell .big { text-align: left; }
+  .app.isq .result .cell .rest { grid-column: 1; text-align: left; }
+  .app.isq .result .cash { border-top: 0; border-left: 1px solid var(--sep); padding-left: 12px; }
+}
+.app.isq .qrow { min-height: 44px; }
+.result .head { display: flex; align-items: center; gap: 6px; min-height: 22px; }
+/* FIELD: «× N» под Chips и «?» под Cash — узкая левая колонка, числам больше места. */
+.result .head { flex-direction: column; align-items: flex-start; gap: 8px; }
+.result .label { font-size: 14px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--gold); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.valbtn { flex: 0 0 auto; height: 26px; padding: 0 10px; border-radius: 13px; border: 1px dashed var(--chipbtn-line); background: var(--chipbtn); color: var(--fg); font: 700 15px var(--f-num); }
+.result .big { font-size: 76px; font-weight: 700; line-height: 1.05; color: var(--gold-hi); white-space: nowrap; overflow: hidden; }
+.result .cash .big { color: var(--cash-fg); }
+.result .rest { font-size: 14px; color: var(--muted); font-weight: 500; }
+.result .big .dn { font-size: .42em; color: var(--muted); margin-left: .08em; }
+.result .big .pl { font-size: .5em; color: var(--muted); margin: 0 .18em; }
+/* Две строки: жетоны комплита и жетоны поля, слева маленькая подпись. */
+/* Одна строка: «392×25 + 103×25 + 32×10», под каждой частью мелкая подпись (комплит / жетоны). */
+#r-chips.parts { padding-bottom: 13px; }
+/* Строки табло не сжимаются по высоте (иначе обрезалась сдача) — если не влезает, fitResult уменьшает числа. */
+.result .big, .result .change, .result .rest { min-height: min-content; }
+.result .big .cseg { position: relative; display: inline-block; }
+.result .big .cap { position: absolute; right: 0; top: 100%; margin-top: -3px; text-align: center; font: 700 10px var(--f-body); letter-spacing: .8px; text-transform: uppercase; color: var(--muted); white-space: nowrap; line-height: 1; }
+.result .big .cseg.comp .cap { color: var(--gold); left: 0; text-align: center; }
+/* Сдача — деньгами (жетоны разного номинала в одну цифру не переводим). */
+#v-ch-chips, .result .change .sep { display: none; }
+.result .change { display: flex; align-items: baseline; gap: 8px; border-top: 1px dashed var(--dash); padding-top: 3px; color: var(--warn); font-weight: 700; }
+.result .change { white-space: nowrap; overflow: hidden; }
+.result .change .label { color: inherit; flex: 1 0 auto; }
+.result .change .v { font-size: 28px; line-height: 1.1; }
+.result .change .sep { opacity: .5; }
+/* FIELD: номинал жетона, который ставится касанием (как раньше — внутри табло). */
+.denoms { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 5px; padding-top: 2px; }
+.denoms button { height: 38px; padding: 0; border-radius: 19px; border: 1px dashed var(--chipbtn-line); background: var(--chipbtn); font: 700 17px var(--f-num); color: var(--fg); }
+.denoms button[aria-pressed="true"] { background: var(--btn); color: var(--on-gold); border: 1px solid var(--gold-hi); }
+.app.isq .denoms { display: none; }
+
+.bottom { display: grid; grid-template-columns: 1fr 2fr; gap: 6px; }
+.bottom button { height: 46px; border-radius: 8px; font-weight: 700; font-size: 14px; letter-spacing: .8px; text-transform: uppercase; }
+.bottom .ghost { background: transparent; border: 1px solid var(--line); color: var(--fg); }
+.bottom .ghost:disabled { opacity: .35; cursor: default; }
+.bottom .new { border: 0; background: var(--btn); color: var(--on-gold); }
+
+/* ---------- Окна ---------- */
+.sheet-bg { position: fixed; inset: 0; background: rgba(0,0,0,.62); display: grid; place-items: center; z-index: 20; padding: 12px; }
+.bd { width: min(400px, 100%); max-height: 88vh; overflow-y: auto; background: var(--panel); border: 1px solid var(--gold); border-radius: 12px; padding: 12px; display: grid; gap: 8px; }
+.bd h2 { margin: 0; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); }
+.bd h3 { margin: 4px 0 0; font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); }
+.bd .close { width: 100%; height: 44px; border-radius: 8px; border: 1px solid var(--line); background: transparent; color: var(--muted); font-weight: 700; }
+.bd ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; font-size: 14px; }
+.bd li { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px dashed var(--dash2); padding-bottom: 3px; }
+.bd li .v { color: var(--gold-hi); font-weight: 700; white-space: nowrap; }
+.bd li.tot { border-bottom: 0; font-weight: 700; }
+.bd li.ret .v { color: var(--warn); }
+.bd .empty { color: var(--muted); font-size: 13px; }
+
+/* Окно числа: комплит одной кнопкой, жетоны Straight up — плюс/минус. */
+.nhead { display: flex; align-items: center; gap: 10px; }
+.nbadge { flex: 0 0 auto; width: 52px; height: 44px; border-radius: 8px; border: 1px solid #b8923a; display: grid; place-items: center; color: #fff; font: 700 26px var(--f-serif); }
+.nbadge.r { background: var(--red); } .nbadge.b { background: var(--black); } .nbadge.g { background: var(--green); }
+.nhead .t { display: grid; gap: 2px; min-width: 0; }
+.nhead .t b { font-size: 16px; }
+.nhead .t span { font-size: 13px; color: var(--muted); }
+.cgrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.cgrid button { height: 60px; border-radius: 10px; border: 1px solid var(--gold); background: var(--cbtn); color: var(--gold-hi); font: 700 27px var(--f-num); }
+.cgrid button small { display: block; font: 600 11px var(--f-body); color: var(--muted); }
+.cgrid button[aria-pressed="true"] { background: var(--btn); color: var(--on-gold); }
+.cgrid button[aria-pressed="true"] small { color: var(--on-gold); }
+.cgrid button:disabled { opacity: .3; cursor: default; border-style: dashed; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.row2 button, .act { height: 46px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel-hi); font-weight: 700; font-size: 14px; }
+.row2 .warn { color: var(--warn); }
+.row2.one { grid-template-columns: 1fr; }
+#kp .row2:has(#kp-del[hidden]) { grid-template-columns: 1fr; }
+.stepper { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border: 1px solid var(--line); border-radius: 10px; }
+.stepper .lab { flex: 1; font-weight: 700; }
+.stepper button { width: 54px; height: 50px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel-hi); font: 700 26px var(--f-num); }
+.stepper .cnt { min-width: 52px; text-align: center; font: 700 30px var(--f-num); color: var(--gold-hi); background: transparent; border: 0; width: auto; }
+
+/* Окно ввода суммы / количества. */
+.kp-disp { height: 58px; border-radius: 8px; background: var(--disp); border: 1px solid var(--line); display: flex; align-items: center; justify-content: flex-end; padding: 0 14px; font: 700 38px var(--f-num); color: var(--gold-hi); }
+.kp-hint { font-size: 12.5px; color: var(--muted); min-height: 16px; }
+.kp-keys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.kp-keys button { height: 50px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel-hi); font: 700 26px var(--f-num); }
+.kp-keys .ok { background: var(--btn); color: var(--on-gold); border-color: var(--btn); font: 700 18px var(--f-body); }
+
+/* Выбор выпавшего числа. */
+.picker { width: min(360px, 100%); background: var(--panel); border: 1px solid var(--gold); border-radius: 12px; padding: 10px; display: grid; gap: 4px; }
+.picker h2 { margin: 0 0 4px; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); }
+.pk-zero { height: 58px; border: 0; border-radius: 0; padding: 14px 0 0; color: #fff; font: 700 24px var(--f-serif);
+  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'%3E%3Cpath d='M1 17 L50 1 L99 17 L99 39 L1 39 Z' fill='%2310884a' stroke='%23d9b45a' stroke-width='1.6' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
+.picker .pk-zero[aria-pressed="true"] { outline: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'%3E%3Cpath d='M1.5 17 L50 1.5 L98.5 17 L98.5 38.5 L1.5 38.5 Z' fill='%2310884a' stroke='%23f1d488' stroke-width='3.5' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E"); }
+.pk-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3px; }
+.pk-grid button { height: 40px; border-radius: 6px; border: 1px solid #b8923a; color: #fff; font: 700 22px var(--f-serif); }
+.pk-grid button.r { background: var(--red); } .pk-grid button.b { background: var(--black); }
+.picker button[aria-pressed="true"] { outline: 3px solid var(--gold-hi); outline-offset: -3px; }
+.pk-close { margin-top: 4px; height: 40px; border-radius: 8px; border: 1px solid var(--line); background: transparent; color: var(--muted); font-weight: 700; }
+
+/* Настройки. */
+.opts { display: grid; gap: 4px; }
+.optrow { display: grid; gap: 4px; }
+.optrow button { height: 42px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel-hi); font: 700 17px var(--f-num); }
+.optrow button[aria-pressed="true"] { background: var(--btn); color: var(--on-gold); border-color: var(--gold-hi); }
+.logo-prev { height: 56px; border-radius: 8px; border: 1px solid var(--line); background: #0f1d4a; display: grid; place-items: center; overflow: hidden; }
+.logo-prev img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.filebtn { display: grid; place-items: center; height: 42px; border-radius: 8px; background: var(--btn); color: var(--on-gold); font-weight: 700; cursor: pointer; }
+.note { font-size: 12.5px; color: var(--muted); margin: 0; }
+</style>
+
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <button type="button" class="logo" id="b-logo" aria-label="Settings"><span class="logo-txt" id="logo-txt">Croupier<br>Pro</span><img id="logo-img" alt="" hidden><span class="gear" aria-hidden="true">⚙</span></button>
+    <button type="button" class="win" id="b-win"><span class="l" id="t-win">Number</span><span class="v num" id="v-win"></span></button>
+    <div class="seg" id="mode">
+      <button type="button" data-m="quick" id="m-quick">Calc</button>
+      <button type="button" data-m="field" id="m-field">Layout</button>
+    </div>
+  </div>
+  <div class="quick" id="quick" hidden></div>
+  <div class="cpanel" id="cpanel">
+    <div class="board-wrap" id="bw"><svg id="board" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Roulette layout around the winning number"></svg></div>
+  </div>
+  <div class="result" aria-live="polite">
+    <div class="cols">
+      <div class="cell"><div class="head"><span class="label" id="t-chips">Chips</span><button type="button" class="valbtn num" id="b-val">× 1</button></div><div class="big num" id="r-chips">0</div><div class="rest num" id="r-rest"></div></div>
+      <div class="cell cash"><div class="head"><span class="label" id="t-cash">Cash</span><button type="button" class="bd-btn" id="b-bd" aria-label="Breakdown">?</button></div><div class="big num" id="r-cash">0</div></div>
+    </div>
+    <div class="change num" id="r-change" hidden>
+      <span class="label" id="t-change">Change</span><span class="v" id="v-ch-chips">0</span><span class="sep">|</span><span class="v" id="v-ch-cash">0</span>
+    </div>
+  </div>
+  <div class="keys" id="keys" hidden></div>
+  <div class="bottom">
+    <button type="button" class="ghost" id="b-undo">Undo</button>
+    <button type="button" class="new" id="b-new">New payout</button>
+  </div>
+</div>
+
+<div class="sheet-bg" id="sheet" hidden><div class="bd" id="bd" role="dialog" aria-modal="true"></div></div>
+<div class="sheet-bg" id="ns" hidden><div class="bd" id="nsb" role="dialog" aria-modal="true"></div></div>
+<div class="sheet-bg" id="kp" hidden>
+  <div class="bd" role="dialog" aria-modal="true" aria-labelledby="kp-title">
+    <h2 id="kp-title"></h2>
+    <div class="kp-disp num" id="kp-disp">0</div>
+    <div class="kp-hint" id="kp-hint"></div>
+    <div class="kp-keys" id="kp-keys"></div>
+    <div class="row2"><button type="button" class="warn" id="kp-del"></button><button type="button" id="kp-cancel"></button></div>
+  </div>
+</div>
+
+<div class="sheet-bg" id="pk-sheet" hidden>
+  <div class="picker" role="dialog" aria-modal="true" aria-labelledby="pk-title">
+    <h2 id="pk-title">Winning number</h2>
+    <button type="button" class="pk-zero" data-n="0">0</button>
+    <div class="pk-grid" id="pk-grid"></div>
+    <button type="button" class="pk-close" id="pk-close">Close</button>
+  </div>
+</div>
+
+<div class="sheet-bg" id="set-sheet" hidden>
+  <div class="bd" role="dialog" aria-modal="true" aria-labelledby="t-set">
+    <h2 id="t-set">Settings</h2>
+    <h3 id="t-max">Max per number</h3>
+    <div class="optrow" id="set-max" style="grid-template-columns: repeat(5, minmax(0, 1fr))"></div>
+    <h3 id="t-lang">Language</h3>
+    <div class="optrow" id="set-lang" style="grid-template-columns: 1fr 1fr">
+      <button type="button" data-l="en">EN</button><button type="button" data-l="lt">LT</button>
+    </div>
+    <h3 id="t-theme">Theme</h3>
+    <div class="optrow" id="set-theme" style="grid-template-columns: 1fr 1fr">
+      <button type="button" data-t="dark" id="th-dark">Dark</button><button type="button" data-t="light" id="th-light">Light</button>
+    </div>
+    <h3 id="t-logo">Logo</h3>
+    <div class="logo-prev"><span class="logo-txt" id="lp-txt">Croupier<br>Pro</span><img id="lp-img" alt="" hidden></div>
+    <p class="note" id="t-logo-note"></p>
+    <div class="row2">
+      <label class="filebtn" for="in-logo" id="t-logo-load">Load logo</label>
+      <button type="button" class="warn" id="b-logo-del">Remove</button>
+    </div>
+    <input id="in-logo" type="file" accept="image/*" hidden>
+    <button type="button" class="close" id="b-set-close">Close</button>
+  </div>
+</div>
+
+<!-- Цена цветного жетона (для строки Chips) — только по касанию «× N» рядом с Chips. -->
+<div class="sheet-bg" id="val-sheet" hidden>
+  <div class="bd" role="dialog" aria-modal="true" aria-labelledby="t-val">
+    <h2 id="t-val">Color chip value</h2>
+    <div class="optrow" id="set-val" style="grid-template-columns: repeat(3, minmax(0, 1fr))"></div>
+    <button type="button" class="close" id="b-val-close">Close</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  const TX = {
+    en: { set: "Settings", val: "Chip value", maxPer: "Max per number", lang: "Language", theme: "Theme", dark: "Dark", light: "Light",
+      logo: "Logo", logoNote: "Your casino logo is stored only on this device. Any picture: PNG, JPG.", logoLoad: "Load logo", logoDel: "Remove logo",
+      win: "Number", quick: "Calc", field: "Layout",
+      chips: "Chips", cash: "Cash", change: "Change", rest: "cash",
+      newp: "New payout", bd: "Breakdown", close: "Close", clr: "Clear", undo: "Undo", ok: "OK", remove: "Remove",
+      compBy: "Complete", compByL: "Complete by", byW: "by", removeC: "Remove complete", givenAmt: "Amount placed", chipsOn: "Chips", fieldS: "Chips",
+      payS: "Payout (CASH)", retS: "Change (CASH)", none: "No winning bets", total: "TOTAL", compsS: "Completes",
+      notWin: "not winning", compS: "Complete", chipsS: "chips", maxS: "max",
+      stations: "spots", given: "placed", min: "min", line: "Six line", place: "place on the field (they stay)", house: "stake — taken by the casino" },
+    lt: { set: "Nustatymai", val: "Žetono vertė", maxPer: "Maks. ant skaičiaus", lang: "Kalba", theme: "Tema", dark: "Tamsi", light: "Šviesi",
+      logo: "Logotipas", logoNote: "Kazino logotipas saugomas tik šiame įrenginyje. Bet koks paveikslėlis: PNG, JPG.", logoLoad: "Įkelti logotipą", logoDel: "Pašalinti logotipą",
+      win: "Skaičius", quick: "Calc", field: "Layout",
+      chips: "Žetonai", cash: "Cash", change: "Grąža", rest: "cash",
+      newp: "Nauja išmoka", bd: "Paaiškinimas", close: "Uždaryti", clr: "Ištrinti", undo: "Atšaukti", ok: "Gerai", remove: "Pašalinti",
+      compBy: "Komplitas", compByL: "Komplitas po", byW: "po", removeC: "Pašalinti komplitą", givenAmt: "Pastatyta suma", chipsOn: "Žetonai", fieldS: "Žetonai",
+      payS: "Išmoka (CASH)", retS: "Grąža (CASH)", none: "Laimėjusių statymų nėra", total: "IŠ VISO", compsS: "Komplitai",
+      notWin: "nelaimėjo", compS: "Komplitas", chipsS: "žet.", maxS: "maks.",
+      stations: "vietos", given: "pastatyta", min: "min.", line: "Six line", place: "išstatyti ant lauko (lieka)", house: "statymas — pasiima kazino" }
+  };
+  const MULT = { straightUp: 35, split: 17, street: 11, corner: 8, sixLine: 5 };
+  const NAME = { straightUp: "Straight up", split: "Split", street: "Street", corner: "Corner", sixLine: "Sixline" };
+  const ORDER = ["sixLine", "street", "corner", "split", "straightUp"];
+  const ORDER_ZERO = ["corner", "street", "split", "straightUp"];
+  const QUICK_ROWS = ["straightUp", "split", "street", "corner", "sixLine"];
+  const DENOMS = [1, 2, 5, 10, 25, 100];        // цена цветного жетона — одна на всё (настройки)
+  const COMP_DENOMS = [5, 10, 25, 100];         // комплиты в казино: по 5, 10, 25, 100
+  const LIMITS = [50, 100, 200, 300, 500];      // макс на номер в этом казино
+  const RED = new Set([1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]);
+  const BW = 276, CW = 92, PADL = 6, PADR = 6, PADY = 6;   // v56: поле на ту же ширину, что и остальные блоки
+  let CH = 80, ZH = 80;   // высота клетки подстраивается под экран — поле занимает всё свободное место
+  const HIT = 26;         // зона касания места (сплит, корнер, стрит, сикс-лайн)
+
+  // ---------- Поле (как в Croupier Pro: RouletteMath, BoardGeometry) ----------
+  const colRow = n => [Math.floor((n - 1) / 3), (n - 1) % 3];
+  const key = (t, ns) => t + ":" + [...ns].sort((a, b) => a - b).join("-");
+  const parseKey = k => { const [t, ns] = k.split(":"); return { type: t, nums: ns.split("-").map(Number) }; };
+  function windowOf(n) {
+    if (n <= 3) return { start: 0, rows: [0, 1], zero: true };
+    const r = colRow(n)[0], s = Math.min(Math.max(r - 1, 0), 9);
+    return { start: s, rows: [s, s + 1, s + 2], zero: false };
+  }
+  const visibleNums = w => (w.zero ? [0] : []).concat(...w.rows.map(r => [r * 3 + 1, r * 3 + 2, r * 3 + 3]));
+  function pos(type, nums, w) {
+    const zo = w.zero ? ZH : 0;
+    const center = n => { const [r, c] = colRow(n); return [CW * c + CW / 2, zo + CH * (r - w.start) + CH / 2]; };
+    if (type === "straightUp") return nums[0] === 0 ? [BW / 2, zo * 0.62] : center(nums[0]);
+    if (nums.includes(0)) {
+      if (type === "split") return [center(nums.find(n => n !== 0))[0], zo];
+      if (type === "corner") return [0, zo];
+      if (type === "street") return [nums.includes(1) ? CW : CW * 2, zo];
+    }
+    const pts = nums.map(center);
+    const ax = pts.reduce((s, p) => s + p[0], 0) / pts.length, ay = pts.reduce((s, p) => s + p[1], 0) / pts.length;
+    return (type === "street" || type === "sixLine") ? [0, ay] : [ax, ay];
+  }
+  function betsWith(n) {
+    const out = [], add = (t, ns) => out.push({ type: t, nums: ns });
+    add("straightUp", [n]);
+    if (n === 0) {
+      add("split", [0, 1]); add("split", [0, 2]); add("split", [0, 3]);
+      add("street", [0, 1, 2]); add("street", [0, 2, 3]); add("corner", [0, 1, 2, 3]);
+      return out;
+    }
+    const [row, col] = colRow(n), ok = x => x >= 1 && x <= 36;
+    if (col > 0) add("split", [n - 1, n]);
+    if (col < 2) add("split", [n, n + 1]);
+    if (row > 0 && ok(n - 3)) add("split", [n - 3, n]);
+    if (row < 11 && ok(n + 3)) add("split", [n, n + 3]);
+    if (col <= 1 && row <= 10) add("corner", [n, n + 1, n + 3, n + 4]);
+    if (col >= 1 && row <= 10) add("corner", [n - 1, n, n + 2, n + 3]);
+    if (col <= 1 && row >= 1) add("corner", [n - 3, n - 2, n, n + 1]);
+    if (col >= 1 && row >= 1) add("corner", [n - 4, n - 3, n - 1, n]);
+    const f = row * 3 + 1;
+    add("street", [f, f + 1, f + 2]);
+    if (row > 0) { const g = (row - 1) * 3 + 1; add("sixLine", [g, g + 1, g + 2, g + 3, g + 4, g + 5]); }
+    if (row < 11) add("sixLine", [f, f + 1, f + 2, f + 3, f + 4, f + 5]);
+    if (n === 1) { add("split", [0, 1]); add("street", [0, 1, 2]); add("corner", [0, 1, 2, 3]); }
+    if (n === 2) { add("split", [0, 2]); add("street", [0, 1, 2]); add("street", [0, 2, 3]); add("corner", [0, 1, 2, 3]); }
+    if (n === 3) { add("split", [0, 3]); add("street", [0, 2, 3]); add("corner", [0, 1, 2, 3]); }
+    return out;
+  }
+  const compChips = n => betsWith(n).reduce((s, b) => s + b.nums.length, 0);   // 40, 30, 27, 36, 17, 24, 18
+  const numsText = (type, nums) => {
+    const s = [...nums].sort((a, b) => a - b);
+    return (s.length <= 2 || s.includes(0)) ? s.join("/") : s[0] + "/" + s[s.length - 1];
+  };
+  const suKey = n => key("straightUp", [n]);
+  // Ставка на месте — список жетонов в порядке постановки, например [10, 25, 25]; сумма — деньги.
+  const listAmt = l => (l || []).reduce((a, b) => a + b, 0);
+  const betAmt = k => listAmt(st.bets[k]);
+  const groupList = l => { const m = {}; (l || []).forEach(d => m[d] = (m[d] || 0) + 1); return Object.keys(m).map(Number).sort((a, b) => b - a).map(d => [d, m[d]]); };
+  const listText = l => groupList(l).map(([d, c]) => `${c}×${fmt(d)}`).join(" + ");
+
+  // ---------- Состояние ----------
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem("cpt_" + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set(k, v) { try { localStorage.setItem("cpt_" + k, JSON.stringify(v)); } catch (e) {} }
+  };
+  const st = {
+    lang: "en", val: 1, cd: 1, limit: 100, tab: "field",
+    win: 17,
+    bets: {},        // FIELD: выигравшее место → жетонов (цена жетона = st.val)
+    comps: {},       // число → { u: по сколько (5/10/25/100), given: подано деньгами или null }
+    quick: {},       // QUICK: вид ставки → жетонов
+    qactive: "straightUp", qfresh: true,
+    hist: [], example: true
+  };
+  function restorePrefs() {
+    st.lang = store.get("lang", "en"); if (!TX[st.lang]) st.lang = "en";
+    st.val = 1;   // 23.10 (заказчик): при открытии всегда «жетон по 1»
+    st.limit = store.get("limit", 100); if (!LIMITS.includes(st.limit)) st.limit = 100;
+    const t = store.get("tab", "field"); st.tab = t === "quick" ? "quick" : "field";
+  }
+  restorePrefs();
+  const T = () => TX[st.lang];
+  const fmt = n => (Math.round(n * 100) / 100).toLocaleString("en-US").replace(/,/g, " ");
+  const $ = id => document.getElementById(id);
+  const quickName = t => t === "sixLine" ? T().line : NAME[t];
+
+  function compInfo(n) {
+    const c = st.comps[n]; if (!c) return null;
+    const chips = compChips(Number(n));
+    if (c.given == null) return { chips, u: c.u, cost: chips * c.u, given: chips * c.u, change: 0, ok: true };
+    const fits = COMP_DENOMS.filter(d => chips * d <= c.given && d <= st.limit);   // комплит не больше Max на номер
+    const u = fits.length ? fits[fits.length - 1] : 0;
+    return { chips, u, cost: chips * u, given: c.given, change: u ? c.given - chips * u : 0, ok: u > 0, min: chips * COMP_DENOMS[0] };
+  }
+
+  // Пример: выпало 17, комплиты на 17 по 100 и на 14 по 25 (пересекаются), сплит 17/18 жетонами; макс 100.
+  function loadExample() {
+    st.win = 17; st.bets = {}; st.comps = { 17: { u: 100, given: null }, 14: { u: 25, given: null } };
+    st.bets[key("split", [17, 18])] = [1, 1, 1, 1];
+    st.quick = { straightUp: 3, split: 9, street: 2, corner: 12, sixLine: 4 };
+    st.val = 1; st.limit = store.get("limit", 100); if (!LIMITS.includes(st.limit)) st.limit = 100;
+    st.example = true; st.hist = [];
+  }
+
+  // ---------- Расчёт ----------
+  function computeQuick() {
+    let payChips = 0; const payLines = [];
+    for (const t of QUICK_ROWS) {
+      const q = st.quick[t] || 0; if (!q) continue;
+      payChips += q * MULT[t];
+      payLines.push({ t: `${quickName(t)}: ${fmt(q)} × ${MULT[t]}`, v: `${fmt(q * MULT[t])} ${T().chipsS}` });
+    }
+    return { pay: payChips * st.val, ret: 0, overmax: 0, compChange: 0, payLines, retLines: [], compLines: [], posMap: new Map(), quickChips: payChips };
+  }
+  // Как calculateOvermaxAndPayout в Croupier Pro (без трека): деньгами, позиции складываются, сверх «макс × чисел» — сдача.
+  function computeComp() {
+    const posMap = new Map();
+    // dm — сколько денег на месте каждым номиналом жетона: { 25: 50, 2: 4 }.
+    const add = (type, nums, amt, fromComp, partial, part, dm) => {
+      if (amt <= 0) return;
+      const k = key(type, nums), p = posMap.get(k) || { key: k, type, nums, amt: 0, comp: 0, partial: 0, parts: [], dm: {} };
+      p.amt += amt; if (fromComp) p.comp += amt; if (partial) p.partial += amt; if (part) p.parts.push(part); posMap.set(k, p);
+      for (const d in dm) p.dm[d] = (p.dm[d] || 0) + dm[d];
+    };
+    const partsText = p => p.parts.join(" + ") + (p.parts.length > 1 || !/^1×[^+]*$/.test(p.parts[0] || "") ? ` = ${fmt(p.amt)}` : "");
+    for (const [k, l] of Object.entries(st.bets)) { const b = parseKey(k), dm = {}; groupList(l).forEach(([d, c]) => dm["f:" + d] = d * c); add(b.type, b.nums, listAmt(l), false, false, `${listText(l)} (${T().chipsS})`, dm); }
+    let compChange = 0;
+    const compLines = [];
+    for (const n of Object.keys(st.comps)) {
+      const ci = compInfo(n);
+      if (!ci.ok) { compLines.push({ t: `${T().compS} ${n}: ${T().given} ${fmt(ci.given)} < ${T().min} ${fmt(ci.min)}`, v: "?" }); continue; }
+      const stations = betsWith(Number(n)).filter(b => b.nums.includes(st.win)).length;
+      const partial = Number(n) !== st.win;
+      for (const b of betsWith(Number(n))) add(b.type, b.nums, b.nums.length * ci.u, true, partial, `${b.nums.length}×${fmt(ci.u)} (${n} ${T().compBy.toLowerCase()})`, { ["c:" + ci.u]: b.nums.length * ci.u });
+      compChange += ci.change;
+      // v53: только «Complete 11: 40 × 25 = 1 000» (без spots, stake, place).
+      compLines.push({ t: `${T().compS} ${n} ${T().byW} ${fmt(ci.u)}: ${ci.chips} × ${ci.u}` + (ci.change ? ` · ${T().given} ${fmt(ci.given)}` : ""), v: fmt(ci.cost) });
+      // Комплит на выигравшем числе: платится 392 × номинал (и т.д.), саму ставку забирает казино (заказчик, 23.10).
+
+      // Частично сыграл: на сыгравшие точки выставляют фишки комплита, они остаются на поле; платится чистый выигрыш.
+      if (partial && stations > 0) {
+        const pts = betsWith(Number(n)).filter(b => b.nums.includes(st.win));
+
+      }
+    }
+    const order = st.win === 0 ? ORDER_ZERO : ORDER;
+    const list = [...posMap.values()].sort((a, b) => order.indexOf(a.type) - order.indexOf(b.type) || a.nums[0] - b.nums[0]);
+    let pay = 0, ret = 0;
+    const payLines = [], retLines = [], payD = {};
+    for (const p of list) {
+      p.cap = st.limit * p.nums.length;
+      const paid = Math.min(p.amt, p.cap);
+      p.over = p.amt - paid; p.wins = p.nums.includes(st.win);
+      const lab = `${NAME[p.type]} ${numsText(p.type, p.nums)}`;
+      if (p.over > 0) { ret += p.over; retLines.push({ t: `${lab}: ${fmt(p.amt)}, ${T().maxS} ${fmt(p.cap)}${p.wins ? "" : " · " + T().notWin}`, v: fmt(p.over) }); }
+      if (p.wins && paid > 0) {
+        pay += paid * MULT[p.type];
+        // Выигрыш платится тем же номиналом, каким стоит ставка (при переборе — в той же доле).
+        // v57: при переборе сначала платится комплит, потом жетоны поля (крупные первыми); что сверх Max — сдача.
+        let left = paid;
+        Object.keys(p.dm).sort((a, b) => (a[0] === "c" ? 0 : 1) - (b[0] === "c" ? 0 : 1) || Number(b.slice(2)) - Number(a.slice(2))).forEach(kd => {
+          const take = Math.min(p.dm[kd], left); left -= take;
+          if (take > 0) payD[kd] = (payD[kd] || 0) + take * MULT[p.type];
+        });
+        const base = partsText(p) + (p.over > 0 ? ` → ${T().maxS} ${fmt(paid)}` : "");
+        payLines.push({ t: `${lab}: ${base} × ${MULT[p.type]}`, v: fmt(paid * MULT[p.type]) });
+      }
+    }
+    // Жетоны выплаты по номиналам, крупные сначала: [[25, 103], [2, 32]] + остаток кэшем.
+    // Отдельно: жетоны комплитов и жетоны поля, каждые по номиналам: { comp: [[25, 392]], field: [[25, 103], [2, 32]] }.
+    let rest = 0; const parts = { comp: [], field: [] };
+    Object.keys(payD).forEach(kd => {
+      const [src, ds] = kd.split(":"), d = Number(ds), c = Math.floor(payD[kd] / d + 1e-6);
+      rest += payD[kd] - c * d; if (c > 0) parts[src === "c" ? "comp" : "field"].push([d, c]);
+    });
+    parts.comp.sort((a, b) => b[0] - a[0]); parts.field.sort((a, b) => b[0] - a[0]);
+    const groups = parts.comp.concat(parts.field);
+    return { pay, ret: ret + compChange, overmax: ret, compChange, payLines, retLines, compLines, posMap, groups, parts, rest: Math.round(rest * 100) / 100 };
+  }
+  const compute = () => st.tab === "quick" ? computeQuick() : computeComp();
+  // Один номинал цветного жетона на всё приложение — «Chips» везде считаются одинаково.
+  const toChips = m => { const v = st.val, c = Math.floor(m / v + 1e-9); return { c, rest: Math.round((m - c * v) * 100) / 100 }; };
+
+  // ---------- Отрисовка поля ----------
+  const NS = "http://www.w3.org/2000/svg";
+  function el(tag, a, p, txt) { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; p.appendChild(e); return e; }
+  const NUMF = "Roboto Condensed, Arial Narrow, sans-serif", SERIF = "Noto Serif, Georgia, serif";
+  const fixedLayout = () => matchMedia("(min-height: 600px)").matches || matchMedia("(min-width: 600px) and (max-height: 599px)").matches;
+  // Высота клетки — так, чтобы поле заполнило свободное место (ширина клетки постоянная).
+  const wideLow = () => matchMedia("(min-width: 600px) and (max-height: 599px)").matches;
+  function fitCells(w) {
+    CH = 80;
+    const wrap = $("bw"), W = wrap.clientWidth, rowsN = w.rows.length + (w.zero ? 0.85 : 0);
+    if (fixedLayout() && !wideLow() && W > 0) {
+      // Высокий экран (телефон, iPad, компьютер): поле на всю ширину, клетки не выше квадрата (92);
+      // если места мало — клетки ниже, табло не меньше 250 px.
+      const sc = W / (BW + PADL + PADR), app = document.querySelector(".app");
+      const avail = app.clientHeight - document.querySelector(".top").offsetHeight - document.querySelector(".bottom").offsetHeight - 18 - 250;
+      CH = Math.max(56, Math.min(92, (avail / sc - 2 * PADY - 4) / rowsN));
+      ZH = Math.round(CH * 0.85);
+      wrap.style.height = Math.round((rowsN * CH + 2 * PADY + 4) * sc) + "px";
+      return;
+    }
+    wrap.style.height = "";
+    const H = wrap.clientHeight;
+    if (fixedLayout() && W > 0 && H > 0) {
+      const units = (H * (BW + PADL + PADR) / W) - 2 * PADY - 4;
+      CH = Math.max(80, Math.min(150, units / rowsN));
+    }
+    ZH = Math.round(CH * 0.85);
+  }
+  function pill(g, x, y, text, fill, color) {
+    const w = Math.max(26, text.length * 7 + 10);
+    x = Math.min(Math.max(x, w / 2 - PADL + 2), BW + PADR - w / 2 - 2);
+    el("rect", { x: x - w / 2, y: y - 9, width: w, height: 18, rx: 9, fill, stroke: "rgba(0,0,0,.6)", "stroke-width": 1, "pointer-events": "none" }, g);
+    el("text", { x, y: y + 4.6, "text-anchor": "middle", "font-family": NUMF, "font-size": 12.5, "font-weight": 700, fill: color, "pointer-events": "none" }, g, text);
+  }
+  function chip(g, x, y, rad, q, over, up) {   // up — цифру чуть выше (снизу жетон закрыт плашкой комплита)
+    el("circle", { cx: x, cy: y + 1.5, r: rad, fill: "rgba(0,0,0,.45)", "pointer-events": "none" }, g);
+    el("circle", { cx: x, cy: y, r: rad, fill: over ? "#d4371f" : "#7a1026", stroke: "#fff", "stroke-width": 2.5, "stroke-dasharray": "4 3.4", "pointer-events": "none" }, g);
+    const t = fmt(q);
+    el("text", { x, y: y + (up ? 1 : 6), "text-anchor": "middle", "font-family": NUMF, "font-size": t.length > 3 ? 13 : (up ? 16 : 18), "font-weight": 700, fill: "#fff", "pointer-events": "none" }, g, t);
+  }
+  let spotList = [];   // места для жетонов (без Straight up): { key, x, y }
+  function renderBoard(r) {
+    const w = windowOf(st.win), svg = $("board");
+    fitCells(w);
+    svg.innerHTML = "";
+    const g = el("g", {}, svg), gold = "#d9b45a";
+    const zo = w.zero ? ZH : 0, H = zo + CH * w.rows.length;
+    svg.setAttribute("viewBox", `${-PADL} ${-PADY} ${BW + PADL + PADR} ${H + 2 * PADY}`);
+    if (w.zero) {
+      const d = `M0 ${ZH * 0.45} L${BW / 2} 0 L${BW} ${ZH * 0.45} L${BW} ${ZH} L0 ${ZH} Z`;
+      el("path", { d, fill: "#10884a", stroke: gold, "stroke-width": 1.6 }, g);
+      el("text", { x: BW / 2, y: ZH * 0.5, "text-anchor": "middle", "font-family": SERIF, "font-size": 24, "font-weight": 700, fill: "#fff", "pointer-events": "none" }, g, "0");
+      if (st.win === 0) el("path", { d, fill: "none", stroke: "#f1d488", "stroke-width": 4, "pointer-events": "none" }, g);
+    }
+    const nf = Math.min(40, 26 + (CH - 80) * 0.2);
+    w.rows.forEach((row, i) => {
+      for (let c = 0; c < 3; c++) {
+        const n = row * 3 + c + 1, x = c * CW, y = zo + i * CH, win = n === st.win;
+        el("rect", { x, y, width: CW, height: CH, fill: RED.has(n) ? "#a3142a" : "#121212", stroke: gold, "stroke-width": 1.6, opacity: win ? 1 : 0.75 }, g);
+        el("text", { x: x + CW / 2, y: y + CH / 2 + nf * 0.36, "text-anchor": "middle", "font-family": SERIF, "font-size": nf, "font-weight": 700, fill: "#fff", opacity: win ? 0.95 : 0.45, "pointer-events": "none" }, g, String(n));
+        if (win) el("rect", { x: x + 3, y: y + 3, width: CW - 6, height: CH - 6, rx: 4, fill: "none", stroke: "#f1d488", "stroke-width": 3.5, "pointer-events": "none" }, g);
+      }
+    });
+    el("rect", { x: -3, y: -3, width: BW + 6, height: H + 6, rx: 4, fill: "none", stroke: "#b8923a", "stroke-width": 5, "pointer-events": "none" }, g);
+    // Комплиты: клетка обведена золотом (рамка — под жетонами).
+    for (const n0 of Object.keys(st.comps)) {
+      const n = Number(n0), [cx, cy] = pos("straightUp", [n], w);
+      if (n !== 0) el("rect", { x: cx - CW / 2 + 2, y: cy - CH / 2 + 2, width: CW - 4, height: CH - 4, rx: 4, fill: "rgba(241,212,136,.12)", stroke: "#f1d488", "stroke-width": 2.5, "pointer-events": "none" }, g);
+    }
+    const under = el("g", {}, g);   // слой под жетонами (подпись комплита, когда места мало)
+    // Места выигравших ставок: пустые — маленькая точка, с жетонами — жетон с количеством.
+    spotList = []; const chipPts = [];
+    for (const b of betsWith(st.win)) {
+      const k = key(b.type, b.nums), su = b.type === "straightUp";
+      let [x, y] = pos(b.type, b.nums, w);
+      const q = betAmt(k), p = r.posMap.get(k), over = p && p.over > 0;
+      if (su) {   // жетоны Straight up — через окно числа; жетон рисуем над номером
+        if (q > 0) { if (st.win === 0) y = ZH * 0.5 - 8; chip(g, x, y, 18, q, over, st.win !== 0 && !!st.comps[st.win]); chipPts.push([x, y]); }   // есть комплит — жетон чуть выше, под ним плашка   // по центру числа, того же размера, что и другие
+        continue;
+      }
+      if (q > 0) chip(g, x, y, 18, q, over);
+      else el("circle", { cx: x, cy: y, r: 6.5, fill: "rgba(241,212,136,.28)", stroke: over ? "#ff5a3c" : "rgba(241,212,136,.7)", "stroke-width": 1.4, "pointer-events": "none" }, g);
+      spotList.push({ key: k, x, y });
+      if (q > 0) chipPts.push([x, y]);
+    }
+    // Плашка комплита — посередине числа, в две строки («KOMPLITAS PO» / «25»), узкая: не задевает жетоны на сплитах слева и справа.
+    // Если на числе жетон Straight up — жетон чуть выше, плашка под ним (на зеро — справа от жетона).
+    for (const n0 of Object.keys(st.comps)) {
+      const n = Number(n0), ci = compInfo(n0), [cx0, cy0] = pos("straightUp", [n], w);
+      const cy = n === 0 ? ZH * 0.5 - 8 : cy0;
+      const su = n === st.win && betAmt(suKey(n)) > 0;
+      const mx = n === 0 && su ? cx0 + 62 : cx0, my = n !== 0 && su ? cy + 19 : cy;   // v61: жетон остаётся в центре, плашка закрывает его нижнюю часть   // v60: жетон и плашка ближе друг к другу, плашка чуть заходит на жетон
+      const fill = ci.ok ? "#f1d488" : "#ff8a6b", val = ci.ok ? fmt(ci.u) : "?", W2 = 54, H2 = 29;
+      el("rect", { x: mx - W2 / 2, y: my - H2 / 2, width: W2, height: H2, rx: 7, fill, stroke: "#1c1406", "stroke-width": 1, "pointer-events": "none" }, g);
+      const t1 = el("text", { x: mx, y: my - 4.5, "text-anchor": "middle", "font-family": "Roboto, system-ui, sans-serif", "font-size": 7.2, "font-weight": 700, "letter-spacing": 0.2, fill: "#1c1406", "pointer-events": "none" }, g, T().compByL.toUpperCase());
+      { const L = t1.getComputedTextLength ? t1.getComputedTextLength() : 0; if (L > W2 - 6) { t1.setAttribute("textLength", W2 - 6); t1.setAttribute("lengthAdjust", "spacingAndGlyphs"); } }
+      el("text", { x: mx, y: my + 11, "text-anchor": "middle", "font-family": NUMF, "font-size": 16, "font-weight": 700, fill: "#1c1406", "pointer-events": "none" }, g, val);
+    }
+  }
+
+  function renderQuick() {
+    const box = $("quick"); box.innerHTML = "";
+    for (const t of QUICK_ROWS) {
+      const q = st.quick[t] || 0;
+      const b = document.createElement("button"); b.type = "button"; b.className = "qrow"; b.dataset.q = t;
+      b.setAttribute("aria-pressed", String(st.qactive === t));
+      b.innerHTML = '<span class="nm"><b></b><span class="num"></span></span><span class="cnt num"></span><span class="sum num"></span>';
+      b.querySelector(".nm b").textContent = quickName(t);
+      b.querySelector(".nm span").textContent = "× " + MULT[t];
+      b.querySelector(".cnt").textContent = q ? fmt(q) : "—";
+      b.querySelector(".sum").textContent = q ? fmt(q * MULT[t]) : "";
+      box.appendChild(b);
+    }
+  }
+
+  // Крупные числа табло: 88 px (CALC — 52), если не влезают — уменьшаем. Пока табло не видно (ширина 0) — не трогаем.
+  function fitResult() {
+    const quick = st.tab === "quick";
+    ["r-chips", "r-cash"].forEach(id => {
+      const e = $(id); if (!e.clientWidth) return;
+      // Табло большое (компьютер, iPad) — числа ещё крупнее, до 130 px.
+      const rh = document.querySelector(".result").clientHeight;
+      let fs = quick ? (innerHeight < 720 ? 52 : 72) : Math.round(Math.min(130, Math.max(88, rh * (id === "r-cash" ? 0.3 : 0.2)))); e.style.fontSize = fs + "px";
+      while (e.scrollWidth > e.clientWidth + 1 && fs > 24) { fs -= 2; e.style.fontSize = fs + "px"; }
+    });
+    // v58: всё табло (с остатком и сдачей) должно влезть по высоте — иначе уменьшаем числа.
+    const res = document.querySelector(".result"), ch = $("r-chips"), ca = $("r-cash");
+    if (quick && ch.clientWidth) {
+      // CALC: клавиши не меньше 44 px — если не влезают, уменьшаем числа табло.
+      const keys = $("keys"); let g2 = 30;
+      while (keys.scrollHeight > keys.clientHeight + 1 && g2--) {
+        const a = parseFloat(ch.style.fontSize) || 88, b = parseFloat(ca.style.fontSize) || 88;
+        if (Math.max(a, b) <= 34) break;
+        ch.style.fontSize = Math.max(34, a - 4) + "px"; ca.style.fontSize = Math.max(34, b - 4) + "px";
+      }
+      return;
+    }
+    if (!res.clientHeight || !ch.clientWidth) return;
+    let guard = 60;
+    while (res.scrollHeight > res.clientHeight + 1 && guard--) {
+      const a = parseFloat(ch.style.fontSize) || 88, b = parseFloat(ca.style.fontSize) || 88;
+      if (a <= 24 && b <= 24) break;
+      if (b >= a && b > 24) ca.style.fontSize = (b - 2) + "px"; else ch.style.fontSize = (a - 2) + "px";
+    }
+  }
+  function renderResult(r) {
+    const tx = T(), quick = st.tab === "quick";
+    const pc = toChips(r.pay), rc = toChips(r.ret);
+    $("t-chips").textContent = tx.chips; $("b-val").textContent = "× " + fmt(st.val);
+    $("t-cash").textContent = tx.cash; $("t-change").textContent = tx.change;
+    if (quick || !r.groups.length) {
+      $("r-chips").classList.remove("parts");
+      $("r-chips").textContent = fmt(pc.c);
+      $("r-rest").textContent = pc.rest > 0 ? `+ ${fmt(pc.rest)} ${tx.rest}` : "";
+    } else {
+      // LAYOUT: отдельно жетоны комплита и жетоны поля, под каждой частью подпись: «392×25 + 103×25 + 32×2».
+      const e = $("r-chips"); e.innerHTML = "";
+      const plus = () => { const pl = document.createElement("span"); pl.className = "pl"; pl.textContent = "+"; return pl; };
+      e.classList.add("parts");
+      [["comp", tx.compBy], ["field", tx.fieldS]].filter(([k]) => r.parts[k].length).forEach(([k, cap], pi) => {
+        if (pi) e.appendChild(plus());
+        const seg = document.createElement("span"); seg.className = "cseg " + k;
+        const top = document.createElement("span"); top.className = "segv";
+        r.parts[k].forEach(([d, c], i) => {
+          if (i) top.appendChild(plus());
+          top.appendChild(document.createTextNode(fmt(c)));
+          const dn = document.createElement("span"); dn.className = "dn"; dn.textContent = "×" + fmt(d); top.appendChild(dn);
+        });
+        const cp = document.createElement("span"); cp.className = "cap"; cp.textContent = cap;
+        seg.append(top, cp); e.appendChild(seg);
+      });
+      $("r-rest").textContent = r.rest > 0 ? `+ ${fmt(r.rest)} ${tx.rest}` : "";
+    }
+    $("r-cash").textContent = fmt(r.pay);
+    // Крупные числа: 64 px, если не влезают в колонку — уменьшаем, пока не влезут.
+    $("r-change").hidden = quick || r.ret <= 0;   // сдача — только когда она есть
+    $("v-ch-chips").textContent = `${fmt(rc.c)} ${tx.chipsS}` + (rc.rest > 0 ? ` + ${fmt(rc.rest)}` : "");
+    $("v-ch-cash").textContent = `${fmt(r.ret)} ${tx.cash.toLowerCase()}`;
+    // Строка сдачи не влезает — уменьшаем цифры (подпись не режем).
+    const ch = $("r-change");
+    if (!ch.hidden) { let fs = 28; const vs = ch.querySelectorAll(".v"); vs.forEach(v => v.style.fontSize = fs + "px"); while (ch.scrollWidth > ch.clientWidth + 1 && fs > 14) { fs -= 2; vs.forEach(v => v.style.fontSize = fs + "px"); } }
+    fitResult();   // после строки сдачи — чтобы всё влезло по высоте
+  }
+  function renderBreakdown(r) {
+    const tx = T(), bd = $("bd"); bd.innerHTML = "";
+    const h = document.createElement("h2");
+    h.textContent = st.tab === "quick" ? `${tx.bd} · ${tx.quick}` : `${tx.bd} · ${tx.win} ${st.win} · ${tx.maxS} ${fmt(st.limit)}`;
+    bd.appendChild(h);
+    const list = (title, lines, cls, total) => {
+      const h3 = document.createElement("h3"); h3.textContent = title; bd.appendChild(h3);
+      const ul = document.createElement("ul");
+      const add = (x, c) => { const li = document.createElement("li"); if (c) li.className = c; const a = document.createElement("span"); a.textContent = x.t; const b = document.createElement("span"); b.className = "v num"; b.textContent = x.v; li.append(a, b); ul.appendChild(li); };
+      lines.forEach(x => add(x, cls));
+      if (total) add(total, "tot" + (cls ? " " + cls : ""));
+      bd.appendChild(ul);
+    };
+    const chipsTxt = m => { const c = toChips(m); return `${fmt(c.c)} ${tx.chipsS}` + (c.rest > 0 ? ` + ${fmt(c.rest)}` : ""); };
+    if (r.compLines.length) list(tx.compsS, r.compLines, "");
+    if (r.payLines.length) list(st.tab === "quick" ? tx.chips : tx.payS, r.payLines, "", { t: tx.total, v: st.tab === "quick" ? `${fmt(r.quickChips)} ${tx.chipsS} × ${fmt(st.val)} = ${fmt(r.pay)}` : `${fmt(r.pay)} = ` + (r.groups.length ? [[r.parts.comp, ` (${tx.compBy.toLowerCase()})`], [r.parts.field, ` (${tx.chipsS})`]].filter(x => x[0].length).map(([g, lab]) => g.map(([d, c]) => `${fmt(c)}×${fmt(d)}`).join(" + ") + lab).join(" + ") + (r.rest > 0 ? ` + ${fmt(r.rest)}` : "") : chipsTxt(r.pay)) });
+    else { const d = document.createElement("div"); d.className = "empty"; d.textContent = tx.none; bd.appendChild(d); }
+    const retAll = r.retLines.slice();
+    if (r.compChange) retAll.push({ t: `${tx.compsS}: ${tx.given}`, v: fmt(r.compChange) });
+    if (retAll.length) list(tx.retS, retAll, "ret", { t: tx.total, v: `${fmt(r.ret)} ${tx.rest}` });
+    const close = document.createElement("button"); close.type = "button"; close.className = "close"; close.textContent = tx.close;
+    close.addEventListener("click", () => { $("sheet").hidden = true; });
+    bd.appendChild(close);
+  }
+  function renderTexts() {
+    const tx = T(), quick = st.tab === "quick";
+    document.documentElement.lang = st.lang;
+    document.querySelector(".app").classList.toggle("isq", quick);
+    $("quick").hidden = !quick; $("keys").hidden = !quick; $("cpanel").hidden = quick;
+    $("t-win").textContent = tx.win; $("v-win").textContent = st.win;
+    $("m-quick").textContent = tx.quick; $("m-field").textContent = tx.field;
+    $("m-quick").setAttribute("aria-pressed", String(quick)); $("m-field").setAttribute("aria-pressed", String(!quick));
+    $("b-new").textContent = tx.newp; $("b-undo").textContent = tx.undo; $("b-undo").disabled = !st.hist.length;
+    const clr = $("keys").querySelector('[data-key="c"]'); if (clr) clr.textContent = tx.clr;
+  }
+  function render() {
+    const r = compute();
+    renderTexts();
+    if (st.tab === "quick") renderQuick(); else renderBoard(r);
+    renderResult(r); renderBreakdown(r);
+    if (!$("ns").hidden && nsNum != null) renderNumSheet();
+  }
+
+  // ---------- Действия ----------
+  function snapshot() {
+    st.hist.push(JSON.stringify({ win: st.win, bets: st.bets, comps: st.comps, quick: st.quick, qactive: st.qactive }));
+    if (st.hist.length > 60) st.hist.shift();
+  }
+  function undo() {
+    const s = st.hist.pop(); if (!s) return;
+    const o = JSON.parse(s);
+    Object.assign(st, { win: o.win, bets: o.bets, comps: o.comps, quick: o.quick, qactive: o.qactive, qfresh: true });
+    render();
+  }
+  function leaveExample() { if (st.example) { st.example = false; st.bets = {}; st.comps = {}; st.quick = {}; st.hist = []; } }
+  function setWin(n) {
+    st.win = n;
+    const winKeys = new Set(betsWith(n).map(b => key(b.type, b.nums))), vis = new Set(visibleNums(windowOf(n)));
+    for (const k of Object.keys(st.bets)) if (!winKeys.has(k)) delete st.bets[k];
+    for (const c of Object.keys(st.comps)) if (!vis.has(Number(c))) delete st.comps[c];
+  }
+  function changeBet(k, fn) { leaveExample(); snapshot(); const l = fn((st.bets[k] || []).slice()); if (l.length) st.bets[k] = l; else delete st.bets[k]; render(); }
+  // +1 жетон номинала «× N» (один выбор на всё, v47). Смена номинала не меняет уже поставленное.
+  function tapSpot(k) { changeBet(k, l => { l.push(st.val); return l; }); }
+  function pressQuick(k) {
+    leaveExample();
+    const t = st.qactive; let cur = st.quick[t] || 0;
+    snapshot();   // v61: Undo отменяет каждое нажатие (последнюю цифру)
+    if (k === "c") cur = 0;
+    else if (k === "b") cur = Math.floor(cur / 10);
+    else { cur = st.qfresh ? Number(k) : (cur < 1e6 ? cur * Math.pow(10, k.length) + Number(k) : cur); st.qfresh = false; }   // «00», «000» — сразу два / три нуля
+    if (cur > 0) st.quick[t] = cur; else delete st.quick[t];
+    render();
+  }
+  function reset() {
+    st.bets = {}; st.comps = {}; st.quick = {}; st.example = false; st.hist = [];
+    st.qactive = "straightUp"; st.qfresh = true;
+  }
+
+  // QUICK: клавиатура как на телефоне.
+  const keys = $("keys");
+  ["7","8","9","4","5","6","1","2","3","0","00","000"].forEach(k => {   // v61: без Clear и ⌫ (исправлять Undo); v65: 0 / 00 / 000
+    const b = document.createElement("button"); b.type = "button"; b.dataset.key = k;
+    b.textContent = k === "b" ? "⌫" : k === "c" ? "" : k;
+    if (k === "c" || k === "b") b.className = "fn";
+    keys.appendChild(b);
+  });
+  keys.addEventListener("click", e => { const b = e.target.closest("[data-key]"); if (b) pressQuick(b.dataset.key); });
+  document.addEventListener("keydown", e => {
+    if (e.target.tagName === "SELECT" || e.target.tagName === "INPUT") return;
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") { undo(); return; }
+    if (!$("kp").hidden) { if (/^[0-9]$/.test(e.key)) kpPress(e.key); else if (e.key === "Backspace") kpPress("b"); else if (e.key === "Enter") kpPress("ok"); return; }
+    if (st.tab !== "quick") return;
+    if (/^[0-9]$/.test(e.key)) pressQuick(e.key); else if (e.key === "Backspace") pressQuick("b");
+  });
+
+  // ---------- Окно ввода числа (сумма комплита / количество жетонов) ----------
+  let kp = null;   // { title, value, hint, onOk, onDel, fresh }
+  const kpKeys = $("kp-keys");
+  ["7","8","9","4","5","6","1","2","3","0","00","000","b","ok"].forEach(k => {   // v65: 0 / 00 / 000
+    const b = document.createElement("button"); b.type = "button"; b.dataset.k = k;
+    b.textContent = k === "b" ? "⌫" : k === "ok" ? "OK" : k;
+    if (k === "ok") b.className = "ok";
+    if (k === "ok") b.style.gridColumn = "span 2";
+    kpKeys.appendChild(b);
+  });
+  function openKeypad(o) {
+    kp = Object.assign({ fresh: true }, o);
+    $("kp-title").textContent = kp.title; $("kp-hint").textContent = kp.hint || "";
+    $("kp-disp").textContent = fmt(kp.value || 0);
+    $("kp-del").textContent = T().remove; $("kp-del").hidden = !kp.onDel;
+    $("kp-cancel").textContent = T().close;
+    kpKeys.querySelector('[data-k="ok"]').textContent = T().ok;
+    $("kp").hidden = false;
+  }
+  function kpPress(k) {
+    if (!kp) return;
+    if (k === "ok") { const v = kp.value; $("kp").hidden = true; const f = kp.onOk; kp = null; f(v); return; }
+    if (k === "b") kp.value = Math.floor(kp.value / 10);
+    else kp.value = kp.fresh ? Number(k) : (kp.value < 1e6 ? kp.value * Math.pow(10, k.length) + Number(k) : kp.value);
+    kp.fresh = false;
+    $("kp-disp").textContent = fmt(kp.value);
+  }
+  kpKeys.addEventListener("click", e => { const b = e.target.closest("[data-k]"); if (b) kpPress(b.dataset.k); });
+  $("kp-del").addEventListener("click", () => { $("kp").hidden = true; const f = kp && kp.onDel; kp = null; if (f) f(); });
+  $("kp-cancel").addEventListener("click", () => { $("kp").hidden = true; kp = null; });
+  $("kp").addEventListener("click", e => { if (e.target === $("kp")) { $("kp").hidden = true; kp = null; } });
+
+  // ---------- Окно числа: комплит одной кнопкой, жетоны Straight up ----------
+  let nsNum = null;
+  function openNumber(n) { nsNum = n; renderNumSheet(); $("ns").hidden = false; }
+  function closeNumber() { $("ns").hidden = true; nsNum = null; }
+  function renderNumSheet() {
+    const tx = T(), n = nsNum, box = $("nsb"), c = st.comps[n], ci = compInfo(n);
+    box.innerHTML = "";
+    const head = document.createElement("div"); head.className = "nhead";
+    const badge = document.createElement("div"); badge.className = "nbadge " + (n === 0 ? "g" : RED.has(n) ? "r" : "b"); badge.textContent = n;
+    const t = document.createElement("div"); t.className = "t";
+    const tb = document.createElement("b"); tb.textContent = `${tx.compBy} · ${compChips(n)} ${tx.chipsS}`;
+    const ts = document.createElement("span");
+    ts.className = "num";
+    ts.textContent = c ? (ci.ok ? `${tx.compByL} ${fmt(ci.u)} = ${fmt(ci.cost)}` + (ci.change ? ` · ${tx.given} ${fmt(ci.given)} · ${tx.change.toLowerCase()} ${fmt(ci.change)}` : "") : `${tx.given} ${fmt(ci.given)} < ${tx.min} ${fmt(ci.min)}`) : "—";
+    t.append(tb, ts); head.append(badge, t); box.appendChild(head);
+    const h3 = document.createElement("h3"); h3.textContent = tx.compByL; box.appendChild(h3);
+    // Кнопки комплита: одно касание — поставить и закрыть.
+    const grid = document.createElement("div"); grid.className = "cgrid";
+    COMP_DENOMS.forEach(u => {
+      const b = document.createElement("button"); b.type = "button"; b.dataset.u = u;
+      b.innerHTML = `${u}<small class="num"></small>`;
+      b.querySelector("small").textContent = "= " + fmt(compChips(n) * u);
+      b.setAttribute("aria-pressed", String(!!c && c.given == null && c.u === u));
+      // Max 50 — комплит по 100 нельзя (на номер встало бы 100).
+      if (u > st.limit) { b.disabled = true; b.querySelector("small").textContent = `> ${T().maxS} ${fmt(st.limit)}`; }
+      grid.appendChild(b);
+    });
+    box.appendChild(grid);
+    // v54: «Amount given» видна сразу — ввёл поданную сумму, комплит и сдача считаются сами.
+    {
+      const row = document.createElement("div"); row.className = c ? "row2" : "row2 one";
+      const g = document.createElement("button"); g.type = "button"; g.dataset.act = "given"; g.textContent = tx.givenAmt;
+      row.append(g);
+      if (c) { const d = document.createElement("button"); d.type = "button"; d.className = "warn"; d.dataset.act = "delc"; d.textContent = tx.removeC; row.append(d); }
+      box.appendChild(row);
+    }
+    // v52: жетоны Straight up в окне комплита убраны — их ставят касанием выпавшего числа.
+    if (false) {
+      const q = betAmt(suKey(n));
+      const s = document.createElement("div"); s.className = "stepper";
+      s.innerHTML = '<span class="lab"></span><button type="button" data-act="minus">−</button><button type="button" class="cnt" data-act="type"></button><button type="button" data-act="plus">+</button>';
+      s.querySelector(".lab").textContent = `${tx.chipsOn} · Straight up`;
+      s.querySelector(".cnt").textContent = fmt(q);
+      box.appendChild(s);
+    }
+    const cl = document.createElement("button"); cl.type = "button"; cl.className = "close"; cl.dataset.act = "close"; cl.textContent = tx.close;
+    box.appendChild(cl);
+  }
+  $("ns").addEventListener("click", e => {
+    if (e.target === $("ns")) { closeNumber(); return; }
+    const n = nsNum; if (n == null) return;
+    const ub = e.target.closest("[data-u]:not(:disabled)");
+    if (ub) { leaveExample(); snapshot(); st.comps[n] = { u: Number(ub.dataset.u), given: null }; closeNumber(); render(); return; }
+    const ab = e.target.closest("[data-act]"); if (!ab) return;
+    const a = ab.dataset.act, k = suKey(n), q = betAmt(k);
+    if (a === "close") closeNumber();
+    else if (a === "delc") { leaveExample(); snapshot(); delete st.comps[n]; closeNumber(); render(); }
+    else if (a === "given") {
+      const c = st.comps[n]; closeNumber();
+      openKeypad({ title: `${T().compS} ${n} · ${T().givenAmt}`, value: c && c.given || 0, hint: `${T().min} ${fmt(compChips(n) * COMP_DENOMS[0])}`,
+        onOk: v => { if (!(v > 0) && !st.comps[n]) return; leaveExample(); snapshot(); st.comps[n] = { u: st.comps[n] ? st.comps[n].u : COMP_DENOMS[0], given: v > 0 ? v : null }; render(); } });
+    }
+    else if (a === "plus") tapSpot(k);
+    else if (a === "minus") { if (q > 0) changeBet(k, l => { l.pop(); return l; }); }
+    else if (a === "type") { closeNumber(); openSpotKeypad(k); }
+  });
+  function openSpotKeypad(k) {
+    const b = parseKey(k);
+    // Сколько ЖЕТОНОВ номинала «× N» прибавить (не деньгами: иначе 250 становилось «жетоном по 250»).
+    const l = st.bets[k], d = st.val;
+    openKeypad({ title: `${NAME[b.type]} ${numsText(b.type, b.nums)} · + ${T().chipsOn} × ${fmt(d)}`, value: 0,
+      hint: l ? `${listText(l)} = ${fmt(listAmt(l))}` : "",
+      onOk: v => { if (v > 0) changeBet(k, x => x.concat(Array(Math.min(v, 9999)).fill(d))); },
+      onDel: l ? () => changeBet(k, () => []) : null });
+  }
+
+  // ---------- Касание поля ----------
+  // Место ставки (сплит, корнер, стрит, сикс-лайн) — +1 жетон; долгое нажатие — ввести количество.
+  // Касание числа — окно числа (комплит, жетоны Straight up).
+  const board = $("board");
+  const toSvg = e => { const m = board.getScreenCTM(); return m ? new DOMPoint(e.clientX, e.clientY).matrixTransform(m.inverse()) : null; };
+  function nearSpot(pt) {
+    let best = null, bd = HIT;
+    for (const s of spotList) { const d = Math.hypot(s.x - pt.x, s.y - pt.y); if (d <= bd) { bd = d; best = s; } }
+    return best;
+  }
+  function cellAt(pt) {
+    const w = windowOf(st.win), zo = w.zero ? ZH : 0;
+    if (pt.x < 0 || pt.x > BW) return null;
+    if (w.zero && pt.y >= 0 && pt.y < zo) return 0;
+    const i = Math.floor((pt.y - zo) / CH), c = Math.floor(pt.x / CW);
+    return (i >= 0 && i < w.rows.length && c >= 0 && c < 3) ? w.rows[i] * 3 + c + 1 : null;
+  }
+  let lpTimer = null, lpDone = false, lpStart = null;
+  board.addEventListener("pointerdown", e => {
+    lpDone = false; lpStart = [e.clientX, e.clientY];
+    const pt = toSvg(e); if (!pt) return;
+    const s = nearSpot(pt), n = s ? null : cellAt(pt);
+    if (!s && n !== st.win) return;
+    // Долгое нажатие: место — ввести количество; выпавшее число — окно комплита.
+    lpTimer = setTimeout(() => { lpTimer = null; lpDone = true; if (s) openSpotKeypad(s.key); else openNumber(n); }, 480);
+  });
+  board.addEventListener("pointermove", e => { if (lpTimer && lpStart && Math.hypot(e.clientX - lpStart[0], e.clientY - lpStart[1]) > 10) { clearTimeout(lpTimer); lpTimer = null; } });
+  ["pointerup", "pointercancel", "pointerleave"].forEach(t => board.addEventListener(t, () => { if (lpTimer) { clearTimeout(lpTimer); lpTimer = null; } }));
+  board.addEventListener("contextmenu", e => e.preventDefault());
+  board.addEventListener("click", e => {
+    if (lpDone) { lpDone = false; return; }
+    const pt = toSvg(e); if (!pt) return;
+    const s = nearSpot(pt); if (s) { tapSpot(s.key); return; }
+    // Выпавшее число — как остальные места: касание = +1 жетон Straight up. Другие числа — окно комплита.
+    const n = cellAt(pt);
+    if (n === st.win) tapSpot(suKey(n)); else if (n != null) openNumber(n);
+  });
+  // Поле подстраивается под размер окна.
+  let lastSize = "";
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(() => {
+      const a = document.querySelector(".app"), s = $("bw").clientWidth + "x" + a.clientHeight + "x" + a.clientWidth;
+      if (s !== lastSize) { lastSize = s; if (st.tab !== "quick") renderBoard(compute()); fitResult(); }
+    });
+    ro.observe($("bw")); ro.observe(document.querySelector(".app"));
+  }
+
+  $("quick").addEventListener("click", e => {
+    const b = e.target.closest("[data-q]"); if (!b) return;
+    st.qactive = b.dataset.q; st.qfresh = true; render();
+  });
+
+  // ---------- Выпавшее число ----------
+  for (let n = 1; n <= 36; n++) {
+    const b = document.createElement("button"); b.type = "button"; b.dataset.n = n; b.textContent = n;
+    b.className = RED.has(n) ? "r" : "b"; $("pk-grid").appendChild(b);
+  }
+  function openPicker() {
+    $("pk-title").textContent = T().win; $("pk-close").textContent = T().close;
+    document.querySelectorAll("#pk-sheet [data-n]").forEach(b => b.setAttribute("aria-pressed", String(Number(b.dataset.n) === st.win)));
+    $("pk-sheet").hidden = false;
+  }
+  $("pk-sheet").addEventListener("click", e => {
+    const b = e.target.closest("[data-n]");
+    if (b) { snapshot(); setWin(Number(b.dataset.n)); $("pk-sheet").hidden = true; render(); return; }
+    if (e.target === $("pk-sheet") || e.target === $("pk-close")) $("pk-sheet").hidden = true;
+  });
+  $("b-win").addEventListener("click", openPicker);
+  $("mode").addEventListener("click", e => {
+    const b = e.target.closest("[data-m]"); if (!b) return;
+    st.tab = b.dataset.m === "quick" ? "quick" : "field"; store.set("tab", st.tab);
+    render();
+  });
+  $("b-undo").addEventListener("click", undo);
+  $("b-new").addEventListener("click", () => { reset(); render(); if (st.tab === "field") openPicker(); });
+  $("b-bd").addEventListener("click", () => { $("sheet").hidden = false; });
+  $("sheet").addEventListener("click", e => { if (e.target === $("sheet")) $("sheet").hidden = true; });
+
+  // ---------- Настройки: номинал жетона, Max, язык, логотип ----------
+  DENOMS.forEach(d => { const b = document.createElement("button"); b.type = "button"; b.dataset.d = d; b.className = "num"; b.textContent = d; $("set-val").appendChild(b); });
+  LIMITS.forEach(d => { const b = document.createElement("button"); b.type = "button"; b.dataset.d = d; b.className = "num"; b.textContent = fmt(d); $("set-max").appendChild(b); });
+  function renderSettings() {
+    const tx = T();
+    $("t-set").textContent = tx.set; $("t-val").textContent = tx.val; $("t-max").textContent = tx.maxPer; $("t-lang").textContent = tx.lang;
+    $("t-logo").textContent = tx.logo; $("t-logo-note").textContent = tx.logoNote; $("t-logo-load").textContent = tx.logoLoad;
+    $("b-logo-del").textContent = tx.logoDel; $("b-set-close").textContent = tx.close; $("b-val-close").textContent = tx.close;
+    document.querySelectorAll("#set-val [data-d]").forEach(b => b.setAttribute("aria-pressed", String(Number(b.dataset.d) === st.val)));
+    document.querySelectorAll("#set-max [data-d]").forEach(b => b.setAttribute("aria-pressed", String(Number(b.dataset.d) === st.limit)));
+    document.querySelectorAll("#set-lang [data-l]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.l === st.lang)));
+    $("t-theme").textContent = tx.theme; $("th-dark").textContent = tx.dark; $("th-light").textContent = tx.light;
+    const lightOn = document.documentElement.classList.contains("light");
+    $("th-dark").setAttribute("aria-pressed", String(!lightOn)); $("th-light").setAttribute("aria-pressed", String(lightOn));
+    showLogo();
+  }
+  const openSettings = () => { renderSettings(); $("set-sheet").hidden = false; };
+  $("b-logo").addEventListener("click", openSettings);
+  $("b-val").addEventListener("click", () => { renderSettings(); $("val-sheet").hidden = false; });
+  $("b-val-close").addEventListener("click", () => { $("val-sheet").hidden = true; });
+  $("val-sheet").addEventListener("click", e => { if (e.target === $("val-sheet")) $("val-sheet").hidden = true; });
+  $("b-set-close").addEventListener("click", () => { $("set-sheet").hidden = true; });
+  $("set-sheet").addEventListener("click", e => { if (e.target === $("set-sheet")) $("set-sheet").hidden = true; });
+  $("set-val").addEventListener("click", e => { const b = e.target.closest("[data-d]"); if (!b) return; st.val = Number(b.dataset.d); $("val-sheet").hidden = true; render(); renderSettings(); });
+  $("set-max").addEventListener("click", e => { const b = e.target.closest("[data-d]"); if (!b) return; st.limit = Number(b.dataset.d); store.set("limit", st.limit); render(); renderSettings(); });
+  // Тема запоминается на этом устройстве.
+  const applyTheme = t => document.documentElement.classList.toggle("light", t === "light");
+  applyTheme(store.get("theme", "dark"));
+  $("set-theme").addEventListener("click", e => { const b = e.target.closest("[data-t]"); if (!b) return; store.set("theme", b.dataset.t); applyTheme(b.dataset.t); renderSettings(); });
+  $("set-lang").addEventListener("click", e => { const b = e.target.closest("[data-l]"); if (!b) return; st.lang = b.dataset.l; store.set("lang", st.lang); render(); renderSettings(); });
+
+  function showLogo() {
+    let src = null; try { src = localStorage.getItem("cpt_logo"); } catch (e) {}
+    ["logo", "lp"].forEach(p => {
+      $(p + "-img").hidden = !src; $(p + "-txt").hidden = !!src;
+      if (src) $(p + "-img").src = src; else $(p + "-img").removeAttribute("src");
+    });
+    $("b-logo-del").hidden = !src;
+  }
+  $("b-logo-del").addEventListener("click", () => { try { localStorage.removeItem("cpt_logo"); } catch (e) {} showLogo(); });
+  $("in-logo").addEventListener("change", e => {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        // Уменьшаем до 360×160, чтобы картинка влезла в память браузера.
+        const k = Math.min(1, 360 / img.width, 160 / img.height);
+        const c = document.createElement("canvas"); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        try { localStorage.setItem("cpt_logo", c.toDataURL("image/png")); } catch (err) {}
+        showLogo(); e.target.value = "";
+      };
+      img.src = rd.result;
+    };
+    rd.readAsDataURL(f);
+  });
+  showLogo();
+
+  loadExample();
+  render();
+})();
+</script>
+
+<script>
+// Работа без интернета: после первого открытия страница берётся из памяти планшета.
+if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+</script>
+</body>
+</html>
