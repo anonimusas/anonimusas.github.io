@@ -23,7 +23,8 @@ img { max-width: 100%; }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto+Condensed:wght@500;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
-/* Layout (версия 35, 27.10): две вкладки QUICK | FIELD. В FIELD поле занимает всё свободное место, клавиатуры нет — она во всплывающем окне.
+/* v68 (28.10): комплиты по всему полю — долгое нажатие на число в окне выбора; сдача со всех пересечений — в табло.
+   Layout (версия 35, 27.10): две вкладки QUICK | FIELD. В FIELD поле занимает всё свободное место, клавиатуры нет — она во всплывающем окне.
    Номинал цветного жетона, Max, язык и логотип — в настройках (касание логотипа). Узкая колонка до 420 px; низкое широкое окно — две колонки. */
 :root {
   --bg: #0d0c0a;
@@ -260,6 +261,19 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 .pk-grid button.r { background: var(--red); } .pk-grid button.b { background: var(--black); }
 .picker button[aria-pressed="true"] { outline: 3px solid var(--gold-hi); outline-offset: -3px; }
 .pk-close { margin-top: 4px; height: 40px; border-radius: 8px; border: 1px solid var(--line); background: transparent; color: var(--muted); font-weight: 700; }
+/* v68: комплиты по всему полю — долгое нажатие на число в окне выбора. Окно не закрывается, на числе плашка «25». */
+.picker { max-height: calc(100dvh - 24px); overflow-y: auto; }
+.pk-hint { margin: -2px 0 4px; font-size: 12px; color: var(--muted); }
+.pk-grid button, .pk-zero { position: relative; -webkit-touch-callout: none; }
+.picker button.hasc { box-shadow: inset 0 0 0 2px #f1d488; }
+.pk-zero.hasc { box-shadow: none; }
+.pk-c { position: absolute; right: 3px; bottom: 3px; min-width: 22px; height: 15px; padding: 0 4px; border-radius: 8px; background: #f1d488; color: #1c1406; font: 700 11px/15px var(--f-num); pointer-events: none; }
+.pk-zero .pk-c { right: 8px; bottom: 5px; }
+/* Окно комплита и клавиатура — поверх окна выбора числа. */
+#ns, #kp { z-index: 30; }
+/* Сколько комплитов вне поля 3×3 — маленькая плашка на кнопке Number. */
+.win { position: relative; }
+.win .far { position: absolute; top: -8px; right: -10px; min-width: 20px; height: 18px; padding: 0 5px; border-radius: 9px; background: #f1d488; color: #1c1406; font: 700 11px/18px var(--f-num); }
 
 /* Настройки. */
 .opts { display: grid; gap: 4px; }
@@ -272,12 +286,10 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 .note { font-size: 12.5px; color: var(--muted); margin: 0; }
 </style>
 
-</head>
-<body>
 <div class="app">
   <div class="top">
     <button type="button" class="logo" id="b-logo" aria-label="Settings"><span class="logo-txt" id="logo-txt">Croupier<br>Pro</span><img id="logo-img" alt="" hidden><span class="gear" aria-hidden="true">⚙</span></button>
-    <button type="button" class="win" id="b-win"><span class="l" id="t-win">Number</span><span class="v num" id="v-win"></span></button>
+    <button type="button" class="win" id="b-win"><span class="l" id="t-win">Number</span><span class="v num" id="v-win"></span><span class="far num" id="v-far" hidden></span></button>
     <div class="seg" id="mode">
       <button type="button" data-m="quick" id="m-quick">Calc</button>
       <button type="button" data-m="field" id="m-field">Layout</button>
@@ -318,6 +330,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 <div class="sheet-bg" id="pk-sheet" hidden>
   <div class="picker" role="dialog" aria-modal="true" aria-labelledby="pk-title">
     <h2 id="pk-title">Winning number</h2>
+    <p class="pk-hint" id="pk-hint"></p>
     <button type="button" class="pk-zero" data-n="0">0</button>
     <div class="pk-grid" id="pk-grid"></div>
     <button type="button" class="pk-close" id="pk-close">Close</button>
@@ -369,7 +382,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
       compBy: "Complete", compByL: "Complete by", byW: "by", removeC: "Remove complete", givenAmt: "Amount placed", chipsOn: "Chips", fieldS: "Chips",
       payS: "Payout (CASH)", retS: "Change (CASH)", none: "No winning bets", total: "TOTAL", compsS: "Completes",
       notWin: "not winning", compS: "Complete", chipsS: "chips", maxS: "max",
-      stations: "spots", given: "placed", min: "min", line: "Six line", place: "place on the field (they stay)", house: "stake — taken by the casino" },
+      pkHint: "Tap — winning number · long press — complete", farT: "completes outside the layout", stations: "spots", given: "placed", min: "min", line: "Six line", place: "place on the field (they stay)", house: "stake — taken by the casino" },
     lt: { set: "Nustatymai", val: "Žetono vertė", maxPer: "Maks. ant skaičiaus", lang: "Kalba", theme: "Tema", dark: "Tamsi", light: "Šviesi",
       logo: "Logotipas", logoNote: "Kazino logotipas saugomas tik šiame įrenginyje. Bet koks paveikslėlis: PNG, JPG.", logoLoad: "Įkelti logotipą", logoDel: "Pašalinti logotipą",
       win: "Skaičius", quick: "Calc", field: "Layout",
@@ -378,7 +391,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
       compBy: "Komplitas", compByL: "Komplitas po", byW: "po", removeC: "Pašalinti komplitą", givenAmt: "Pastatyta suma", chipsOn: "Žetonai", fieldS: "Žetonai",
       payS: "Išmoka (CASH)", retS: "Grąža (CASH)", none: "Laimėjusių statymų nėra", total: "IŠ VISO", compsS: "Komplitai",
       notWin: "nelaimėjo", compS: "Komplitas", chipsS: "žet.", maxS: "maks.",
-      stations: "vietos", given: "pastatyta", min: "min.", line: "Six line", place: "išstatyti ant lauko (lieka)", house: "statymas — pasiima kazino" }
+      pkHint: "Paspausk — iškritęs skaičius · ilgai — komplitas", farT: "komplitai už lauko ribų", stations: "vietos", given: "pastatyta", min: "min.", line: "Six line", place: "išstatyti ant lauko (lieka)", house: "statymas — pasiima kazino" }
   };
   const MULT = { straightUp: 35, split: 17, street: 11, corner: 8, sixLine: 5 };
   const NAME = { straightUp: "Straight up", split: "Split", street: "Street", corner: "Corner", sixLine: "Sixline" };
@@ -641,8 +654,9 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
       }
     });
     el("rect", { x: -3, y: -3, width: BW + 6, height: H + 6, rx: 4, fill: "none", stroke: "#b8923a", "stroke-width": 5, "pointer-events": "none" }, g);
-    // Комплиты: клетка обведена золотом (рамка — под жетонами).
-    for (const n0 of Object.keys(st.comps)) {
+    // Комплиты: клетка обведена золотом (рамка — под жетонами). v68: на поле — только те, что в 3×3 (остальные — в окне выбора числа).
+    const visSet = new Set(visibleNums(w)), compsVis = Object.keys(st.comps).filter(c => visSet.has(Number(c)));
+    for (const n0 of compsVis) {
       const n = Number(n0), [cx, cy] = pos("straightUp", [n], w);
       if (n !== 0) el("rect", { x: cx - CW / 2 + 2, y: cy - CH / 2 + 2, width: CW - 4, height: CH - 4, rx: 4, fill: "rgba(241,212,136,.12)", stroke: "#f1d488", "stroke-width": 2.5, "pointer-events": "none" }, g);
     }
@@ -664,7 +678,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
     }
     // Плашка комплита — посередине числа, в две строки («KOMPLITAS PO» / «25»), узкая: не задевает жетоны на сплитах слева и справа.
     // Если на числе жетон Straight up — жетон чуть выше, плашка под ним (на зеро — справа от жетона).
-    for (const n0 of Object.keys(st.comps)) {
+    for (const n0 of compsVis) {
       const n = Number(n0), ci = compInfo(n0), [cx0, cy0] = pos("straightUp", [n], w);
       const cy = n === 0 ? ZH * 0.5 - 8 : cy0;
       const su = n === st.win && betAmt(suKey(n)) > 0;
@@ -790,6 +804,8 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
     document.querySelector(".app").classList.toggle("isq", quick);
     $("quick").hidden = !quick; $("keys").hidden = !quick; $("cpanel").hidden = quick;
     $("t-win").textContent = tx.win; $("v-win").textContent = st.win;
+    { const vis = new Set(visibleNums(windowOf(st.win))), far = Object.keys(st.comps).filter(c => !vis.has(Number(c))).length;
+      $("v-far").hidden = !far; $("v-far").textContent = "+" + far; $("b-win").title = far ? `${far} ${tx.farT}` : ""; }
     $("m-quick").textContent = tx.quick; $("m-field").textContent = tx.field;
     $("m-quick").setAttribute("aria-pressed", String(quick)); $("m-field").setAttribute("aria-pressed", String(!quick));
     $("b-new").textContent = tx.newp; $("b-undo").textContent = tx.undo; $("b-undo").disabled = !st.hist.length;
@@ -801,6 +817,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
     if (st.tab === "quick") renderQuick(); else renderBoard(r);
     renderResult(r); renderBreakdown(r);
     if (!$("ns").hidden && nsNum != null) renderNumSheet();
+    if (!$("pk-sheet").hidden) markPicker();
   }
 
   // ---------- Действия ----------
@@ -819,7 +836,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
     st.win = n;
     const winKeys = new Set(betsWith(n).map(b => key(b.type, b.nums))), vis = new Set(visibleNums(windowOf(n)));
     for (const k of Object.keys(st.bets)) if (!winKeys.has(k)) delete st.bets[k];
-    for (const c of Object.keys(st.comps)) if (!vis.has(Number(c))) delete st.comps[c];
+    // v68: комплиты по всему полю остаются (их сдача с пересечений — в табло), убирает только New payout / Undo.
   }
   function changeBet(k, fn) { leaveExample(); snapshot(); const l = fn((st.bets[k] || []).slice()); if (l.length) st.bets[k] = l; else delete st.bets[k]; render(); }
   // +1 жетон номинала «× N» (один выбор на всё, v47). Смена номинала не меняет уже поставленное.
@@ -890,7 +907,8 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 
   // ---------- Окно числа: комплит одной кнопкой, жетоны Straight up ----------
   let nsNum = null;
-  function openNumber(n) { nsNum = n; renderNumSheet(); $("ns").hidden = false; }
+  let nsOpenedAt = 0;   // v68: после долгого нажатия палец отпускают уже над окном — первое касание не считаем
+  function openNumber(n) { nsNum = n; renderNumSheet(); $("ns").hidden = false; nsOpenedAt = performance.now(); }
   function closeNumber() { $("ns").hidden = true; nsNum = null; }
   function renderNumSheet() {
     const tx = T(), n = nsNum, box = $("nsb"), c = st.comps[n], ci = compInfo(n);
@@ -937,6 +955,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
     box.appendChild(cl);
   }
   $("ns").addEventListener("click", e => {
+    if (performance.now() - nsOpenedAt < 350) return;
     if (e.target === $("ns")) { closeNumber(); return; }
     const n = nsNum; if (n == null) return;
     const ub = e.target.closest("[data-u]:not(:disabled)");
@@ -1021,12 +1040,34 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
     const b = document.createElement("button"); b.type = "button"; b.dataset.n = n; b.textContent = n;
     b.className = RED.has(n) ? "r" : "b"; $("pk-grid").appendChild(b);
   }
+  // v68: на числах окна — выпавшее (обводка) и комплиты (золотая рамка + плашка «25»).
+  function markPicker() {
+    document.querySelectorAll("#pk-sheet [data-n]").forEach(b => {
+      const n = Number(b.dataset.n), ci = compInfo(n);
+      b.setAttribute("aria-pressed", String(n === st.win));
+      b.classList.toggle("hasc", !!ci);
+      let tag = b.querySelector(".pk-c");
+      if (ci) { if (!tag) { tag = document.createElement("span"); tag.className = "pk-c"; b.appendChild(tag); } tag.textContent = ci.ok ? fmt(ci.u) : "?"; }
+      else if (tag) tag.remove();
+    });
+  }
   function openPicker() {
-    $("pk-title").textContent = T().win; $("pk-close").textContent = T().close;
-    document.querySelectorAll("#pk-sheet [data-n]").forEach(b => b.setAttribute("aria-pressed", String(Number(b.dataset.n) === st.win)));
+    $("pk-title").textContent = T().win; $("pk-close").textContent = T().close; $("pk-hint").textContent = T().pkHint;
+    markPicker();
     $("pk-sheet").hidden = false;
   }
+  // Касание числа — выпавшее число, окно закрывается. Долгое нажатие — комплит на это число, окно остаётся открытым.
+  let pkTimer = null, pkLong = false, pkStart = null;
+  $("pk-sheet").addEventListener("pointerdown", e => {
+    pkLong = false; const b = e.target.closest("[data-n]"); if (!b) return;
+    pkStart = [e.clientX, e.clientY];
+    pkTimer = setTimeout(() => { pkTimer = null; pkLong = true; openNumber(Number(b.dataset.n)); }, 480);
+  });
+  $("pk-sheet").addEventListener("pointermove", e => { if (pkTimer && pkStart && Math.hypot(e.clientX - pkStart[0], e.clientY - pkStart[1]) > 10) { clearTimeout(pkTimer); pkTimer = null; } });
+  ["pointerup", "pointercancel", "pointerleave"].forEach(t => $("pk-sheet").addEventListener(t, () => { if (pkTimer) { clearTimeout(pkTimer); pkTimer = null; } }));
+  $("pk-sheet").addEventListener("contextmenu", e => e.preventDefault());
   $("pk-sheet").addEventListener("click", e => {
+    if (pkLong) { pkLong = false; return; }
     const b = e.target.closest("[data-n]");
     if (b) { snapshot(); setWin(Number(b.dataset.n)); $("pk-sheet").hidden = true; render(); return; }
     if (e.target === $("pk-sheet") || e.target === $("pk-close")) $("pk-sheet").hidden = true;
