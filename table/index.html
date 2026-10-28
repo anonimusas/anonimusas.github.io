@@ -23,7 +23,8 @@ img { max-width: 100%; }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto+Condensed:wght@500;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
-/* v74 (28.10): номинал на жетоне крупнее («1000» без пробела, сжимается по ширине); жетоны 500 и 1000 в «× N» (2 ряда по 4).
+/* v75 (28.10): жетон с комплитом — цифры как у всех, плашка прикрывает; строка CHIPS не обрезается справа; кусок перебора платится жетонами места (без «+25 cash»).
+   v74 (28.10): номинал на жетоне крупнее («1000» без пробела, сжимается по ширине); жетоны 500 и 1000 в «× N» (2 ряда по 4).
    v73 (28.10): жетон на поле как настоящий (белые вставки по краю, кольцо, блеск).
    v72 (28.10): разбор «?» влезает в рамку по ширине (перенос строк, числа не рвутся).
    v71 (28.10): в разборе сдача с комплита по поставленной сумме расписана: «pastatyta 5 000 − 40 × 100 (4 000)».
@@ -158,7 +159,9 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 /* ---------- Ответ ---------- */
 .result { position: relative; background: linear-gradient(180deg, var(--res-top), var(--panel)); border: 1px solid var(--gold); border-radius: 10px; padding: 18px 12px 18px; display: grid; gap: 8px; }
 .bd-btn { flex: 0 0 auto; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line); background: transparent; color: var(--muted); font: 700 14px var(--f-body); padding: 0; }
-.result .cols { display: grid; grid-template-columns: 1fr; gap: 0; }
+.result .cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
+/* v75: табло не шире рамки — иначе строка CHIPS обрезалась справа, а уменьшение шрифта не срабатывало. */
+.result { grid-template-columns: minmax(0, 1fr); }
 /* Chips и Cash — две строки на всю ширину: слева подпись, справа крупное число. */
 .result .cell { min-width: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; column-gap: 10px; }
 .result .cell .big { text-align: right; }
@@ -184,11 +187,20 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 .result .big { font-size: 76px; font-weight: 700; line-height: 1.05; color: var(--gold-hi); white-space: nowrap; overflow: hidden; }
 .result .cash .big { color: var(--cash-fg); }
 .result .rest { font-size: 14px; color: var(--muted); font-weight: 500; }
+.result .rest .rv { font: 700 24px var(--f-num); color: var(--cash-fg); }
+.result .rest .rl { font: 700 10px var(--f-body); letter-spacing: .8px; text-transform: uppercase; color: var(--muted); margin-left: 4px; }
 .result .big .dn { font-size: .42em; color: var(--muted); margin-left: .08em; }
 .result .big .pl { font-size: .5em; color: var(--muted); margin: 0 .18em; }
 /* Две строки: жетоны комплита и жетоны поля, слева маленькая подпись. */
 /* Одна строка: «392×25 + 103×25 + 32×10», под каждой частью мелкая подпись (комплит / жетоны). */
 #r-chips.parts { padding-bottom: 13px; }
+/* v75: перенос строки CHIPS — только между частями, справа. */
+#r-chips .grp { white-space: nowrap; }
+#r-chips.wrap { white-space: normal; line-height: 1.08; }
+#r-chips.wrap > .pl { display: none; }
+#r-chips.wrap .cseg { display: block; text-align: right; }
+#r-chips.wrap .cseg + .cseg { margin-top: 16px; }
+#r-chips.wrap .cseg.comp .cap { left: auto; right: 0; }
 /* Строки табло не сжимаются по высоте (иначе обрезалась сдача) — если не влезает, fitResult уменьшает числа. */
 .result .big, .result .change, .result .rest { min-height: min-content; }
 .result .big .cseg { position: relative; display: inline-block; }
@@ -577,11 +589,23 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
         pay += paid * MULT[p.type];
         // Выигрыш платится тем же номиналом, каким стоит ставка (при переборе — в той же доле).
         // v57: при переборе сначала платится комплит, потом жетоны поля (крупные первыми); что сверх Max — сдача.
-        let left = paid;
-        Object.keys(p.dm).sort((a, b) => (a[0] === "c" ? 0 : 1) - (b[0] === "c" ? 0 : 1) || Number(b.slice(2)) - Number(a.slice(2))).forEach(kd => {
-          const take = Math.min(p.dm[kd], left); left -= take;
-          if (take > 0) payD[kd] = (payD[kd] || 0) + take * MULT[p.type];
+        let left = paid, odd = 0;
+        const kds = Object.keys(p.dm).sort((a, b) => (a[0] === "c" ? 0 : 1) - (b[0] === "c" ? 0 : 1) || Number(b.slice(2)) - Number(a.slice(2)));
+        kds.forEach(kd => {
+          const take = Math.min(p.dm[kd], left); left -= take; if (take <= 0) return;
+          // v75: при переборе играет кусок, не кратный жетону (75 из жетонов по 100) — его выигрыш не «26×100 + 25 cash»,
+          // а платится теми жетонами, что стоят на месте, крупные первыми (2 625 = 26×100 + 1×25).
+          const d = Number(kd.slice(2)), whole = kd[0] === "f" ? Math.floor(take / d + 1e-9) * d : take;
+          if (whole > 0) payD[kd] = (payD[kd] || 0) + whole * MULT[p.type];
+          odd += take - whole;
         });
+        if (odd > 1e-9) {
+          let rem = odd * MULT[p.type];
+          kds.filter(k => k[0] === "f").map(k => Number(k.slice(2))).sort((a, b) => b - a).forEach(d => {
+            const c = Math.floor(rem / d + 1e-9); if (c > 0) { payD["f:" + d] = (payD["f:" + d] || 0) + c * d; rem -= c * d; }
+          });
+          if (rem > 1e-9) { const k0 = kds.filter(k => k[0] === "f").pop(); payD[k0] = (payD[k0] || 0) + rem; }   // не делится — остаток кэшем
+        }
         const base = partsText(p) + (p.over > 0 ? ` → ${T().maxS} ${fmt(paid)}` : "");
         payLines.push({ t: `${lab}: ${base} × ${MULT[p.type]}`, v: fmt(paid * MULT[p.type]) });
       }
@@ -691,7 +715,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
       let [x, y] = pos(b.type, b.nums, w);
       const q = betAmt(k), p = r.posMap.get(k), over = p && p.over > 0;
       if (su) {   // жетоны Straight up — через окно числа; жетон рисуем над номером
-        if (q > 0) { if (st.win === 0) y = ZH * 0.5 - 8; chip(g, x, y, 18, q, over, st.win !== 0 && !!st.comps[st.win]); chipPts.push([x, y]); }   // есть комплит — жетон чуть выше, под ним плашка   // по центру числа, того же размера, что и другие
+        if (q > 0) { if (st.win === 0) y = ZH * 0.5 - 8; chip(g, x, y, 18, q, over, false);   /* v75: цифры как на всех жетонах, плашка комплита их прикрывает снизу */ chipPts.push([x, y]); }   // есть комплит — жетон чуть выше, под ним плашка   // по центру числа, того же размера, что и другие
         continue;
       }
       if (q > 0) chip(g, x, y, 18, q, over);
@@ -737,7 +761,12 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
       // Табло большое (компьютер, iPad) — числа ещё крупнее, до 130 px.
       const rh = document.querySelector(".result").clientHeight;
       let fs = quick ? (innerHeight < 720 ? 52 : 72) : Math.round(Math.min(130, Math.max(88, rh * (id === "r-cash" ? 0.3 : 0.2)))); e.style.fontSize = fs + "px";
-      while (e.scrollWidth > e.clientWidth + 1 && fs > 24) { fs -= 2; e.style.fontSize = fs + "px"; }
+      // v75: строка CHIPS из многих номиналов: уменьшаем до 40 px, не влезает — переносим на вторую строку (между частями) и уменьшаем дальше.
+      e.classList.remove("wrap");
+      const minOne = e.classList.contains("parts") ? 40 : 24;
+      while (e.scrollWidth > e.clientWidth + 1 && fs > minOne) { fs -= 2; e.style.fontSize = fs + "px"; }
+      if (e.scrollWidth > e.clientWidth + 1 && e.classList.contains("parts")) e.classList.add("wrap");
+      while (e.scrollWidth > e.clientWidth + 1 && fs > 20) { fs -= 2; e.style.fontSize = fs + "px"; }
     });
     // v58: всё табло (с остатком и сдачей) должно влезть по высоте — иначе уменьшаем числа.
     const res = document.querySelector(".result"), ch = $("r-chips"), ca = $("r-cash");
@@ -778,14 +807,16 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
         const seg = document.createElement("span"); seg.className = "cseg " + k;
         const top = document.createElement("span"); top.className = "segv";
         r.parts[k].forEach(([d, c], i) => {
-          if (i) top.appendChild(plus());
-          top.appendChild(document.createTextNode(fmt(c)));
-          const dn = document.createElement("span"); dn.className = "dn"; dn.textContent = "×" + fmt(d); top.appendChild(dn);
+          if (i) { top.appendChild(plus()); top.appendChild(document.createTextNode("\u200b")); }   // v75: здесь можно перенести строку
+          const grp = document.createElement("span"); grp.className = "grp";   // v75: «68×100» не рвётся при переносе
+          grp.appendChild(document.createTextNode(fmt(c)));
+          const dn = document.createElement("span"); dn.className = "dn"; dn.textContent = "×" + fmt(d); grp.appendChild(dn); top.appendChild(grp);
         });
         const cp = document.createElement("span"); cp.className = "cap"; cp.textContent = cap;
         seg.append(top, cp); e.appendChild(seg);
       });
-      $("r-rest").textContent = r.rest > 0 ? `+ ${fmt(r.rest)} ${tx.rest}` : "";
+      $("r-rest").innerHTML = "";
+      if (r.rest > 0) { const a = document.createElement("span"); a.className = "rv"; a.textContent = `+ ${fmt(r.rest)}`; const b = document.createElement("span"); b.className = "rl"; b.textContent = tx.rest; $("r-rest").append(a, b); }
     }
     $("r-cash").textContent = fmt(r.pay);
     // Крупные числа: 64 px, если не влезают в колонку — уменьшаем, пока не влезут.
