@@ -23,7 +23,8 @@ img { max-width: 100%; }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto+Condensed:wght@500;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
-/* v68 (28.10): комплиты по всему полю — долгое нажатие на число в окне выбора; сдача со всех пересечений — в табло.
+/* v69 (28.10): при включении пусто (без примера).
+   v68 (28.10): комплиты по всему полю — долгое нажатие на число в окне выбора; сдача со всех пересечений — в табло.
    Layout (версия 35, 27.10): две вкладки QUICK | FIELD. В FIELD поле занимает всё свободное место, клавиатуры нет — она во всплывающем окне.
    Номинал цветного жетона, Max, язык и логотип — в настройках (касание логотипа). Узкая колонка до 420 px; низкое широкое окно — две колонки. */
 :root {
@@ -1142,7 +1143,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
   });
   showLogo();
 
-  loadExample();
+  reset();   // v69 (заказчик): при включении ничего не показываем — без примера, всё по нулям
   render();
 })();
 </script>
