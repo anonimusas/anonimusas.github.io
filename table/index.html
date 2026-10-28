@@ -23,7 +23,8 @@ img { max-width: 100%; }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto+Condensed:wght@500;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
-/* v71 (28.10): в разборе сдача с комплита по поставленной сумме расписана: «pastatyta 5 000 − 40 × 100 (4 000)».
+/* v72 (28.10): разбор «?» влезает в рамку по ширине (перенос строк, числа не рвутся).
+   v71 (28.10): в разборе сдача с комплита по поставленной сумме расписана: «pastatyta 5 000 − 40 × 100 (4 000)».
    v70 (28.10): окна «Настройки» и «Выбор числа» закрываются только кнопкой Close.
    v69 (28.10): при включении пусто (без примера).
    v68 (28.10): комплиты по всему полю — долгое нажатие на число в окне выбора; сдача со всех пересечений — в табло.
@@ -220,6 +221,11 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 .bd li { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px dashed var(--dash2); padding-bottom: 3px; }
 .bd li .v { color: var(--gold-hi); font-weight: 700; white-space: nowrap; }
 .bd li.tot { border-bottom: 0; font-weight: 700; }
+/* v72: разбор всегда в ширину рамки, без прокрутки вбок. Длинный итог («15 150 = 128×100 (komplitas) + 94×25 (žet.)») переносится на вторую строку справа. */
+.bd { grid-template-columns: minmax(0, 1fr); overflow-x: hidden; }
+.bd li > span:first-child { min-width: 0; overflow-wrap: break-word; }
+.bd li.tot { flex-wrap: wrap; column-gap: 10px; row-gap: 2px; }
+.bd li.tot .v { white-space: normal; flex: 1 1 auto; text-align: right; min-width: 0; }
 .bd li.ret .v { color: var(--warn); }
 .bd .empty { color: var(--muted); font-size: 13px; }
 
@@ -492,7 +498,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
   }
   restorePrefs();
   const T = () => TX[st.lang];
-  const fmt = n => (Math.round(n * 100) / 100).toLocaleString("en-US").replace(/,/g, " ");
+  const fmt = n => (Math.round(n * 100) / 100).toLocaleString("en-US").replace(/,/g, " ");   // v72: неразрывный пробел — «5 000» не рвётся при переносе
   const $ = id => document.getElementById(id);
   const quickName = t => t === "sixLine" ? T().line : NAME[t];
 
