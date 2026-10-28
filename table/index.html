@@ -23,7 +23,8 @@ img { max-width: 100%; }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto+Condensed:wght@500;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
-/* v75 (28.10): жетон с комплитом — цифры как у всех, плашка прикрывает; строка CHIPS не обрезается справа; кусок перебора платится жетонами места (без «+25 cash»).
+/* v76 (28.10): перебор крупным жетоном — играющий кусок как жетоны, которыми он набирается (500 на сплите, Max 100 → 34×100, сдача 300).
+   v75 (28.10): жетон с комплитом — цифры как у всех, плашка прикрывает; строка CHIPS не обрезается справа; кусок перебора платится жетонами места (без «+25 cash»).
    v74 (28.10): номинал на жетоне крупнее («1000» без пробела, сжимается по ширине); жетоны 500 и 1000 в «× N» (2 ряда по 4).
    v73 (28.10): жетон на поле как настоящий (белые вставки по краю, кольцо, блеск).
    v72 (28.10): разбор «?» влезает в рамку по ширине (перенос строк, числа не рвутся).
@@ -600,11 +601,10 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
           odd += take - whole;
         });
         if (odd > 1e-9) {
-          let rem = odd * MULT[p.type];
-          kds.filter(k => k[0] === "f").map(k => Number(k.slice(2))).sort((a, b) => b - a).forEach(d => {
-            const c = Math.floor(rem / d + 1e-9); if (c > 0) { payD["f:" + d] = (payD["f:" + d] || 0) + c * d; rem -= c * d; }
-          });
-          if (rem > 1e-9) { const k0 = kds.filter(k => k[0] === "f").pop(); payD[k0] = (payD[k0] || 0) + rem; }   // не делится — остаток кэшем
+          // v76 (заказчик): из жетона 500 на сплите при Max 100 играет 200 — это как 2 жетона по 100, выплата 3 400 = 34×100, сдача 300.
+          // Играющий кусок считаем самыми крупными жетонами, которыми он набирается ровно (200 → по 100, 75 → по 25).
+          const D = DENOMS.slice().reverse().find(d => d <= odd + 1e-9 && Math.abs(odd / d - Math.round(odd / d)) < 1e-9) || 1;
+          payD["f:" + D] = (payD["f:" + D] || 0) + odd * MULT[p.type];
         }
         const base = partsText(p) + (p.over > 0 ? ` → ${T().maxS} ${fmt(paid)}` : "");
         payLines.push({ t: `${lab}: ${base} × ${MULT[p.type]}`, v: fmt(paid * MULT[p.type]) });
