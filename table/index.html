@@ -23,7 +23,8 @@ img { max-width: 100%; }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto+Condensed:wght@500;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
-/* v70 (28.10): окна «Настройки» и «Выбор числа» закрываются только кнопкой Close.
+/* v71 (28.10): в разборе сдача с комплита по поставленной сумме расписана: «pastatyta 5 000 − 40 × 100 (4 000)».
+   v70 (28.10): окна «Настройки» и «Выбор числа» закрываются только кнопкой Close.
    v69 (28.10): при включении пусто (без примера).
    v68 (28.10): комплиты по всему полю — долгое нажатие на число в окне выбора; сдача со всех пересечений — в табло.
    Layout (версия 35, 27.10): две вкладки QUICK | FIELD. В FIELD поле занимает всё свободное место, клавиатуры нет — она во всплывающем окне.
@@ -794,7 +795,11 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
     if (r.payLines.length) list(st.tab === "quick" ? tx.chips : tx.payS, r.payLines, "", { t: tx.total, v: st.tab === "quick" ? `${fmt(r.quickChips)} ${tx.chipsS} × ${fmt(st.val)} = ${fmt(r.pay)}` : `${fmt(r.pay)} = ` + (r.groups.length ? [[r.parts.comp, ` (${tx.compBy.toLowerCase()})`], [r.parts.field, ` (${tx.chipsS})`]].filter(x => x[0].length).map(([g, lab]) => g.map(([d, c]) => `${fmt(c)}×${fmt(d)}`).join(" + ") + lab).join(" + ") + (r.rest > 0 ? ` + ${fmt(r.rest)}` : "") : chipsTxt(r.pay)) });
     else { const d = document.createElement("div"); d.className = "empty"; d.textContent = tx.none; bd.appendChild(d); }
     const retAll = r.retLines.slice();
-    if (r.compChange) retAll.push({ t: `${tx.compsS}: ${tx.given}`, v: fmt(r.compChange) });
+    // v71: сдача с комплита, поставленного суммой, — по каждому: «Komplitas 20: pastatyta 5 000 − 40 × 100 (4 000)» → 1 000.
+    if (st.tab !== "quick") Object.keys(st.comps).forEach(n => {
+      const ci = compInfo(n);
+      if (ci && ci.ok && ci.change > 0) retAll.push({ t: `${tx.compS} ${n}: ${tx.given} ${fmt(ci.given)} − ${ci.chips} × ${fmt(ci.u)} (${fmt(ci.cost)})`, v: fmt(ci.change) });
+    });
     if (retAll.length) list(tx.retS, retAll, "ret", { t: tx.total, v: `${fmt(r.ret)} ${tx.rest}` });
     const close = document.createElement("button"); close.type = "button"; close.className = "close"; close.textContent = tx.close;
     close.addEventListener("click", () => { $("sheet").hidden = true; });
