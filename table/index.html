@@ -23,7 +23,8 @@ img { max-width: 100%; }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto+Condensed:wght@500;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
-/* v72 (28.10): разбор «?» влезает в рамку по ширине (перенос строк, числа не рвутся).
+/* v73 (28.10): жетон на поле как настоящий (белые вставки по краю, кольцо, блеск).
+   v72 (28.10): разбор «?» влезает в рамку по ширине (перенос строк, числа не рвутся).
    v71 (28.10): в разборе сдача с комплита по поставленной сумме расписана: «pastatyta 5 000 − 40 × 100 (4 000)».
    v70 (28.10): окна «Настройки» и «Выбор числа» закрываются только кнопкой Close.
    v69 (28.10): при включении пусто (без примера).
@@ -634,16 +635,26 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
     el("text", { x, y: y + 4.6, "text-anchor": "middle", "font-family": NUMF, "font-size": 12.5, "font-weight": 700, fill: color, "pointer-events": "none" }, g, text);
   }
   function chip(g, x, y, rad, q, over, up) {   // up — цифру чуть выше (снизу жетон закрыт плашкой комплита)
-    el("circle", { cx: x, cy: y + 1.5, r: rad, fill: "rgba(0,0,0,.45)", "pointer-events": "none" }, g);
-    el("circle", { cx: x, cy: y, r: rad, fill: over ? "#d4371f" : "#7a1026", stroke: "#fff", "stroke-width": 2.5, "stroke-dasharray": "4 3.4", "pointer-events": "none" }, g);
-    const t = fmt(q);
-    el("text", { x, y: y + (up ? 1 : 6), "text-anchor": "middle", "font-family": NUMF, "font-size": t.length > 3 ? 13 : (up ? 16 : 18), "font-weight": 700, fill: "#fff", "pointer-events": "none" }, g, t);
+    // v73: жетон как настоящий — по краю 8 белых вставок, внутри тонкое кольцо, центр с цифрой, лёгкий блеск сверху.
+    const N = { "pointer-events": "none" }, body = over ? "#d4371f" : "#8c1531", ins = rad - 3, C = 2 * Math.PI * ins, seg = C / 8;
+    el("circle", { cx: x, cy: y + 2, r: rad, fill: "rgba(0,0,0,.5)", ...N }, g);
+    el("circle", { cx: x, cy: y, r: rad, fill: body, stroke: "rgba(0,0,0,.6)", "stroke-width": 0.8, ...N }, g);
+    el("circle", { cx: x, cy: y, r: ins, fill: "none", stroke: "#f6f1e6", "stroke-width": 5, "stroke-dasharray": `${(seg * 0.46).toFixed(2)} ${(seg * 0.54).toFixed(2)}`, "stroke-dashoffset": (seg * 0.23).toFixed(2), ...N }, g);
+    el("circle", { cx: x, cy: y, r: rad * 0.64, fill: "rgba(0,0,0,.16)", stroke: "rgba(255,255,255,.8)", "stroke-width": 1, ...N }, g);
+    el("circle", { cx: x, cy: y, r: rad * 0.64 - 2.2, fill: "none", stroke: "rgba(255,255,255,.35)", "stroke-width": 0.6, "stroke-dasharray": "1.2 1.6", ...N }, g);
+    el("circle", { cx: x, cy: y, r: rad - 0.4, fill: "url(#cpShine)", ...N }, g);
+    const t = fmt(q), L = t.replace(/\u00a0/g, "").length;
+    const fs = L <= 2 ? (up ? 14 : 16) : L === 3 ? (up ? 12.5 : 14) : L === 4 ? 9.5 : 8.5;
+    el("text", { x, y: y + (up ? 1 : fs * 0.36), "text-anchor": "middle", "font-family": NUMF, "font-size": fs, "font-weight": 700, fill: "#fff", stroke: "rgba(0,0,0,.35)", "stroke-width": 0.6, "paint-order": "stroke", ...N }, g, t);
   }
   let spotList = [];   // места для жетонов (без Straight up): { key, x, y }
   function renderBoard(r) {
     const w = windowOf(st.win), svg = $("board");
     fitCells(w);
     svg.innerHTML = "";
+    // v73: блеск жетонов (светлее сверху).
+    { const defs = el("defs", {}, svg), lg = el("linearGradient", { id: "cpShine", x1: 0, y1: 0, x2: 0, y2: 1 }, defs);
+      el("stop", { offset: 0, "stop-color": "#fff", "stop-opacity": 0.32 }, lg); el("stop", { offset: 0.5, "stop-color": "#fff", "stop-opacity": 0 }, lg); el("stop", { offset: 1, "stop-color": "#000", "stop-opacity": 0.12 }, lg); }
     const g = el("g", {}, svg), gold = "#d9b45a";
     const zo = w.zero ? ZH : 0, H = zo + CH * w.rows.length;
     svg.setAttribute("viewBox", `${-PADL} ${-PADY} ${BW + PADL + PADR} ${H + 2 * PADY}`);
