@@ -23,7 +23,8 @@ img { max-width: 100%; }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto+Condensed:wght@500;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
-/* v69 (28.10): при включении пусто (без примера).
+/* v70 (28.10): окна «Настройки» и «Выбор числа» закрываются только кнопкой Close.
+   v69 (28.10): при включении пусто (без примера).
    v68 (28.10): комплиты по всему полю — долгое нажатие на число в окне выбора; сдача со всех пересечений — в табло.
    Layout (версия 35, 27.10): две вкладки QUICK | FIELD. В FIELD поле занимает всё свободное место, клавиатуры нет — она во всплывающем окне.
    Номинал цветного жетона, Max, язык и логотип — в настройках (касание логотипа). Узкая колонка до 420 px; низкое широкое окно — две колонки. */
@@ -1071,7 +1072,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
     if (pkLong) { pkLong = false; return; }
     const b = e.target.closest("[data-n]");
     if (b) { snapshot(); setWin(Number(b.dataset.n)); $("pk-sheet").hidden = true; render(); return; }
-    if (e.target === $("pk-sheet") || e.target === $("pk-close")) $("pk-sheet").hidden = true;
+    if (e.target === $("pk-close")) $("pk-sheet").hidden = true;   // v70: только кнопкой Close
   });
   $("b-win").addEventListener("click", openPicker);
   $("mode").addEventListener("click", e => {
@@ -1106,7 +1107,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
   $("b-val-close").addEventListener("click", () => { $("val-sheet").hidden = true; });
   $("val-sheet").addEventListener("click", e => { if (e.target === $("val-sheet")) $("val-sheet").hidden = true; });
   $("b-set-close").addEventListener("click", () => { $("set-sheet").hidden = true; });
-  $("set-sheet").addEventListener("click", e => { if (e.target === $("set-sheet")) $("set-sheet").hidden = true; });
+  // v70 (заказчик): настройки закрываются только кнопкой Close (касание мимо окна не закрывает).
   $("set-val").addEventListener("click", e => { const b = e.target.closest("[data-d]"); if (!b) return; st.val = Number(b.dataset.d); $("val-sheet").hidden = true; render(); renderSettings(); });
   $("set-max").addEventListener("click", e => { const b = e.target.closest("[data-d]"); if (!b) return; st.limit = Number(b.dataset.d); store.set("limit", st.limit); render(); renderSettings(); });
   // Тема запоминается на этом устройстве.
