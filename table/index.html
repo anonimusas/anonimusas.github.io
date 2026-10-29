@@ -23,7 +23,8 @@ img { max-width: 100%; }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto+Condensed:wght@500;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
-/* v78 (29.10): окно Number — общая рамка поля, 0 на всю ширину.
+/* v79 (29.10): вместо логотипа — значок настроек, логотип водяным знаком внизу табло; все окна закрываются касанием мимо окна.
+   v78 (29.10): окно Number — общая рамка поля, 0 на всю ширину.
    v77 (29.10): без прокрутки страницы на телефоне (экран прибит, с высоты 460 px).
    v76 (28.10): перебор крупным жетоном — играющий кусок как жетоны, которыми он набирается (500 на сплите, Max 100 → 34×100, сдача 300).
    v75 (28.10): жетон с комплитом — цифры как у всех, плашка прикрывает; строка CHIPS не обрезается справа; кусок перебора платится жетонами места (без «+25 cash»).
@@ -305,6 +306,15 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 .win { position: relative; }
 .win .far { position: absolute; top: -8px; right: -10px; min-width: 20px; height: 18px; padding: 0 5px; border-radius: 9px; background: #f1d488; color: #1c1406; font: 700 11px/18px var(--f-num); }
 
+/* v79: наверху — значок настроек вместо логотипа; логотип — бледный водяной знак внизу табло (только LAYOUT). */
+.logo { width: 46px; padding: 0; background: var(--panel); color: var(--gold); }
+.wm { position: absolute; left: 50%; bottom: 7px; transform: translateX(-50%); height: 26px; max-width: 60%; display: flex; align-items: center; justify-content: center; opacity: .3; pointer-events: none; z-index: 0; }
+.wm img { max-height: 26px; max-width: 100%; object-fit: contain; display: block; }
+.wm-txt { font: 700 15px var(--f-serif); color: var(--gold); white-space: nowrap; letter-spacing: .5px; }
+.result > :not(.wm) { position: relative; z-index: 1; }
+.app.isq .wm { display: none; }
+.win { width: 74px; }
+
 /* v78: окно Number как поле — одна общая золотая рамка, клетки вплотную, тонкие золотые линии, «крыша» 0 на всю ширину. */
 .pk-board { border: 3px solid #b8923a; border-radius: 5px; overflow: hidden; background: var(--panel); }
 .pk-board .pk-grid { gap: 1px; background: #d9b45a; border-top: 1px solid #d9b45a; }
@@ -344,7 +354,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 
 <div class="app">
   <div class="top">
-    <button type="button" class="logo" id="b-logo" aria-label="Settings"><span class="logo-txt" id="logo-txt">Croupier<br>Pro</span><img id="logo-img" alt="" hidden><span class="gear" aria-hidden="true">⚙</span></button>
+    <button type="button" class="logo" id="b-logo" aria-label="Settings"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1l-.4-2.6h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L4.6 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.5zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg></button>
     <button type="button" class="win" id="b-win"><span class="l" id="t-win">Number</span><span class="v num" id="v-win"></span><span class="far num" id="v-far" hidden></span></button>
     <div class="seg" id="mode">
       <button type="button" data-m="quick" id="m-quick">Calc</button>
@@ -356,6 +366,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
     <div class="board-wrap" id="bw"><svg id="board" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Roulette layout around the winning number"></svg></div>
   </div>
   <div class="result" aria-live="polite">
+    <div class="wm" aria-hidden="true"><span class="wm-txt" id="logo-txt">Croupier Pro</span><img id="logo-img" alt="" hidden></div>
     <div class="cols">
       <div class="cell"><div class="head"><span class="label" id="t-chips">Chips</span><button type="button" class="valbtn num" id="b-val">× 1</button></div><div class="big num" id="r-chips">0</div><div class="rest num" id="r-rest"></div></div>
       <div class="cell cash"><div class="head"><span class="label" id="t-cash">Cash</span><button type="button" class="bd-btn" id="b-bd" aria-label="Breakdown">?</button></div><div class="big num" id="r-cash">0</div></div>
@@ -1164,7 +1175,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
     if (pkLong) { pkLong = false; return; }
     const b = e.target.closest("[data-n]");
     if (b) { snapshot(); setWin(Number(b.dataset.n)); $("pk-sheet").hidden = true; render(); return; }
-    if (e.target === $("pk-close")) $("pk-sheet").hidden = true;   // v70: только кнопкой Close
+    if (e.target === $("pk-sheet") || e.target === $("pk-close")) $("pk-sheet").hidden = true;   // v79: везде одинаково — касание мимо окна или Close
   });
   $("b-win").addEventListener("click", openPicker);
   $("mode").addEventListener("click", e => {
@@ -1175,7 +1186,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
   $("b-undo").addEventListener("click", undo);
   $("b-new").addEventListener("click", () => { reset(); render(); if (st.tab === "field") openPicker(); });
   $("b-bd").addEventListener("click", () => { $("sheet").hidden = false; });
-  $("sheet").addEventListener("click", e => { if (e.target === $("sheet")) $("sheet").hidden = true; });
+  $("sheet").addEventListener("click", () => { $("sheet").hidden = true; });   // v79: разбор — только чтение, касание в любом месте закрывает
 
   // ---------- Настройки: номинал жетона, Max, язык, логотип ----------
   DENOMS.forEach(d => { const b = document.createElement("button"); b.type = "button"; b.dataset.d = d; b.className = "num"; b.textContent = d; $("set-val").appendChild(b); });
@@ -1199,7 +1210,8 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
   $("b-val-close").addEventListener("click", () => { $("val-sheet").hidden = true; });
   $("val-sheet").addEventListener("click", e => { if (e.target === $("val-sheet")) $("val-sheet").hidden = true; });
   $("b-set-close").addEventListener("click", () => { $("set-sheet").hidden = true; });
-  // v70 (заказчик): настройки закрываются только кнопкой Close (касание мимо окна не закрывает).
+  // v79: везде одинаково — окно закрывается касанием мимо окна (как и кнопкой Close).
+  $("set-sheet").addEventListener("click", e => { if (e.target === $("set-sheet")) $("set-sheet").hidden = true; });
   $("set-val").addEventListener("click", e => { const b = e.target.closest("[data-d]"); if (!b) return; st.val = Number(b.dataset.d); $("val-sheet").hidden = true; render(); renderSettings(); });
   $("set-max").addEventListener("click", e => { const b = e.target.closest("[data-d]"); if (!b) return; st.limit = Number(b.dataset.d); store.set("limit", st.limit); render(); renderSettings(); });
   // Тема запоминается на этом устройстве.
