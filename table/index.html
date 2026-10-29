@@ -23,7 +23,8 @@ img { max-width: 100%; }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto+Condensed:wght@500;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
-/* v79 (29.10): вместо логотипа — значок настроек, логотип водяным знаком внизу табло; все окна закрываются касанием мимо окна.
+/* v80 (29.10): чёткая шестерёнка; NUMBER не налезает на рамку (запрет автоувеличения шрифта на телефоне).
+   v79 (29.10): вместо логотипа — значок настроек, логотип водяным знаком внизу табло; все окна закрываются касанием мимо окна.
    v78 (29.10): окно Number — общая рамка поля, 0 на всю ширину.
    v77 (29.10): без прокрутки страницы на телефоне (экран прибит, с высоты 460 px).
    v76 (28.10): перебор крупным жетоном — играющий кусок как жетоны, которыми он набирается (500 на сплите, Max 100 → 34×100, сдача 300).
@@ -314,6 +315,13 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 .result > :not(.wm) { position: relative; z-index: 1; }
 .app.isq .wm { display: none; }
 .win { width: 74px; }
+/* v80: на телефоне браузер сам увеличивал шрифт («17» крупнее, NUMBER налезал на рамку) — запрещаем автоувеличение;
+   надпись и число в кнопке с отступом от рамки, не налезают. Шестерёнка крупнее и чёткая. */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+.win { justify-content: center; gap: 3px; padding: 4px 2px 3px; overflow: hidden; }
+.win .l { font-size: 8.5px; line-height: 9px; flex: 0 0 auto; }
+.win .v { font-size: 24px; line-height: 24px; flex: 0 0 auto; }
+.logo svg { display: block; width: 30px; height: 30px; }
 
 /* v78: окно Number как поле — одна общая золотая рамка, клетки вплотную, тонкие золотые линии, «крыша» 0 на всю ширину. */
 .pk-board { border: 3px solid #b8923a; border-radius: 5px; overflow: hidden; background: var(--panel); }
@@ -354,7 +362,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 
 <div class="app">
   <div class="top">
-    <button type="button" class="logo" id="b-logo" aria-label="Settings"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1l-.4-2.6h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L4.6 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.5zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg></button>
+    <button type="button" class="logo" id="b-logo" aria-label="Settings"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.49.49 0 0 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61zM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2z"/></svg></button>
     <button type="button" class="win" id="b-win"><span class="l" id="t-win">Number</span><span class="v num" id="v-win"></span><span class="far num" id="v-far" hidden></span></button>
     <div class="seg" id="mode">
       <button type="button" data-m="quick" id="m-quick">Calc</button>
