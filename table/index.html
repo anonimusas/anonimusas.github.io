@@ -23,7 +23,8 @@ img { max-width: 100%; }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto+Condensed:wght@500;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
-/* v77 (29.10): без прокрутки страницы на телефоне (экран прибит, с высоты 460 px).
+/* v78 (29.10): окно Number — общая рамка поля, 0 на всю ширину.
+   v77 (29.10): без прокрутки страницы на телефоне (экран прибит, с высоты 460 px).
    v76 (28.10): перебор крупным жетоном — играющий кусок как жетоны, которыми он набирается (500 на сплите, Max 100 → 34×100, сдача 300).
    v75 (28.10): жетон с комплитом — цифры как у всех, плашка прикрывает; строка CHIPS не обрезается справа; кусок перебора платится жетонами места (без «+25 cash»).
    v74 (28.10): номинал на жетоне крупнее («1000» без пробела, сжимается по ширине); жетоны 500 и 1000 в «× N» (2 ряда по 4).
@@ -304,6 +305,16 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 .win { position: relative; }
 .win .far { position: absolute; top: -8px; right: -10px; min-width: 20px; height: 18px; padding: 0 5px; border-radius: 9px; background: #f1d488; color: #1c1406; font: 700 11px/18px var(--f-num); }
 
+/* v78: окно Number как поле — одна общая золотая рамка, клетки вплотную, тонкие золотые линии, «крыша» 0 на всю ширину. */
+.pk-board { border: 3px solid #b8923a; border-radius: 5px; overflow: hidden; background: var(--panel); }
+.pk-board .pk-grid { gap: 1px; background: #d9b45a; border-top: 1px solid #d9b45a; }
+.pk-board .pk-grid button { border: 0; border-radius: 0; }
+.picker .pk-board .pk-grid button[aria-pressed="true"] { outline: 3px solid var(--gold-hi); outline-offset: -4px; }
+.pk-board .pk-zero { display: block; width: 100%;
+  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'%3E%3Cpath d='M0 17 L50 0 L100 17 L100 40 L0 40 Z' fill='%2310884a'/%3E%3Cpath d='M0 17 L50 0 L100 17' fill='none' stroke='%23d9b45a' stroke-width='1.6' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
+.picker .pk-board .pk-zero[aria-pressed="true"] { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'%3E%3Cpath d='M0 17 L50 0 L100 17 L100 40 L0 40 Z' fill='%2310884a'/%3E%3Cpath d='M2.5 17.6 L50 2.4 L97.5 17.6 L97.5 37.5 L2.5 37.5 Z' fill='none' stroke='%23f1d488' stroke-width='3.5' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E"); }
+.pk-board .pk-zero.hasc { box-shadow: none; }
+
 /* v77: окно выбора числа целиком на экране и на невысоком телефоне — кнопки ниже, без прокрутки. */
 .pk-grid button { height: clamp(26px, calc((100dvh - 232px) / 12.4), 40px); }
 .pk-zero { height: clamp(40px, calc((100dvh - 232px) / 9), 58px); }
@@ -376,8 +387,8 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
   <div class="picker" role="dialog" aria-modal="true" aria-labelledby="pk-title">
     <h2 id="pk-title">Winning number</h2>
     <p class="pk-hint" id="pk-hint"></p>
-    <button type="button" class="pk-zero" data-n="0">0</button>
-    <div class="pk-grid" id="pk-grid"></div>
+    <div class="pk-board"><button type="button" class="pk-zero" data-n="0">0</button>
+    <div class="pk-grid" id="pk-grid"></div></div>
     <button type="button" class="pk-close" id="pk-close">Close</button>
   </div>
 </div>
