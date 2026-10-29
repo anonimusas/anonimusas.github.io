@@ -23,7 +23,8 @@ img { max-width: 100%; }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto+Condensed:wght@500;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
-/* v76 (28.10): перебор крупным жетоном — играющий кусок как жетоны, которыми он набирается (500 на сплите, Max 100 → 34×100, сдача 300).
+/* v77 (29.10): без прокрутки страницы на телефоне (экран прибит, с высоты 460 px).
+   v76 (28.10): перебор крупным жетоном — играющий кусок как жетоны, которыми он набирается (500 на сплите, Max 100 → 34×100, сдача 300).
    v75 (28.10): жетон с комплитом — цифры как у всех, плашка прикрывает; строка CHIPS не обрезается справа; кусок перебора платится жетонами места (без «+25 cash»).
    v74 (28.10): номинал на жетоне крупнее («1000» без пробела, сжимается по ширине); жетоны 500 и 1000 в «× N» (2 ряда по 4).
    v73 (28.10): жетон на поле как настоящий (белые вставки по краю, кольцо, блеск).
@@ -86,9 +87,13 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 .num { font-family: var(--f-num); font-variant-numeric: lining-nums tabular-nums; }
 
 .app { max-width: 420px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; }
-@media (min-height: 600px) {
+/* v77: экран без прокрутки уже с высоты 460 px (раньше 600) — на телефоне в окне приложения калькулятор «ездил» вверх-вниз.
+   Страница прибита к окну (position: fixed), прокрутки и «пружины» нет; прокручиваются только всплывающие окна. */
+@media (min-height: 460px) {
   html, body { height: 100%; }
-  body { overflow: hidden; }
+  html { overflow: hidden; overscroll-behavior: none; }
+  body { overflow: hidden; position: fixed; inset: 0; margin: 0; overscroll-behavior: none;
+    padding-top: max(6px, env(safe-area-inset-top, 0px)); padding-bottom: max(8px, env(safe-area-inset-bottom, 0px)); }
   .app { height: 100%; }
   .cpanel { flex: 1; min-height: 0; }
   .board-wrap { flex: 1; min-height: 0; display: flex; }
@@ -105,7 +110,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
   .app:not(.isq) .result { flex: 1 1 auto; min-height: 0; align-content: start; overflow: hidden; }
 }
 /* Низкое широкое окно: слева поле (или строки QUICK), справа шапка, ответ, кнопки. */
-@media (min-width: 600px) and (max-height: 599px) {
+@media (min-width: 600px) and (max-height: 459px) {
   html, body { height: 100%; }
   body { overflow: hidden; }
   .app { max-width: 900px; height: 100%; display: grid; gap: 6px 10px;
@@ -200,7 +205,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 #r-chips.wrap { white-space: normal; line-height: 1.08; }
 #r-chips.wrap > .pl { display: none; }
 #r-chips.wrap .cseg { display: block; text-align: right; }
-#r-chips.wrap .cseg + .cseg { margin-top: 16px; }
+#r-chips.wrap .cseg.comp + .pl + .cseg, #r-chips.wrap .cseg.comp ~ .cseg { margin-top: 15px; }
 #r-chips.wrap .cseg.comp .cap { left: auto; right: 0; }
 /* Строки табло не сжимаются по высоте (иначе обрезалась сдача) — если не влезает, fitResult уменьшает числа. */
 .result .big, .result .change, .result .rest { min-height: min-content; }
@@ -298,6 +303,22 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 /* Сколько комплитов вне поля 3×3 — маленькая плашка на кнопке Number. */
 .win { position: relative; }
 .win .far { position: absolute; top: -8px; right: -10px; min-width: 20px; height: 18px; padding: 0 5px; border-radius: 9px; background: #f1d488; color: #1c1406; font: 700 11px/18px var(--f-num); }
+
+/* v77: окно выбора числа целиком на экране и на невысоком телефоне — кнопки ниже, без прокрутки. */
+.pk-grid button { height: clamp(26px, calc((100dvh - 232px) / 12.4), 40px); }
+.pk-zero { height: clamp(40px, calc((100dvh - 232px) / 9), 58px); }
+@media (max-height: 620px) { .picker { padding: 8px; gap: 3px; } .pk-hint { margin: 0; } .pk-close { height: 36px; } }
+/* v77: на невысоком экране табло плотнее. */
+@media (max-height: 679px) { .app:not(.isq) .result { padding: 10px 12px; gap: 4px; } .result .change .v { line-height: 1; } }
+/* v77: CALC на невысоком экране (телефон в окне приложения) — строки и клавиши ниже, чтобы всё влезло без прокрутки. */
+@media (min-height: 460px) and (max-height: 679px) {
+  .app.isq { gap: 4px; }
+  .app.isq .quick { gap: 3px; }
+  .app.isq .qrow { min-height: 30px; }
+  .app.isq .qrow .cnt { font-size: 24px; }
+  .app.isq .keys { gap: 4px; grid-auto-rows: minmax(30px, 1fr); }
+  .app.isq .keys button { font-size: 22px; }
+}
 
 /* Настройки. */
 .opts { display: grid; gap: 4px; }
@@ -629,9 +650,9 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
   const NS = "http://www.w3.org/2000/svg";
   function el(tag, a, p, txt) { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; p.appendChild(e); return e; }
   const NUMF = "Roboto Condensed, Arial Narrow, sans-serif", SERIF = "Noto Serif, Georgia, serif";
-  const fixedLayout = () => matchMedia("(min-height: 600px)").matches || matchMedia("(min-width: 600px) and (max-height: 599px)").matches;
+  const fixedLayout = () => matchMedia("(min-height: 460px)").matches || matchMedia("(min-width: 600px) and (max-height: 459px)").matches;
   // Высота клетки — так, чтобы поле заполнило свободное место (ширина клетки постоянная).
-  const wideLow = () => matchMedia("(min-width: 600px) and (max-height: 599px)").matches;
+  const wideLow = () => matchMedia("(min-width: 600px) and (max-height: 459px)").matches;
   function fitCells(w) {
     CH = 80;
     const wrap = $("bw"), W = wrap.clientWidth, rowsN = w.rows.length + (w.zero ? 0.85 : 0);
@@ -639,8 +660,8 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
       // Высокий экран (телефон, iPad, компьютер): поле на всю ширину, клетки не выше квадрата (92);
       // если места мало — клетки ниже, табло не меньше 250 px.
       const sc = W / (BW + PADL + PADR), app = document.querySelector(".app");
-      const avail = app.clientHeight - document.querySelector(".top").offsetHeight - document.querySelector(".bottom").offsetHeight - 18 - 250;
-      CH = Math.max(56, Math.min(92, (avail / sc - 2 * PADY - 4) / rowsN));
+      const avail = app.clientHeight - document.querySelector(".top").offsetHeight - document.querySelector(".bottom").offsetHeight - 18 - Math.min(250, Math.max(170, app.clientHeight * 0.36));   // v77: на невысоком экране табло может быть меньше 250
+      CH = Math.max(48, Math.min(92, (avail / sc - 2 * PADY - 4) / rowsN));
       ZH = Math.round(CH * 0.85);
       wrap.style.height = Math.round((rowsN * CH + 2 * PADY + 4) * sc) + "px";
       return;
@@ -782,10 +803,14 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
     }
     if (!res.clientHeight || !ch.clientWidth) return;
     let guard = 60;
+    // v77: не влезает по высоте — сначала уменьшаем CASH до размера CHIPS, потом CHIPS до 22 px, CASH держим крупным (до 44 px), дальше оба.
+    guard = 120;
     while (res.scrollHeight > res.clientHeight + 1 && guard--) {
       const a = parseFloat(ch.style.fontSize) || 88, b = parseFloat(ca.style.fontSize) || 88;
-      if (a <= 24 && b <= 24) break;
-      if (b >= a && b > 24) ca.style.fontSize = (b - 2) + "px"; else ch.style.fontSize = (a - 2) + "px";
+      if (b > a + 20 && b > 44) ca.style.fontSize = (b - 2) + "px";
+      else if (a > 22) ch.style.fontSize = (a - 2) + "px";
+      else if (b > 24) ca.style.fontSize = (b - 2) + "px";
+      else break;
     }
   }
   function renderResult(r) {
