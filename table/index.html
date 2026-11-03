@@ -23,7 +23,8 @@ img { max-width: 100%; }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto+Condensed:wght@500;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
-/* v88 (03.11): «+N» внутри кнопки Number, рядом с числом.
+/* v89 (03.11): общий корпус-рамка вокруг всего калькулятора.
+   v88 (03.11): «+N» внутри кнопки Number, рядом с числом.
    v87 (03.11): кнопки растут под крупный системный шрифт (не жёсткая высота).
    v86 (03.11): водяной знак в LAYOUT как в CALC — мелко, в одну строку.
    v85 (03.11): клавиатуры 1 2 3 сверху.
@@ -397,6 +398,14 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 /* v88: «+N» внутри кнопки, справа от числа (раньше в углу и обрезался рамкой). */
 .win .vrow { display: flex; align-items: center; justify-content: center; gap: 3px; max-width: 100%; }
 .win .far { position: static; flex: 0 0 auto; min-width: 0; height: auto; padding: 1px 4px; border-radius: 7px; font: 700 10px/1.1 var(--f-num); }
+
+/* v89: общий корпус — всё в одной рамке (как один прибор); внутренние рамки тише. */
+.app { padding: 7px; border: 1.5px solid rgba(217,180,90,.55); border-radius: 16px;
+  background: linear-gradient(180deg, rgba(217,180,90,.07), rgba(217,180,90,.02)); box-shadow: 0 0 0 1px rgba(0,0,0,.6), 0 6px 24px rgba(0,0,0,.45); }
+html.light .app { border-color: rgba(160,122,28,.55); background: linear-gradient(180deg, rgba(160,122,28,.08), rgba(160,122,28,.02)); box-shadow: 0 4px 18px rgba(0,0,0,.12); }
+.top .logo, .seg, .qrow, .keys button, .bottom .ghost { border-color: rgba(217,180,90,.18); }
+html.light .top .logo, html.light .seg, html.light .qrow, html.light .keys button, html.light .bottom .ghost { border-color: rgba(160,122,28,.25); }
+.result { border-color: rgba(217,180,90,.5); }
 </style>
 
 <div class="app">
@@ -518,7 +527,8 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   const RED = new Set([1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]);
   const BW = 276, CW = 92, PADL = 6, PADR = 6, PADY = 6;   // v56: поле на ту же ширину, что и остальные блоки
   let CH = 80, ZH = 80;   // высота клетки подстраивается под экран — поле занимает всё свободное место
-  const HIT = 26;         // зона касания места (сплит, корнер, стрит, сикс-лайн)
+  const HIT = 26;
+  const APP_PAD = 7;   // v89: отступ внутри общего корпуса калькулятора         // зона касания места (сплит, корнер, стрит, сикс-лайн)
 
   // ---------- Поле (как в Croupier Pro: RouletteMath, BoardGeometry) ----------
   const colRow = n => [Math.floor((n - 1) / 3), (n - 1) % 3];
@@ -730,7 +740,7 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
       // Высокий экран (телефон, iPad, компьютер): поле на всю ширину, клетки не выше квадрата (92);
       // если места мало — клетки ниже, табло не меньше 250 px.
       const sc = W / (BW + PADL + PADR), app = document.querySelector(".app");
-      const avail = app.clientHeight - document.querySelector(".top").offsetHeight - document.querySelector(".bottom").offsetHeight - 18 - Math.min(250, Math.max(170, app.clientHeight * 0.36));   // v77: на невысоком экране табло может быть меньше 250
+      const avail = app.clientHeight - document.querySelector(".top").offsetHeight - document.querySelector(".bottom").offsetHeight - 18 - 2 * APP_PAD - Math.min(250, Math.max(170, app.clientHeight * 0.36));   // v77: на невысоком экране табло может быть меньше 250
       CH = Math.max(48, Math.min(92, (avail / sc - 2 * PADY - 4) / rowsN));
       ZH = Math.round(CH * 0.85);
       wrap.style.height = Math.round((rowsN * CH + 2 * PADY + 4) * sc) + "px";
