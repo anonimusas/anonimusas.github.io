@@ -23,7 +23,8 @@ img { max-width: 100%; }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto+Condensed:wght@500;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
-/* v82 (03.11): мелкий водяной знак и в CALC; знак прячется, если налезает на цифры.
+/* v83 (03.11): светлая тема — поле с тёмной подложкой; разбор короче; без «—» в окне комплита; подсказка клавиатуры крупнее.
+   v82 (03.11): мелкий водяной знак и в CALC; знак прячется, если налезает на цифры.
    v80 (29.10): чёткая шестерёнка; NUMBER не налезает на рамку (запрет автоувеличения шрифта на телефоне).
    v79 (29.10): вместо логотипа — значок настроек, логотип водяным знаком внизу табло; все окна закрываются касанием мимо окна.
    v78 (29.10): окно Number — общая рамка поля, 0 на всю ширину.
@@ -244,6 +245,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 .bd ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; font-size: 14px; }
 .bd li { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px dashed var(--dash2); padding-bottom: 3px; }
 .bd li .v { color: var(--gold-hi); font-weight: 700; white-space: nowrap; }
+.bd li .sub { display: block; font-size: 12px; color: var(--muted); line-height: 1.3; margin-top: 1px; }
 .bd li.tot { border-bottom: 0; font-weight: 700; }
 /* v72: разбор всегда в ширину рамки, без прокрутки вбок. Длинный итог («15 150 = 128×100 (komplitas) + 94×25 (žet.)») переносится на вторую строку справа. */
 .bd { grid-template-columns: minmax(0, 1fr); overflow-x: hidden; }
@@ -278,7 +280,7 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 
 /* Окно ввода суммы / количества. */
 .kp-disp { height: 58px; border-radius: 8px; background: var(--disp); border: 1px solid var(--line); display: flex; align-items: center; justify-content: flex-end; padding: 0 14px; font: 700 38px var(--f-num); color: var(--gold-hi); }
-.kp-hint { font-size: 12.5px; color: var(--muted); min-height: 16px; }
+.kp-hint { font-size: 15px; font-weight: 500; color: var(--fg); opacity: .8; min-height: 18px; }
 .kp-keys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
 .kp-keys button { height: 50px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel-hi); font: 700 26px var(--f-num); }
 .kp-keys .ok { background: var(--btn); color: var(--on-gold); border-color: var(--btn); font: 700 18px var(--f-body); }
@@ -663,7 +665,8 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
           payD["f:" + D] = (payD["f:" + D] || 0) + odd * MULT[p.type];
         }
         const base = partsText(p) + (p.over > 0 ? ` → ${T().maxS} ${fmt(paid)}` : "");
-        payLines.push({ t: `${lab}: ${base} × ${MULT[p.type]}`, v: fmt(paid * MULT[p.type]) });
+        // v83: коротко «Corner 17/21: 525 → 400 × 8», состав ставки — мелко второй строкой.
+        payLines.push({ t: `${lab}: ${fmt(p.amt)}` + (p.over > 0 ? ` → ${fmt(paid)}` : "") + ` × ${MULT[p.type]}`, sub: p.parts.join(" + "), v: fmt(paid * MULT[p.type]) });
       }
     }
     // Жетоны выплаты по номиналам, крупные сначала: [[25, 103], [2, 32]] + остаток кэшем.
@@ -747,6 +750,8 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
       el("text", { x: BW / 2, y: ZH * 0.5, "text-anchor": "middle", "font-family": SERIF, "font-size": 24, "font-weight": 700, fill: "#fff", "pointer-events": "none" }, g, "0");
       if (st.win === 0) el("path", { d, fill: "none", stroke: "#f1d488", "stroke-width": 4, "pointer-events": "none" }, g);
     }
+    // v83: тёмная подложка под клетками — в светлой теме невыпавшие числа темнее, а не бледно-розовые.
+    el("rect", { x: 0, y: zo, width: BW, height: CH * w.rows.length, fill: "#0b0a08", "pointer-events": "none" }, g);
     const nf = Math.min(40, 26 + (CH - 80) * 0.2);
     w.rows.forEach((row, i) => {
       for (let c = 0; c < 3; c++) {
@@ -906,7 +911,7 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     const list = (title, lines, cls, total) => {
       const h3 = document.createElement("h3"); h3.textContent = title; bd.appendChild(h3);
       const ul = document.createElement("ul");
-      const add = (x, c) => { const li = document.createElement("li"); if (c) li.className = c; const a = document.createElement("span"); a.textContent = x.t; const b = document.createElement("span"); b.className = "v num"; b.textContent = x.v; li.append(a, b); ul.appendChild(li); };
+      const add = (x, c) => { const li = document.createElement("li"); if (c) li.className = c; const a = document.createElement("span"); a.textContent = x.t; if (x.sub) { const sb = document.createElement("small"); sb.className = "sub"; sb.textContent = x.sub; a.appendChild(sb); } const b = document.createElement("span"); b.className = "v num"; b.textContent = x.v; li.append(a, b); ul.appendChild(li); };
       lines.forEach(x => add(x, cls));
       if (total) add(total, "tot" + (cls ? " " + cls : ""));
       bd.appendChild(ul);
@@ -1047,7 +1052,8 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     const tb = document.createElement("b"); tb.textContent = `${tx.compBy} · ${compChips(n)} ${tx.chipsS}`;
     const ts = document.createElement("span");
     ts.className = "num";
-    ts.textContent = c ? (ci.ok ? `${tx.compByL} ${fmt(ci.u)} = ${fmt(ci.cost)}` + (ci.change ? ` · ${tx.given} ${fmt(ci.given)} · ${tx.change.toLowerCase()} ${fmt(ci.change)}` : "") : `${tx.given} ${fmt(ci.given)} < ${tx.min} ${fmt(ci.min)}`) : "—";
+    ts.textContent = c ? (ci.ok ? `${tx.compByL} ${fmt(ci.u)} = ${fmt(ci.cost)}` + (ci.change ? ` · ${tx.given} ${fmt(ci.given)} · ${tx.change.toLowerCase()} ${fmt(ci.change)}` : "") : `${tx.given} ${fmt(ci.given)} < ${tx.min} ${fmt(ci.min)}`) : "";   // v83: без «—», когда комплита нет
+    ts.hidden = !c;
     t.append(tb, ts); head.append(badge, t); box.appendChild(head);
     const h3 = document.createElement("h3"); h3.textContent = tx.compByL; box.appendChild(h3);
     // Кнопки комплита: одно касание — поставить и закрыть.
