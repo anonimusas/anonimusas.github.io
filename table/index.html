@@ -23,7 +23,8 @@ img { max-width: 100%; }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto+Condensed:wght@500;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
-/* v80 (29.10): чёткая шестерёнка; NUMBER не налезает на рамку (запрет автоувеличения шрифта на телефоне).
+/* v82 (03.11): мелкий водяной знак и в CALC; знак прячется, если налезает на цифры.
+   v80 (29.10): чёткая шестерёнка; NUMBER не налезает на рамку (запрет автоувеличения шрифта на телефоне).
    v79 (29.10): вместо логотипа — значок настроек, логотип водяным знаком внизу табло; все окна закрываются касанием мимо окна.
    v78 (29.10): окно Number — общая рамка поля, 0 на всю ширину.
    v77 (29.10): без прокрутки страницы на телефоне (экран прибит, с высоты 460 px).
@@ -313,7 +314,11 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 .wm img { max-height: 26px; max-width: 100%; object-fit: contain; display: block; }
 .wm-txt { font: 700 15px var(--f-serif); color: var(--gold); white-space: nowrap; letter-spacing: .5px; }
 .result > :not(.wm) { position: relative; z-index: 1; }
-.app.isq .wm { display: none; }
+/* v82: в CALC водяной знак тоже есть, только мельче. */
+.app.isq .wm { height: 14px; bottom: 2px; opacity: .25; }
+.app.isq .result { padding-bottom: 16px !important; }
+.app.isq .wm img { max-height: 15px; }
+.app.isq .wm-txt { font-size: 10px; }
 .win { width: 74px; }
 /* v80: на телефоне браузер сам увеличивал шрифт («17» крупнее, NUMBER налезал на рамку) — запрещаем автоувеличение;
    надпись и число в кнопке с отступом от рамки, не налезают. Шестерёнка крупнее и чёткая. */
@@ -843,6 +848,15 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
       else break;
     }
   }
+  // v82: водяной знак не должен налезать на подписи и цифры табло — если налезает, прячем.
+  function placeWatermark() {
+    const wm = document.querySelector(".result .wm"); if (!wm) return;
+    wm.style.visibility = "visible";
+    const w = wm.getBoundingClientRect(); if (!w.width) return;
+    const hit = [...document.querySelectorAll("#r-chips, #r-cash, #r-rest, #r-change:not([hidden]) .label, #r-change:not([hidden]) .v, .result .label, .result .valbtn, .result .bd-btn")]
+      .some(e => { if (!e.offsetParent) return false; const b = e.getBoundingClientRect(); return b.width && b.left < w.right && b.right > w.left && b.top < w.bottom && b.bottom > w.top; });
+    if (hit) wm.style.visibility = "hidden";
+  }
   function renderResult(r) {
     const tx = T(), quick = st.tab === "quick";
     const pc = toChips(r.pay), rc = toChips(r.ret);
@@ -882,6 +896,7 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     const ch = $("r-change");
     if (!ch.hidden) { let fs = 28; const vs = ch.querySelectorAll(".v"); vs.forEach(v => v.style.fontSize = fs + "px"); while (ch.scrollWidth > ch.clientWidth + 1 && fs > 14) { fs -= 2; vs.forEach(v => v.style.fontSize = fs + "px"); } }
     fitResult();   // после строки сдачи — чтобы всё влезло по высоте
+    placeWatermark();
   }
   function renderBreakdown(r) {
     const tx = T(), bd = $("bd"); bd.innerHTML = "";
@@ -1138,7 +1153,7 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   if (window.ResizeObserver) {
     const ro = new ResizeObserver(() => {
       const a = document.querySelector(".app"), s = $("bw").clientWidth + "x" + a.clientHeight + "x" + a.clientWidth;
-      if (s !== lastSize) { lastSize = s; if (st.tab !== "quick") renderBoard(compute()); fitResult(); }
+      if (s !== lastSize) { lastSize = s; if (st.tab !== "quick") renderBoard(compute()); fitResult(); placeWatermark(); }
     });
     ro.observe($("bw")); ro.observe(document.querySelector(".app"));
   }
