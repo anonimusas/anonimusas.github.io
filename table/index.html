@@ -23,7 +23,8 @@ img { max-width: 100%; }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto+Condensed:wght@500;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
-/* v84 (03.11): водяной знак слева на обоих экранах.
+/* v85 (03.11): клавиатуры 1 2 3 сверху.
+   v84 (03.11): водяной знак слева на обоих экранах.
    v83 (03.11): светлая тема — поле с тёмной подложкой; разбор короче; без «—» в окне комплита; подсказка клавиатуры крупнее.
    v82 (03.11): мелкий водяной знак и в CALC; знак прячется, если налезает на цифры.
    v80 (29.10): чёткая шестерёнка; NUMBER не налезает на рамку (запрет автоувеличения шрифта на телефоне).
@@ -999,7 +1000,7 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
   // QUICK: клавиатура как на телефоне.
   const keys = $("keys");
-  ["7","8","9","4","5","6","1","2","3","0","00","000"].forEach(k => {   // v61: без Clear и ⌫ (исправлять Undo); v65: 0 / 00 / 000
+  ["1","2","3","4","5","6","7","8","9","0","00","000"].forEach(k => {   // v85: 1 2 3 сверху, как в телефоне   // v61: без Clear и ⌫ (исправлять Undo); v65: 0 / 00 / 000
     const b = document.createElement("button"); b.type = "button"; b.dataset.key = k;
     b.textContent = k === "b" ? "⌫" : k === "c" ? "" : k;
     if (k === "c" || k === "b") b.className = "fn";
@@ -1017,7 +1018,7 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   // ---------- Окно ввода числа (сумма комплита / количество жетонов) ----------
   let kp = null;   // { title, value, hint, onOk, onDel, fresh }
   const kpKeys = $("kp-keys");
-  ["7","8","9","4","5","6","1","2","3","0","00","000","b","ok"].forEach(k => {   // v65: 0 / 00 / 000
+  ["1","2","3","4","5","6","7","8","9","0","00","000","b","ok"].forEach(k => {   // v85: 1 2 3 сверху   // v65: 0 / 00 / 000
     const b = document.createElement("button"); b.type = "button"; b.dataset.k = k;
     b.textContent = k === "b" ? "⌫" : k === "ok" ? "OK" : k;
     if (k === "ok") b.className = "ok";
