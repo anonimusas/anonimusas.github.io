@@ -23,7 +23,8 @@ img { max-width: 100%; }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto+Condensed:wght@500;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
-/* v85 (03.11): клавиатуры 1 2 3 сверху.
+/* v86 (03.11): водяной знак в LAYOUT как в CALC — мелко, в одну строку.
+   v85 (03.11): клавиатуры 1 2 3 сверху.
    v84 (03.11): водяной знак слева на обоих экранах.
    v83 (03.11): светлая тема — поле с тёмной подложкой; разбор короче; без «—» в окне комплита; подсказка клавиатуры крупнее.
    v82 (03.11): мелкий водяной знак и в CALC; знак прячется, если налезает на цифры.
@@ -325,10 +326,10 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 .app.isq .wm-txt { font-size: 10px; }
 /* v84: водяной знак слева на обоих экранах. LAYOUT — под кнопкой «?» (там всегда пусто); CALC — внизу слева. */
 .app:not(.isq) .result > .wm { display: none; }
-.wm2 { display: none; opacity: .3; pointer-events: none; margin-top: 4px; max-width: 72px; }
+.wm2 { display: none; opacity: .25; pointer-events: none; margin-top: 6px; }
 .app:not(.isq) .wm2 { display: block; }
-.wm2 .wm-txt { font-size: 12px; line-height: 1.1; white-space: normal; display: block; }
-.wm2 img { display: block; max-width: 72px; max-height: 30px; object-fit: contain; }
+.wm2 .wm-txt { font-size: 10px; line-height: 14px; white-space: nowrap; display: block; }   /* v86: как в CALC — одна строка, 10 px */
+.wm2 img { display: block; max-width: 80px; max-height: 15px; object-fit: contain; }
 .app.isq .result > .wm { left: 12px; transform: none; justify-content: flex-start; }
 .win { width: 74px; }
 /* v80: на телефоне браузер сам увеличивал шрифт («17» крупнее, NUMBER налезал на рамку) — запрещаем автоувеличение;
@@ -393,7 +394,7 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     <div class="wm" aria-hidden="true"><span class="wm-txt" id="logo-txt">Croupier Pro</span><img id="logo-img" alt="" hidden></div>
     <div class="cols">
       <div class="cell"><div class="head"><span class="label" id="t-chips">Chips</span><button type="button" class="valbtn num" id="b-val">× 1</button></div><div class="big num" id="r-chips">0</div><div class="rest num" id="r-rest"></div></div>
-      <div class="cell cash"><div class="head"><span class="label" id="t-cash">Cash</span><button type="button" class="bd-btn" id="b-bd" aria-label="Breakdown">?</button><div class="wm2" aria-hidden="true"><span class="wm-txt">Croupier<br>Pro</span><img alt="" hidden></div></div><div class="big num" id="r-cash">0</div></div>
+      <div class="cell cash"><div class="head"><span class="label" id="t-cash">Cash</span><button type="button" class="bd-btn" id="b-bd" aria-label="Breakdown">?</button><div class="wm2" aria-hidden="true"><span class="wm-txt">Croupier Pro</span><img alt="" hidden></div></div><div class="big num" id="r-cash">0</div></div>
     </div>
     <div class="change num" id="r-change" hidden>
       <span class="label" id="t-change">Change</span><span class="v" id="v-ch-chips">0</span><span class="sep">|</span><span class="v" id="v-ch-cash">0</span>
