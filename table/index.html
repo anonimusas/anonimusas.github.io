@@ -23,7 +23,8 @@ img { max-width: 100%; }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto+Condensed:wght@500;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
-/* v91 (04.11): CALC — клавиши чуть меньше, строки Straight up / Split / Street… чуть выше.
+/* v92 (04.11): CALC — ещё чуть: строки ставок выше и крупнее, клавиши ниже.
+   v91 (04.11): CALC — клавиши чуть меньше, строки Straight up / Split / Street… чуть выше.
    v90 (04.11): клавиши CALC не налезают на нижние кнопки; верхние кнопки меньше, отступ от края.
    v89 (03.11): общий корпус-рамка вокруг всего калькулятора.
    v88 (03.11): «+N» внутри кнопки Number, рядом с числом.
@@ -417,12 +418,15 @@ html.light .top .logo, html.light .seg, html.light .qrow, html.light .keys butto
   .app.isq .qrow { min-height: 34px; }
   body { padding-top: max(12px, env(safe-area-inset-top, 0px)); padding-bottom: max(10px, env(safe-area-inset-bottom, 0px)); }
 }
-/* v91: место между строками ставок и клавишами — больше строкам, меньше клавишам. */
+/* v91: место между строками ставок и клавишами — больше строкам, меньше клавишам.
+   v92: ещё чуть — строки выше и крупнее текст, клавиши ниже. */
 @media (min-height: 460px) {
-  .app.isq .quick { flex: 1.3 1 0; }
-  .app.isq .qrow { min-height: 40px; max-height: 80px; }
-  .app.isq .qrow .nm b { font-size: 19px; }
-  .app.isq .keys { flex: 1.55 1 0; }
+  .app.isq .quick { flex: 1.55 1 0; }
+  .app.isq .qrow { min-height: 44px; max-height: 92px; }
+  .app.isq .qrow .nm b { font-size: 21px; }
+  .app.isq .qrow .nm span { font-size: 14px; }
+  .app.isq .qrow .cnt { font-size: 31px; }
+  .app.isq .keys { flex: 1.35 1 0; }
 }
 .top { min-height: 40px; }
 .seg button { font-size: 14px; }
@@ -902,10 +906,10 @@ html.light .top .logo, html.light .seg, html.light .qrow, html.light .keys butto
       // v90: клавиши делят оставшееся место; если ряд клавиш ниже 40 px — сначала ниже строки видов ставок (до 26 px), потом меньше числа табло.
       const keys = $("keys"), qrows = [...document.querySelectorAll(".app.isq .qrow")];
       const keyH = () => { const b = keys.querySelector("button"); return b ? b.getBoundingClientRect().height : 99; };
-      let qmin = 40; qrows.forEach(q => q.style.minHeight = qmin + "px");  // v91: строки выше (было 34)
+      let qmin = 44; qrows.forEach(q => q.style.minHeight = qmin + "px");  // v92: строки выше (v91 — 40, было 34)
       let g2 = 40;
       while (keyH() < 40 && g2--) {
-        if (qmin > 26) { qmin -= 2; qrows.forEach(q => { q.style.minHeight = qmin + "px"; q.style.maxHeight = Math.max(qmin, 80) + "px"; }); continue; }
+        if (qmin > 26) { qmin -= 2; qrows.forEach(q => { q.style.minHeight = qmin + "px"; q.style.maxHeight = Math.max(qmin, 92) + "px"; }); continue; }
         const a = parseFloat(ch.style.fontSize) || 88, b = parseFloat(ca.style.fontSize) || 88;
         if (Math.max(a, b) <= 30) break;
         ch.style.fontSize = Math.max(30, a - 4) + "px"; ca.style.fontSize = Math.max(30, b - 4) + "px";
