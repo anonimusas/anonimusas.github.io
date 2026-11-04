@@ -11,8 +11,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<style>
-:root { box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+<style>:root { box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
 html { scroll-padding-top: env(safe-area-inset-top, 0px); }
 body { margin: 0; font: 14px -apple-system, BlinkMacSystemFont, sans-serif; }
 img { max-width: 100%; }
@@ -22,124 +21,87 @@ img { max-width: 100%; }
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto+Condensed:wght@500;700&family=Roboto:wght@400;500;700&display=swap">
-<style>
-/* v92 (04.11): CALC — ещё чуть: строки ставок выше и крупнее, клавиши ниже.
-   v91 (04.11): CALC — клавиши чуть меньше, строки Straight up / Split / Street… чуть выше.
-   v90 (04.11): клавиши CALC не налезают на нижние кнопки; верхние кнопки меньше, отступ от края.
-   v89 (03.11): общий корпус-рамка вокруг всего калькулятора.
-   v88 (03.11): «+N» внутри кнопки Number, рядом с числом.
-   v87 (03.11): кнопки растут под крупный системный шрифт (не жёсткая высота).
-   v86 (03.11): водяной знак в LAYOUT как в CALC — мелко, в одну строку.
-   v85 (03.11): клавиатуры 1 2 3 сверху.
-   v84 (03.11): водяной знак слева на обоих экранах.
-   v83 (03.11): светлая тема — поле с тёмной подложкой; разбор короче; без «—» в окне комплита; подсказка клавиатуры крупнее.
-   v82 (03.11): мелкий водяной знак и в CALC; знак прячется, если налезает на цифры.
-   v80 (29.10): чёткая шестерёнка; NUMBER не налезает на рамку (запрет автоувеличения шрифта на телефоне).
-   v79 (29.10): вместо логотипа — значок настроек, логотип водяным знаком внизу табло; все окна закрываются касанием мимо окна.
-   v78 (29.10): окно Number — общая рамка поля, 0 на всю ширину.
-   v77 (29.10): без прокрутки страницы на телефоне (экран прибит, с высоты 460 px).
-   v76 (28.10): перебор крупным жетоном — играющий кусок как жетоны, которыми он набирается (500 на сплите, Max 100 → 34×100, сдача 300).
-   v75 (28.10): жетон с комплитом — цифры как у всех, плашка прикрывает; строка CHIPS не обрезается справа; кусок перебора платится жетонами места (без «+25 cash»).
-   v74 (28.10): номинал на жетоне крупнее («1000» без пробела, сжимается по ширине); жетоны 500 и 1000 в «× N» (2 ряда по 4).
-   v73 (28.10): жетон на поле как настоящий (белые вставки по краю, кольцо, блеск).
-   v72 (28.10): разбор «?» влезает в рамку по ширине (перенос строк, числа не рвутся).
-   v71 (28.10): в разборе сдача с комплита по поставленной сумме расписана: «pastatyta 5 000 − 40 × 100 (4 000)».
-   v70 (28.10): окна «Настройки» и «Выбор числа» закрываются только кнопкой Close.
-   v69 (28.10): при включении пусто (без примера).
-   v68 (28.10): комплиты по всему полю — долгое нажатие на число в окне выбора; сдача со всех пересечений — в табло.
-   Layout (версия 35, 27.10): две вкладки QUICK | FIELD. В FIELD поле занимает всё свободное место, клавиатуры нет — она во всплывающем окне.
-   Номинал цветного жетона, Max, язык и логотип — в настройках (касание логотипа). Узкая колонка до 420 px; низкое широкое окно — две колонки. */
-:root {
-  --bg: #0d0c0a;
-  --panel: #17140f;
-  --panel-hi: #2a2214;
-  --line: #3a3122;
-  --gold: #d9b45a;
-  --gold-hi: #f1d488;
-  --on-gold: #1c1406;
-  --fg: #efe8d6;
-  --muted: #a39878;
-  --red: #a3142a;
-  --black: #121212;
-  --green: #10884a;
-  --warn: #ff8a6b;
-  --btn: #d9b45a;          /* золотые кнопки */
-  --res-top: #221b0e;      /* верх табло */
-  --sep: rgba(217,180,90,.25);
-  --chipbtn: #2a1a1e; --chipbtn-line: rgba(255,255,255,.45);
-  --cash-fg: #ffffff;
-  --dash: #4a3a22; --dash2: #2b2418;
-  --cbtn: #1f2a1c; --disp: #0b0a08;
-  --f-serif: "Noto Serif", Georgia, "Times New Roman", serif;
-  --f-num: "Roboto Condensed", "Arial Narrow", system-ui, sans-serif;
-  --f-body: Roboto, system-ui, -apple-system, "Segoe UI", sans-serif;
-  color-scheme: dark;
+<style>:root {
+--bg: #0d0c0a;
+--panel: #17140f;
+--panel-hi: #2a2214;
+--line: #3a3122;
+--gold: #d9b45a;
+--gold-hi: #f1d488;
+--on-gold: #1c1406;
+--fg: #efe8d6;
+--muted: #a39878;
+--red: #a3142a;
+--black: #121212;
+--green: #10884a;
+--warn: #ff8a6b;
+--btn: #d9b45a;          
+--res-top: #221b0e;      
+--sep: rgba(217,180,90,.25);
+--chipbtn: #2a1a1e; --chipbtn-line: rgba(255,255,255,.45);
+--cash-fg: #ffffff;
+--dash: #4a3a22; --dash2: #2b2418;
+--cbtn: #1f2a1c; --disp: #0b0a08;
+--f-serif: "Noto Serif", Georgia, "Times New Roman", serif;
+--f-num: "Roboto Condensed", "Arial Narrow", system-ui, sans-serif;
+--f-body: Roboto, system-ui, -apple-system, "Segoe UI", sans-serif;
+color-scheme: dark;
 }
-/* v67: светлая тема (Nustatymai → Tema). Поле рулетки (красный, чёрный, зелёный, золото) — без изменений. */
 html.light {
-  --bg: #e9e4d8; --panel: #fbf8f1; --panel-hi: #efe6d2; --line: #cdbf9f;
-  --gold: #a07a1c; --gold-hi: #84600e; --on-gold: #1c1406; --fg: #1f1a12; --muted: #6b604c; --warn: #c2410c;
-  --btn: #d9b45a; --res-top: #f6eedb; --sep: rgba(160,122,28,.35);
-  --chipbtn: #f4e6e2; --chipbtn-line: rgba(0,0,0,.35); --cash-fg: #15120c;
-  --dash: #cdbf9f; --dash2: #e2d9c4; --cbtn: #eef2e8; --disp: #fffdf8;
-  color-scheme: light;
+--bg: #e9e4d8; --panel: #fbf8f1; --panel-hi: #efe6d2; --line: #cdbf9f;
+--gold: #a07a1c; --gold-hi: #84600e; --on-gold: #1c1406; --fg: #1f1a12; --muted: #6b604c; --warn: #c2410c;
+--btn: #d9b45a; --res-top: #f6eedb; --sep: rgba(160,122,28,.35);
+--chipbtn: #f4e6e2; --chipbtn-line: rgba(0,0,0,.35); --cash-fg: #15120c;
+--dash: #cdbf9f; --dash2: #e2d9c4; --cbtn: #eef2e8; --disp: #fffdf8;
+color-scheme: light;
 }
 html, body { background: var(--bg); color: var(--fg); }
 body {
-  font-family: var(--f-body);
-  font-size: 14px;
-  padding-left: max(10px, env(safe-area-inset-left, 0px));
-  padding-right: max(10px, env(safe-area-inset-right, 0px));
-  padding-block: 6px 8px;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
+font-family: var(--f-body);
+font-size: 14px;
+padding-left: max(10px, env(safe-area-inset-left, 0px));
+padding-right: max(10px, env(safe-area-inset-right, 0px));
+padding-block: 6px 8px;
+-webkit-tap-highlight-color: transparent;
+-webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 button, select { font: inherit; color: inherit; cursor: pointer; touch-action: manipulation; }
 button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); outline-offset: 2px; }
 .num { font-family: var(--f-num); font-variant-numeric: lining-nums tabular-nums; }
-
 .app { max-width: 420px; margin: 0 auto; display: flex; flex-direction: column; gap: 6px; }
-/* v77: экран без прокрутки уже с высоты 460 px (раньше 600) — на телефоне в окне приложения калькулятор «ездил» вверх-вниз.
-   Страница прибита к окну (position: fixed), прокрутки и «пружины» нет; прокручиваются только всплывающие окна. */
 @media (min-height: 460px) {
-  html, body { height: 100%; }
-  html { overflow: hidden; overscroll-behavior: none; }
-  body { overflow: hidden; position: fixed; top: 0; right: 0; bottom: 0; left: 0; margin: 0; overscroll-behavior: none;   /* v81: top/left вместо inset — старые iPad (Safari < 14.5) */
-    padding-top: max(6px, env(safe-area-inset-top, 0px)); padding-bottom: max(8px, env(safe-area-inset-bottom, 0px)); }
-  .app { height: 100%; }
-  .cpanel { flex: 1; min-height: 0; }
-  .board-wrap { flex: 1; min-height: 0; display: flex; }
-  .board-wrap svg { height: 100%; }
-  /* v62: клавиши CALC — по 50 px, лишнее место отдаём табло. */
-  /* v63: табло CALC — по содержимому (как в LAYOUT), остаток — строкам и клавишам. */
-  .app.isq .result { flex: none; padding-block: 12px; }
-  .app.isq .quick { flex: 1 1 0; min-height: min-content; }
-  .app.isq .qrow { flex: 1 1 0; min-height: 40px; max-height: 66px; }
-  .app.isq .keys { flex: 1.9 1 0; min-height: 0; grid-auto-rows: minmax(44px, 1fr); }
-  .app.isq .keys button { height: auto; }
-  /* v56: поле на всю ширину, высота — по ширине (задаёт fitCells); всё остальное место — табло. */
-  .app:not(.isq) .cpanel { flex: 0 0 auto; }
-  .app:not(.isq) .result { flex: 1 1 auto; min-height: 0; align-content: start; overflow: hidden; }
+html, body { height: 100%; }
+html { overflow: hidden; overscroll-behavior: none; }
+body { overflow: hidden; position: fixed; top: 0; right: 0; bottom: 0; left: 0; margin: 0; overscroll-behavior: none;   
+padding-top: max(6px, env(safe-area-inset-top, 0px)); padding-bottom: max(8px, env(safe-area-inset-bottom, 0px)); }
+.app { height: 100%; }
+.cpanel { flex: 1; min-height: 0; }
+.board-wrap { flex: 1; min-height: 0; display: flex; }
+.board-wrap svg { height: 100%; }
+.app.isq .result { flex: none; padding-block: 12px; }
+.app.isq .quick { flex: 1 1 0; min-height: min-content; }
+.app.isq .qrow { flex: 1 1 0; min-height: 40px; max-height: 66px; }
+.app.isq .keys { flex: 1.9 1 0; min-height: 0; grid-auto-rows: minmax(44px, 1fr); }
+.app.isq .keys button { height: auto; }
+.app:not(.isq) .cpanel { flex: 0 0 auto; }
+.app:not(.isq) .result { flex: 1 1 auto; min-height: 0; align-content: start; overflow: hidden; }
 }
-/* Низкое широкое окно: слева поле (или строки QUICK), справа шапка, ответ, кнопки. */
 @media (min-width: 600px) and (max-height: 459px) {
-  html, body { height: 100%; }
-  body { overflow: hidden; }
-  .app { max-width: 900px; height: 100%; display: grid; gap: 6px 10px;
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-    grid-template-rows: auto auto 1fr auto;
-    grid-template-areas: "board top" "board result" "board keys" "board bottom"; }
-  .top { grid-area: top; } .result { grid-area: result; } .keys { grid-area: keys; min-height: 0; } .bottom { grid-area: bottom; }
-  .cpanel, .quick { grid-area: board; min-height: 0; }
-  .app:not(.isq) .cpanel { flex: 1; } .app:not(.isq) .result { flex: none; align-content: start; }
-  .board-wrap { flex: 1; min-height: 0; display: flex; } .board-wrap svg { height: 100%; }
-  .app.isq .keys { grid-auto-rows: minmax(36px, 1fr); }
-  .app.isq .keys button { height: auto; }
+html, body { height: 100%; }
+body { overflow: hidden; }
+.app { max-width: 900px; height: 100%; display: grid; gap: 6px 10px;
+grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+grid-template-rows: auto auto 1fr auto;
+grid-template-areas: "board top" "board result" "board keys" "board bottom"; }
+.top { grid-area: top; } .result { grid-area: result; } .keys { grid-area: keys; min-height: 0; } .bottom { grid-area: bottom; }
+.cpanel, .quick { grid-area: board; min-height: 0; }
+.app:not(.isq) .cpanel { flex: 1; } .app:not(.isq) .result { flex: none; align-content: start; }
+.board-wrap { flex: 1; min-height: 0; display: flex; } .board-wrap svg { height: 100%; }
+.app.isq .keys { grid-auto-rows: minmax(36px, 1fr); }
+.app.isq .keys button { height: auto; }
 }
-
-/* ---------- Шапка: логотип (= настройки) · Number · вкладки ---------- */
 .top { display: flex; gap: 6px; align-items: stretch; height: 46px; }
 .logo { position: relative; flex: 0 0 auto; width: 64px; padding: 2px; border-radius: 8px; border: 1px solid var(--line); background: #0f1d4a; display: grid; place-items: center; overflow: hidden; }
 .logo-txt { font-family: var(--f-serif); font-size: 11.5px; line-height: 1.05; font-weight: 700; color: var(--gold); text-align: center; }
@@ -153,13 +115,9 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 .seg button { flex: 1; background: transparent; border: 0; font-weight: 700; font-size: 15px; letter-spacing: .5px; color: var(--muted); text-transform: uppercase; }
 .seg button + button { border-left: 1px solid var(--line); }
 .seg button[aria-pressed="true"] { background: var(--btn); color: var(--on-gold); }
-
-/* ---------- Поле ---------- */
 .cpanel { display: flex; flex-direction: column; }
 .board-wrap { background: transparent; }
 .board-wrap svg { overflow: visible; display: block; width: 100%; max-width: 100%; user-select: none; -webkit-user-select: none; touch-action: manipulation; -webkit-touch-callout: none; }
-
-/* ---------- QUICK ---------- */
 .app.isq .top { order: -2; }
 .app.isq .result { order: -1; }
 .quick { display: flex; flex-direction: column; gap: 4px; }
@@ -174,33 +132,25 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 .keys button { height: 52px; font-size: 26px; font-weight: 700; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; font-family: var(--f-num); }
 .keys button:active { background: var(--panel-hi); }
 .keys .fn { font-size: 16px; color: var(--muted); font-family: var(--f-body); }
-
-
-/* ---------- Ответ ---------- */
 .result { position: relative; background: linear-gradient(180deg, var(--res-top), var(--panel)); border: 1px solid var(--gold); border-radius: 10px; padding: 18px 12px 18px; display: grid; gap: 8px; }
 .bd-btn { flex: 0 0 auto; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line); background: transparent; color: var(--muted); font: 700 14px var(--f-body); padding: 0; }
 .result .cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
-/* v75: табло не шире рамки — иначе строка CHIPS обрезалась справа, а уменьшение шрифта не срабатывало. */
 .result { grid-template-columns: minmax(0, 1fr); }
-/* Chips и Cash — две строки на всю ширину: слева подпись, справа крупное число. */
 .result .cell { min-width: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; column-gap: 10px; }
 .result .cell .big { text-align: right; }
 .result .cell .rest { grid-column: 2; text-align: right; margin-top: -4px; }
 .result .cash { border-top: 1px solid var(--sep); }
-/* v63: табло CALC такое же, как в LAYOUT (две строки, подпись слева, крупное число справа).
-   На невысоком экране (< 720 px) — компактно, Chips и Cash рядом, чтобы влезли строки и клавиши. */
 @media (max-height: 719px) {
-  .app.isq .result { padding: 8px 12px; }
-  .app.isq .result .cols { grid-template-columns: 1fr 1fr; column-gap: 12px; }
-  .app.isq .result .cell { grid-template-columns: minmax(0, 1fr); }
-  .app.isq .result .head { flex-direction: row; align-items: center; }
-  .app.isq .result .cell .big { text-align: left; }
-  .app.isq .result .cell .rest { grid-column: 1; text-align: left; }
-  .app.isq .result .cash { border-top: 0; border-left: 1px solid var(--sep); padding-left: 12px; }
+.app.isq .result { padding: 8px 12px; }
+.app.isq .result .cols { grid-template-columns: 1fr 1fr; column-gap: 12px; }
+.app.isq .result .cell { grid-template-columns: minmax(0, 1fr); }
+.app.isq .result .head { flex-direction: row; align-items: center; }
+.app.isq .result .cell .big { text-align: left; }
+.app.isq .result .cell .rest { grid-column: 1; text-align: left; }
+.app.isq .result .cash { border-top: 0; border-left: 1px solid var(--sep); padding-left: 12px; }
 }
 .app.isq .qrow { min-height: 44px; }
 .result .head { display: flex; align-items: center; gap: 6px; min-height: 22px; }
-/* FIELD: «× N» под Chips и «?» под Cash — узкая левая колонка, числам больше места. */
 .result .head { flex-direction: column; align-items: flex-start; gap: 8px; }
 .result .label { font-size: 14px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--gold); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .valbtn { flex: 0 0 auto; height: 26px; padding: 0 10px; border-radius: 13px; border: 1px dashed var(--chipbtn-line); background: var(--chipbtn); color: var(--fg); font: 700 15px var(--f-num); }
@@ -211,41 +161,32 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 .result .rest .rl { font: 700 10px var(--f-body); letter-spacing: .8px; text-transform: uppercase; color: var(--muted); margin-left: 4px; }
 .result .big .dn { font-size: .42em; color: var(--muted); margin-left: .08em; }
 .result .big .pl { font-size: .5em; color: var(--muted); margin: 0 .18em; }
-/* Две строки: жетоны комплита и жетоны поля, слева маленькая подпись. */
-/* Одна строка: «392×25 + 103×25 + 32×10», под каждой частью мелкая подпись (комплит / жетоны). */
 #r-chips.parts { padding-bottom: 13px; }
-/* v75: перенос строки CHIPS — только между частями, справа. */
 #r-chips .grp { white-space: nowrap; }
 #r-chips.wrap { white-space: normal; line-height: 1.08; }
 #r-chips.wrap > .pl { display: none; }
 #r-chips.wrap .cseg { display: block; text-align: right; }
 #r-chips.wrap .cseg.comp + .pl + .cseg, #r-chips.wrap .cseg.comp ~ .cseg { margin-top: 15px; }
 #r-chips.wrap .cseg.comp .cap { left: auto; right: 0; }
-/* Строки табло не сжимаются по высоте (иначе обрезалась сдача) — если не влезает, fitResult уменьшает числа. */
 .result .big, .result .change, .result .rest { min-height: min-content; }
 .result .big .cseg { position: relative; display: inline-block; }
 .result .big .cap { position: absolute; right: 0; top: 100%; margin-top: -3px; text-align: center; font: 700 10px var(--f-body); letter-spacing: .8px; text-transform: uppercase; color: var(--muted); white-space: nowrap; line-height: 1; }
 .result .big .cseg.comp .cap { color: var(--gold); left: 0; text-align: center; }
-/* Сдача — деньгами (жетоны разного номинала в одну цифру не переводим). */
 #v-ch-chips, .result .change .sep { display: none; }
 .result .change { display: flex; align-items: baseline; gap: 8px; border-top: 1px dashed var(--dash); padding-top: 3px; color: var(--warn); font-weight: 700; }
 .result .change { white-space: nowrap; overflow: hidden; }
 .result .change .label { color: inherit; flex: 1 0 auto; }
 .result .change .v { font-size: 28px; line-height: 1.1; }
 .result .change .sep { opacity: .5; }
-/* FIELD: номинал жетона, который ставится касанием (как раньше — внутри табло). */
 .denoms { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 5px; padding-top: 2px; }
 .denoms button { height: 38px; padding: 0; border-radius: 19px; border: 1px dashed var(--chipbtn-line); background: var(--chipbtn); font: 700 17px var(--f-num); color: var(--fg); }
 .denoms button[aria-pressed="true"] { background: var(--btn); color: var(--on-gold); border: 1px solid var(--gold-hi); }
 .app.isq .denoms { display: none; }
-
 .bottom { display: grid; grid-template-columns: 1fr 2fr; gap: 6px; }
 .bottom button { height: 46px; border-radius: 8px; font-weight: 700; font-size: 14px; letter-spacing: .8px; text-transform: uppercase; }
 .bottom .ghost { background: transparent; border: 1px solid var(--line); color: var(--fg); }
 .bottom .ghost:disabled { opacity: .35; cursor: default; }
 .bottom .new { border: 0; background: var(--btn); color: var(--on-gold); }
-
-/* ---------- Окна ---------- */
 .sheet-bg { position: fixed; top: 0; right: 0; bottom: 0; left: 0; background: rgba(0,0,0,.62); display: grid; place-items: center; z-index: 20; padding: 12px; }
 .bd { width: min(400px, 100%); max-height: 88vh; overflow-y: auto; background: var(--panel); border: 1px solid var(--gold); border-radius: 12px; padding: 12px; display: grid; gap: 8px; }
 .bd h2 { margin: 0; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); }
@@ -256,15 +197,12 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 .bd li .v { color: var(--gold-hi); font-weight: 700; white-space: nowrap; }
 .bd li .sub { display: block; font-size: 12px; color: var(--muted); line-height: 1.3; margin-top: 1px; }
 .bd li.tot { border-bottom: 0; font-weight: 700; }
-/* v72: разбор всегда в ширину рамки, без прокрутки вбок. Длинный итог («15 150 = 128×100 (komplitas) + 94×25 (žet.)») переносится на вторую строку справа. */
 .bd { grid-template-columns: minmax(0, 1fr); overflow-x: hidden; }
 .bd li > span:first-child { min-width: 0; overflow-wrap: break-word; }
 .bd li.tot { flex-wrap: wrap; column-gap: 10px; row-gap: 2px; }
 .bd li.tot .v { white-space: normal; flex: 1 1 auto; text-align: right; min-width: 0; }
 .bd li.ret .v { color: var(--warn); }
 .bd .empty { color: var(--muted); font-size: 13px; }
-
-/* Окно числа: комплит одной кнопкой, жетоны Straight up — плюс/минус. */
 .nhead { display: flex; align-items: center; gap: 10px; }
 .nbadge { flex: 0 0 auto; width: 52px; height: 44px; border-radius: 8px; border: 1px solid #b8923a; display: grid; place-items: center; color: #fff; font: 700 26px var(--f-serif); }
 .nbadge.r { background: var(--red); } .nbadge.b { background: var(--black); } .nbadge.g { background: var(--green); }
@@ -286,26 +224,21 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 .stepper .lab { flex: 1; font-weight: 700; }
 .stepper button { width: 54px; height: 50px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel-hi); font: 700 26px var(--f-num); }
 .stepper .cnt { min-width: 52px; text-align: center; font: 700 30px var(--f-num); color: var(--gold-hi); background: transparent; border: 0; width: auto; }
-
-/* Окно ввода суммы / количества. */
 .kp-disp { height: 58px; border-radius: 8px; background: var(--disp); border: 1px solid var(--line); display: flex; align-items: center; justify-content: flex-end; padding: 0 14px; font: 700 38px var(--f-num); color: var(--gold-hi); }
 .kp-hint { font-size: 15px; font-weight: 500; color: var(--fg); opacity: .8; min-height: 18px; }
 .kp-keys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
 .kp-keys button { height: 50px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel-hi); font: 700 26px var(--f-num); }
 .kp-keys .ok { background: var(--btn); color: var(--on-gold); border-color: var(--btn); font: 700 18px var(--f-body); }
-
-/* Выбор выпавшего числа. */
 .picker { width: min(360px, 100%); background: var(--panel); border: 1px solid var(--gold); border-radius: 12px; padding: 10px; display: grid; gap: 4px; }
 .picker h2 { margin: 0 0 4px; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); }
 .pk-zero { height: 58px; border: 0; border-radius: 0; padding: 14px 0 0; color: #fff; font: 700 24px var(--f-serif);
-  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'%3E%3Cpath d='M1 17 L50 1 L99 17 L99 39 L1 39 Z' fill='%2310884a' stroke='%23d9b45a' stroke-width='1.6' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
+background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'%3E%3Cpath d='M1 17 L50 1 L99 17 L99 39 L1 39 Z' fill='%2310884a' stroke='%23d9b45a' stroke-width='1.6' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
 .picker .pk-zero[aria-pressed="true"] { outline: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'%3E%3Cpath d='M1.5 17 L50 1.5 L98.5 17 L98.5 38.5 L1.5 38.5 Z' fill='%2310884a' stroke='%23f1d488' stroke-width='3.5' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E"); }
 .pk-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 3px; }
 .pk-grid button { height: 40px; border-radius: 6px; border: 1px solid #b8923a; color: #fff; font: 700 22px var(--f-serif); }
 .pk-grid button.r { background: var(--red); } .pk-grid button.b { background: var(--black); }
 .picker button[aria-pressed="true"] { outline: 3px solid var(--gold-hi); outline-offset: -3px; }
 .pk-close { margin-top: 4px; height: 40px; border-radius: 8px; border: 1px solid var(--line); background: transparent; color: var(--muted); font-weight: 700; }
-/* v68: комплиты по всему полю — долгое нажатие на число в окне выбора. Окно не закрывается, на числе плашка «25». */
 .picker { max-height: calc(100dvh - 24px); overflow-y: auto; }
 .pk-hint { margin: -2px 0 4px; font-size: 12px; color: var(--muted); }
 .pk-grid button, .pk-zero { position: relative; -webkit-touch-callout: none; }
@@ -313,66 +246,50 @@ button:focus-visible, select:focus-visible { outline: 2px solid var(--gold-hi); 
 .pk-zero.hasc { box-shadow: none; }
 .pk-c { position: absolute; right: 3px; bottom: 3px; min-width: 22px; height: 15px; padding: 0 4px; border-radius: 8px; background: #f1d488; color: #1c1406; font: 700 11px/15px var(--f-num); pointer-events: none; }
 .pk-zero .pk-c { right: 8px; bottom: 5px; }
-/* Окно комплита и клавиатура — поверх окна выбора числа. */
 #ns, #kp { z-index: 30; }
-/* Сколько комплитов вне поля 3×3 — маленькая плашка на кнопке Number. */
 .win { position: relative; }
 .win .far { position: absolute; top: -8px; right: -10px; min-width: 20px; height: 18px; padding: 0 5px; border-radius: 9px; background: #f1d488; color: #1c1406; font: 700 11px/18px var(--f-num); }
-
-/* v79: наверху — значок настроек вместо логотипа; логотип — бледный водяной знак внизу табло (только LAYOUT). */
 .logo { width: 46px; padding: 0; background: var(--panel); color: var(--gold); }
 .wm { position: absolute; left: 50%; bottom: 7px; transform: translateX(-50%); height: 26px; max-width: 60%; display: flex; align-items: center; justify-content: center; opacity: .3; pointer-events: none; z-index: 0; }
 .wm img { max-height: 26px; max-width: 100%; object-fit: contain; display: block; }
 .wm-txt { font: 700 15px var(--f-serif); color: var(--gold); white-space: nowrap; letter-spacing: .5px; }
 .result > :not(.wm) { position: relative; z-index: 1; }
-/* v82: в CALC водяной знак тоже есть, только мельче. */
 .app.isq .wm { height: 14px; bottom: 2px; opacity: .25; }
 .app.isq .result { padding-bottom: 16px !important; }
 .app.isq .wm img { max-height: 15px; }
 .app.isq .wm-txt { font-size: 10px; }
-/* v84: водяной знак слева на обоих экранах. LAYOUT — под кнопкой «?» (там всегда пусто); CALC — внизу слева. */
 .app:not(.isq) .result > .wm { display: none; }
 .wm2 { display: none; opacity: .25; pointer-events: none; margin-top: 6px; }
 .app:not(.isq) .wm2 { display: block; }
-.wm2 .wm-txt { font-size: 10px; line-height: 14px; white-space: nowrap; display: block; }   /* v86: как в CALC — одна строка, 10 px */
+.wm2 .wm-txt { font-size: 10px; line-height: 14px; white-space: nowrap; display: block; }   
 .wm2 img { display: block; max-width: 80px; max-height: 15px; object-fit: contain; }
 .app.isq .result > .wm { left: 12px; transform: none; justify-content: flex-start; }
 .win { width: 74px; }
-/* v80: на телефоне браузер сам увеличивал шрифт («17» крупнее, NUMBER налезал на рамку) — запрещаем автоувеличение;
-   надпись и число в кнопке с отступом от рамки, не налезают. Шестерёнка крупнее и чёткая. */
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 .win { justify-content: center; gap: 3px; padding: 4px 2px 3px; overflow: hidden; }
 .win .l { font-size: 8.5px; line-height: 9px; flex: 0 0 auto; }
 .win .v { font-size: 24px; line-height: 24px; flex: 0 0 auto; }
 .logo svg { display: block; width: 30px; height: 30px; }
-
-/* v78: окно Number как поле — одна общая золотая рамка, клетки вплотную, тонкие золотые линии, «крыша» 0 на всю ширину. */
 .pk-board { border: 3px solid #b8923a; border-radius: 5px; overflow: hidden; background: var(--panel); }
 .pk-board .pk-grid { gap: 1px; background: #d9b45a; border-top: 1px solid #d9b45a; }
 .pk-board .pk-grid button { border: 0; border-radius: 0; }
 .picker .pk-board .pk-grid button[aria-pressed="true"] { outline: 3px solid var(--gold-hi); outline-offset: -4px; }
 .pk-board .pk-zero { display: block; width: 100%;
-  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'%3E%3Cpath d='M0 17 L50 0 L100 17 L100 40 L0 40 Z' fill='%2310884a'/%3E%3Cpath d='M0 17 L50 0 L100 17' fill='none' stroke='%23d9b45a' stroke-width='1.6' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
+background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'%3E%3Cpath d='M0 17 L50 0 L100 17 L100 40 L0 40 Z' fill='%2310884a'/%3E%3Cpath d='M0 17 L50 0 L100 17' fill='none' stroke='%23d9b45a' stroke-width='1.6' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") center / 100% 100% no-repeat; }
 .picker .pk-board .pk-zero[aria-pressed="true"] { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 40' preserveAspectRatio='none'%3E%3Cpath d='M0 17 L50 0 L100 17 L100 40 L0 40 Z' fill='%2310884a'/%3E%3Cpath d='M2.5 17.6 L50 2.4 L97.5 17.6 L97.5 37.5 L2.5 37.5 Z' fill='none' stroke='%23f1d488' stroke-width='3.5' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E"); }
 .pk-board .pk-zero.hasc { box-shadow: none; }
-
-/* v77: окно выбора числа целиком на экране и на невысоком телефоне — кнопки ниже, без прокрутки. */
 .pk-grid button { height: clamp(26px, calc((100dvh - 232px) / 12.4), 40px); }
 .pk-zero { height: clamp(40px, calc((100dvh - 232px) / 9), 58px); }
 @media (max-height: 620px) { .picker { padding: 8px; gap: 3px; } .pk-hint { margin: 0; } .pk-close { height: 36px; } }
-/* v77: на невысоком экране табло плотнее. */
 @media (max-height: 679px) { .app:not(.isq) .result { padding: 10px 12px; gap: 4px; } .result .change .v { line-height: 1; } }
-/* v77: CALC на невысоком экране (телефон в окне приложения) — строки и клавиши ниже, чтобы всё влезло без прокрутки. */
 @media (min-height: 460px) and (max-height: 679px) {
-  .app.isq { gap: 4px; }
-  .app.isq .quick { gap: 3px; }
-  .app.isq .qrow { min-height: 30px; }
-  .app.isq .qrow .cnt { font-size: 24px; }
-  .app.isq .keys { gap: 4px; grid-auto-rows: minmax(30px, 1fr); }
-  .app.isq .keys button { font-size: 22px; }
+.app.isq { gap: 4px; }
+.app.isq .quick { gap: 3px; }
+.app.isq .qrow { min-height: 30px; }
+.app.isq .qrow .cnt { font-size: 24px; }
+.app.isq .keys { gap: 4px; grid-auto-rows: minmax(30px, 1fr); }
+.app.isq .keys button { font-size: 22px; }
 }
-
-/* Настройки. */
 .opts { display: grid; gap: 4px; }
 .optrow { display: grid; gap: 4px; }
 .optrow button { height: 42px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel-hi); font: 700 17px var(--f-num); }
@@ -381,9 +298,6 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 .logo-prev img { max-width: 100%; max-height: 100%; object-fit: contain; }
 .filebtn { display: grid; place-items: center; height: 42px; border-radius: 8px; background: var(--btn); color: var(--on-gold); font-weight: 700; cursor: pointer; }
 .note { font-size: 12.5px; color: var(--muted); margin: 0; }
-
-/* v87: на телефоне с крупным системным шрифтом текст больше задуманного — кнопки и строки не с жёсткой высотой,
-   а «не меньше», и растут под текст (раньше «= 200» вылезало за кнопку комплита, NUMBER — на рамку). */
 .top { height: auto; min-height: 46px; }
 .cgrid button { height: auto; min-height: 60px; padding: 5px 2px 6px; line-height: 1.05; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
 .cgrid button small { line-height: 1.15; white-space: nowrap; overflow: hidden; text-overflow: clip; max-width: 100%; }
@@ -398,35 +312,27 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 .win { height: auto; }
 .win .l, .win .v { line-height: 1.1; }
 .seg button { line-height: 1.1; padding: 4px 2px; }
-/* v88: «+N» внутри кнопки, справа от числа (раньше в углу и обрезался рамкой). */
 .win .vrow { display: flex; align-items: center; justify-content: center; gap: 3px; max-width: 100%; }
 .win .far { position: static; flex: 0 0 auto; min-width: 0; height: auto; padding: 1px 4px; border-radius: 7px; font: 700 10px/1.1 var(--f-num); }
-
-/* v89: общий корпус — всё в одной рамке (как один прибор); внутренние рамки тише. */
 .app { padding: 7px; border: 1.5px solid rgba(217,180,90,.55); border-radius: 16px;
-  background: linear-gradient(180deg, rgba(217,180,90,.07), rgba(217,180,90,.02)); box-shadow: 0 0 0 1px rgba(0,0,0,.6), 0 6px 24px rgba(0,0,0,.45); }
+background: linear-gradient(180deg, rgba(217,180,90,.07), rgba(217,180,90,.02)); box-shadow: 0 0 0 1px rgba(0,0,0,.6), 0 6px 24px rgba(0,0,0,.45); }
 html.light .app { border-color: rgba(160,122,28,.55); background: linear-gradient(180deg, rgba(160,122,28,.08), rgba(160,122,28,.02)); box-shadow: 0 4px 18px rgba(0,0,0,.12); }
 .top .logo, .seg, .qrow, .keys button, .bottom .ghost { border-color: rgba(217,180,90,.18); }
 html.light .top .logo, html.light .seg, html.light .qrow, html.light .keys button, html.light .bottom .ghost { border-color: rgba(160,122,28,.25); }
 .result { border-color: rgba(217,180,90,.5); }
-
-/* v90 (по фото с iPad): клавиши CALC никогда не налезают на Undo / New payout — 4 ряда делят место, которое есть;
-   строки видов ставок ниже; верхние кнопки чуть меньше и дальше от края экрана. */
 @media (min-height: 460px) {
-  .app.isq .keys { grid-template-rows: repeat(4, minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); overflow: hidden; }
-  .app.isq .keys button { min-height: 0; height: auto; overflow: hidden; font-size: clamp(18px, 4.2vh, 26px); line-height: 1; padding: 0; }
-  .app.isq .qrow { min-height: 34px; }
-  body { padding-top: max(12px, env(safe-area-inset-top, 0px)); padding-bottom: max(10px, env(safe-area-inset-bottom, 0px)); }
+.app.isq .keys { grid-template-rows: repeat(4, minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); overflow: hidden; }
+.app.isq .keys button { min-height: 0; height: auto; overflow: hidden; font-size: clamp(18px, 4.2vh, 26px); line-height: 1; padding: 0; }
+.app.isq .qrow { min-height: 34px; }
+body { padding-top: max(12px, env(safe-area-inset-top, 0px)); padding-bottom: max(10px, env(safe-area-inset-bottom, 0px)); }
 }
-/* v91: место между строками ставок и клавишами — больше строкам, меньше клавишам.
-   v92: ещё чуть — строки выше и крупнее текст, клавиши ниже. */
 @media (min-height: 460px) {
-  .app.isq .quick { flex: 1.55 1 0; }
-  .app.isq .qrow { min-height: 44px; max-height: 92px; }
-  .app.isq .qrow .nm b { font-size: 21px; }
-  .app.isq .qrow .nm span { font-size: 14px; }
-  .app.isq .qrow .cnt { font-size: 31px; }
-  .app.isq .keys { flex: 1.35 1 0; }
+.app.isq .quick { flex: 1.55 1 0; }
+.app.isq .qrow { min-height: 44px; max-height: 92px; }
+.app.isq .qrow .nm b { font-size: 21px; }
+.app.isq .qrow .nm span { font-size: 14px; }
+.app.isq .qrow .cnt { font-size: 31px; }
+.app.isq .keys { flex: 1.35 1 0; }
 }
 .top { min-height: 40px; }
 .seg button { font-size: 14px; }
@@ -513,7 +419,7 @@ html.light .top .logo, html.light .seg, html.light .qrow, html.light .keys butto
   </div>
 </div>
 
-<!-- Цена цветного жетона (для строки Chips) — только по касанию «× N» рядом с Chips. -->
+
 <div class="sheet-bg" id="val-sheet" hidden>
   <div class="bd" role="dialog" aria-modal="true" aria-labelledby="t-val">
     <h2 id="t-val">Color chip value</h2>
@@ -522,846 +428,30 @@ html.light .top .logo, html.light .seg, html.light .qrow, html.light .keys butto
   </div>
 </div>
 
-<script>
-(() => {
-  const TX = {
-    en: { set: "Settings", val: "Chip value", maxPer: "Max per number", lang: "Language", theme: "Theme", dark: "Dark", light: "Light",
-      logo: "Logo", logoNote: "Your casino logo is stored only on this device. Any picture: PNG, JPG.", logoLoad: "Load logo", logoDel: "Remove logo",
-      win: "Number", quick: "Calc", field: "Layout",
-      chips: "Chips", cash: "Cash", change: "Change", rest: "cash",
-      newp: "New payout", bd: "Breakdown", close: "Close", clr: "Clear", undo: "Undo", ok: "OK", remove: "Remove",
-      compBy: "Complete", compByL: "Complete by", byW: "by", removeC: "Remove complete", givenAmt: "Amount placed", chipsOn: "Chips", fieldS: "Chips",
-      payS: "Payout (CASH)", retS: "Change (CASH)", none: "No winning bets", total: "TOTAL", compsS: "Completes",
-      notWin: "not winning", compS: "Complete", chipsS: "chips", maxS: "max",
-      pkHint: "Tap — winning number · long press — complete", farT: "completes outside the layout", stations: "spots", given: "placed", min: "min", line: "Six line", place: "place on the field (they stay)", house: "stake — taken by the casino" },
-    lt: { set: "Nustatymai", val: "Žetono vertė", maxPer: "Maks. ant skaičiaus", lang: "Kalba", theme: "Tema", dark: "Tamsi", light: "Šviesi",
-      logo: "Logotipas", logoNote: "Kazino logotipas saugomas tik šiame įrenginyje. Bet koks paveikslėlis: PNG, JPG.", logoLoad: "Įkelti logotipą", logoDel: "Pašalinti logotipą",
-      win: "Skaičius", quick: "Calc", field: "Layout",
-      chips: "Žetonai", cash: "Cash", change: "Grąža", rest: "cash",
-      newp: "Nauja išmoka", bd: "Paaiškinimas", close: "Uždaryti", clr: "Ištrinti", undo: "Atšaukti", ok: "Gerai", remove: "Pašalinti",
-      compBy: "Komplitas", compByL: "Komplitas po", byW: "po", removeC: "Pašalinti komplitą", givenAmt: "Pastatyta suma", chipsOn: "Žetonai", fieldS: "Žetonai",
-      payS: "Išmoka (CASH)", retS: "Grąža (CASH)", none: "Laimėjusių statymų nėra", total: "IŠ VISO", compsS: "Komplitai",
-      notWin: "nelaimėjo", compS: "Komplitas", chipsS: "žet.", maxS: "maks.",
-      pkHint: "Paspausk — iškritęs skaičius · ilgai — komplitas", farT: "komplitai už lauko ribų", stations: "vietos", given: "pastatyta", min: "min.", line: "Six line", place: "išstatyti ant lauko (lieka)", house: "statymas — pasiima kazino" }
-  };
-  const MULT = { straightUp: 35, split: 17, street: 11, corner: 8, sixLine: 5 };
-  const NAME = { straightUp: "Straight up", split: "Split", street: "Street", corner: "Corner", sixLine: "Sixline" };
-  const ORDER = ["sixLine", "street", "corner", "split", "straightUp"];
-  const ORDER_ZERO = ["corner", "street", "split", "straightUp"];
-  const QUICK_ROWS = ["straightUp", "split", "street", "corner", "sixLine"];
-  const DENOMS = [1, 2, 5, 10, 25, 100, 500, 1000];   // v74: + 500 и 1000, окошко «× N» — два ряда по 4        // цена цветного жетона — одна на всё (настройки)
-  const COMP_DENOMS = [5, 10, 25, 100];         // комплиты в казино: по 5, 10, 25, 100
-  const LIMITS = [50, 100, 200, 300, 500];      // макс на номер в этом казино
-  const RED = new Set([1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]);
-  const BW = 276, CW = 92, PADL = 6, PADR = 6, PADY = 6;   // v56: поле на ту же ширину, что и остальные блоки
-  let CH = 80, ZH = 80;   // высота клетки подстраивается под экран — поле занимает всё свободное место
-  const HIT = 26;
-  const APP_PAD = 7;   // v89: отступ внутри общего корпуса калькулятора         // зона касания места (сплит, корнер, стрит, сикс-лайн)
-
-  // ---------- Поле (как в Croupier Pro: RouletteMath, BoardGeometry) ----------
-  const colRow = n => [Math.floor((n - 1) / 3), (n - 1) % 3];
-  const key = (t, ns) => t + ":" + [...ns].sort((a, b) => a - b).join("-");
-  const parseKey = k => { const [t, ns] = k.split(":"); return { type: t, nums: ns.split("-").map(Number) }; };
-  function windowOf(n) {
-    if (n <= 3) return { start: 0, rows: [0, 1], zero: true };
-    const r = colRow(n)[0], s = Math.min(Math.max(r - 1, 0), 9);
-    return { start: s, rows: [s, s + 1, s + 2], zero: false };
-  }
-  const visibleNums = w => (w.zero ? [0] : []).concat(...w.rows.map(r => [r * 3 + 1, r * 3 + 2, r * 3 + 3]));
-  function pos(type, nums, w) {
-    const zo = w.zero ? ZH : 0;
-    const center = n => { const [r, c] = colRow(n); return [CW * c + CW / 2, zo + CH * (r - w.start) + CH / 2]; };
-    if (type === "straightUp") return nums[0] === 0 ? [BW / 2, zo * 0.62] : center(nums[0]);
-    if (nums.includes(0)) {
-      if (type === "split") return [center(nums.find(n => n !== 0))[0], zo];
-      if (type === "corner") return [0, zo];
-      if (type === "street") return [nums.includes(1) ? CW : CW * 2, zo];
-    }
-    const pts = nums.map(center);
-    const ax = pts.reduce((s, p) => s + p[0], 0) / pts.length, ay = pts.reduce((s, p) => s + p[1], 0) / pts.length;
-    return (type === "street" || type === "sixLine") ? [0, ay] : [ax, ay];
-  }
-  function betsWith(n) {
-    const out = [], add = (t, ns) => out.push({ type: t, nums: ns });
-    add("straightUp", [n]);
-    if (n === 0) {
-      add("split", [0, 1]); add("split", [0, 2]); add("split", [0, 3]);
-      add("street", [0, 1, 2]); add("street", [0, 2, 3]); add("corner", [0, 1, 2, 3]);
-      return out;
-    }
-    const [row, col] = colRow(n), ok = x => x >= 1 && x <= 36;
-    if (col > 0) add("split", [n - 1, n]);
-    if (col < 2) add("split", [n, n + 1]);
-    if (row > 0 && ok(n - 3)) add("split", [n - 3, n]);
-    if (row < 11 && ok(n + 3)) add("split", [n, n + 3]);
-    if (col <= 1 && row <= 10) add("corner", [n, n + 1, n + 3, n + 4]);
-    if (col >= 1 && row <= 10) add("corner", [n - 1, n, n + 2, n + 3]);
-    if (col <= 1 && row >= 1) add("corner", [n - 3, n - 2, n, n + 1]);
-    if (col >= 1 && row >= 1) add("corner", [n - 4, n - 3, n - 1, n]);
-    const f = row * 3 + 1;
-    add("street", [f, f + 1, f + 2]);
-    if (row > 0) { const g = (row - 1) * 3 + 1; add("sixLine", [g, g + 1, g + 2, g + 3, g + 4, g + 5]); }
-    if (row < 11) add("sixLine", [f, f + 1, f + 2, f + 3, f + 4, f + 5]);
-    if (n === 1) { add("split", [0, 1]); add("street", [0, 1, 2]); add("corner", [0, 1, 2, 3]); }
-    if (n === 2) { add("split", [0, 2]); add("street", [0, 1, 2]); add("street", [0, 2, 3]); add("corner", [0, 1, 2, 3]); }
-    if (n === 3) { add("split", [0, 3]); add("street", [0, 2, 3]); add("corner", [0, 1, 2, 3]); }
-    return out;
-  }
-  const compChips = n => betsWith(n).reduce((s, b) => s + b.nums.length, 0);   // 40, 30, 27, 36, 17, 24, 18
-  const numsText = (type, nums) => {
-    const s = [...nums].sort((a, b) => a - b);
-    return (s.length <= 2 || s.includes(0)) ? s.join("/") : s[0] + "/" + s[s.length - 1];
-  };
-  const suKey = n => key("straightUp", [n]);
-  // Ставка на месте — список жетонов в порядке постановки, например [10, 25, 25]; сумма — деньги.
-  const listAmt = l => (l || []).reduce((a, b) => a + b, 0);
-  const betAmt = k => listAmt(st.bets[k]);
-  const groupList = l => { const m = {}; (l || []).forEach(d => m[d] = (m[d] || 0) + 1); return Object.keys(m).map(Number).sort((a, b) => b - a).map(d => [d, m[d]]); };
-  const listText = l => groupList(l).map(([d, c]) => `${c}×${fmt(d)}`).join(" + ");
-
-  // ---------- Состояние ----------
-  const store = {
-    get(k, d) { try { const v = localStorage.getItem("cpt_" + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
-    set(k, v) { try { localStorage.setItem("cpt_" + k, JSON.stringify(v)); } catch (e) {} }
-  };
-  const st = {
-    lang: "en", val: 1, cd: 1, limit: 100, tab: "field",
-    win: 17,
-    bets: {},        // FIELD: выигравшее место → жетонов (цена жетона = st.val)
-    comps: {},       // число → { u: по сколько (5/10/25/100), given: подано деньгами или null }
-    quick: {},       // QUICK: вид ставки → жетонов
-    qactive: "straightUp", qfresh: true,
-    hist: [], example: true
-  };
-  function restorePrefs() {
-    st.lang = store.get("lang", "en"); if (!TX[st.lang]) st.lang = "en";
-    st.val = 1;   // 23.10 (заказчик): при открытии всегда «жетон по 1»
-    st.limit = store.get("limit", 100); if (!LIMITS.includes(st.limit)) st.limit = 100;
-    const t = store.get("tab", "field"); st.tab = t === "quick" ? "quick" : "field";
-  }
-  restorePrefs();
-  const T = () => TX[st.lang];
-  const fmt = n => (Math.round(n * 100) / 100).toLocaleString("en-US").replace(/,/g, " ");   // v72: неразрывный пробел — «5 000» не рвётся при переносе
-  const $ = id => document.getElementById(id);
-  const quickName = t => t === "sixLine" ? T().line : NAME[t];
-
-  function compInfo(n) {
-    const c = st.comps[n]; if (!c) return null;
-    const chips = compChips(Number(n));
-    if (c.given == null) return { chips, u: c.u, cost: chips * c.u, given: chips * c.u, change: 0, ok: true };
-    const fits = COMP_DENOMS.filter(d => chips * d <= c.given && d <= st.limit);   // комплит не больше Max на номер
-    const u = fits.length ? fits[fits.length - 1] : 0;
-    return { chips, u, cost: chips * u, given: c.given, change: u ? c.given - chips * u : 0, ok: u > 0, min: chips * COMP_DENOMS[0] };
-  }
-
-  // Пример: выпало 17, комплиты на 17 по 100 и на 14 по 25 (пересекаются), сплит 17/18 жетонами; макс 100.
-  function loadExample() {
-    st.win = 17; st.bets = {}; st.comps = { 17: { u: 100, given: null }, 14: { u: 25, given: null } };
-    st.bets[key("split", [17, 18])] = [1, 1, 1, 1];
-    st.quick = { straightUp: 3, split: 9, street: 2, corner: 12, sixLine: 4 };
-    st.val = 1; st.limit = store.get("limit", 100); if (!LIMITS.includes(st.limit)) st.limit = 100;
-    st.example = true; st.hist = [];
-  }
-
-  // ---------- Расчёт ----------
-  function computeQuick() {
-    let payChips = 0; const payLines = [];
-    for (const t of QUICK_ROWS) {
-      const q = st.quick[t] || 0; if (!q) continue;
-      payChips += q * MULT[t];
-      payLines.push({ t: `${quickName(t)}: ${fmt(q)} × ${MULT[t]}`, v: `${fmt(q * MULT[t])} ${T().chipsS}` });
-    }
-    return { pay: payChips * st.val, ret: 0, overmax: 0, compChange: 0, payLines, retLines: [], compLines: [], posMap: new Map(), quickChips: payChips };
-  }
-  // Как calculateOvermaxAndPayout в Croupier Pro (без трека): деньгами, позиции складываются, сверх «макс × чисел» — сдача.
-  function computeComp() {
-    const posMap = new Map();
-    // dm — сколько денег на месте каждым номиналом жетона: { 25: 50, 2: 4 }.
-    const add = (type, nums, amt, fromComp, partial, part, dm) => {
-      if (amt <= 0) return;
-      const k = key(type, nums), p = posMap.get(k) || { key: k, type, nums, amt: 0, comp: 0, partial: 0, parts: [], dm: {} };
-      p.amt += amt; if (fromComp) p.comp += amt; if (partial) p.partial += amt; if (part) p.parts.push(part); posMap.set(k, p);
-      for (const d in dm) p.dm[d] = (p.dm[d] || 0) + dm[d];
-    };
-    const partsText = p => p.parts.join(" + ") + (p.parts.length > 1 || !/^1×[^+]*$/.test(p.parts[0] || "") ? ` = ${fmt(p.amt)}` : "");
-    for (const [k, l] of Object.entries(st.bets)) { const b = parseKey(k), dm = {}; groupList(l).forEach(([d, c]) => dm["f:" + d] = d * c); add(b.type, b.nums, listAmt(l), false, false, `${listText(l)} (${T().chipsS})`, dm); }
-    let compChange = 0;
-    const compLines = [];
-    for (const n of Object.keys(st.comps)) {
-      const ci = compInfo(n);
-      if (!ci.ok) { compLines.push({ t: `${T().compS} ${n}: ${T().given} ${fmt(ci.given)} < ${T().min} ${fmt(ci.min)}`, v: "?" }); continue; }
-      const stations = betsWith(Number(n)).filter(b => b.nums.includes(st.win)).length;
-      const partial = Number(n) !== st.win;
-      for (const b of betsWith(Number(n))) add(b.type, b.nums, b.nums.length * ci.u, true, partial, `${b.nums.length}×${fmt(ci.u)} (${n} ${T().compBy.toLowerCase()})`, { ["c:" + ci.u]: b.nums.length * ci.u });
-      compChange += ci.change;
-      // v53: только «Complete 11: 40 × 25 = 1 000» (без spots, stake, place).
-      compLines.push({ t: `${T().compS} ${n} ${T().byW} ${fmt(ci.u)}: ${ci.chips} × ${ci.u}` + (ci.change ? ` · ${T().given} ${fmt(ci.given)}` : ""), v: fmt(ci.cost) });
-      // Комплит на выигравшем числе: платится 392 × номинал (и т.д.), саму ставку забирает казино (заказчик, 23.10).
-
-      // Частично сыграл: на сыгравшие точки выставляют фишки комплита, они остаются на поле; платится чистый выигрыш.
-      if (partial && stations > 0) {
-        const pts = betsWith(Number(n)).filter(b => b.nums.includes(st.win));
-
-      }
-    }
-    const order = st.win === 0 ? ORDER_ZERO : ORDER;
-    const list = [...posMap.values()].sort((a, b) => order.indexOf(a.type) - order.indexOf(b.type) || a.nums[0] - b.nums[0]);
-    let pay = 0, ret = 0;
-    const payLines = [], retLines = [], payD = {};
-    for (const p of list) {
-      p.cap = st.limit * p.nums.length;
-      const paid = Math.min(p.amt, p.cap);
-      p.over = p.amt - paid; p.wins = p.nums.includes(st.win);
-      const lab = `${NAME[p.type]} ${numsText(p.type, p.nums)}`;
-      if (p.over > 0) { ret += p.over; retLines.push({ t: `${lab}: ${fmt(p.amt)}, ${T().maxS} ${fmt(p.cap)}${p.wins ? "" : " · " + T().notWin}`, v: fmt(p.over) }); }
-      if (p.wins && paid > 0) {
-        pay += paid * MULT[p.type];
-        // Выигрыш платится тем же номиналом, каким стоит ставка (при переборе — в той же доле).
-        // v57: при переборе сначала платится комплит, потом жетоны поля (крупные первыми); что сверх Max — сдача.
-        let left = paid, odd = 0;
-        const kds = Object.keys(p.dm).sort((a, b) => (a[0] === "c" ? 0 : 1) - (b[0] === "c" ? 0 : 1) || Number(b.slice(2)) - Number(a.slice(2)));
-        kds.forEach(kd => {
-          const take = Math.min(p.dm[kd], left); left -= take; if (take <= 0) return;
-          // v75: при переборе играет кусок, не кратный жетону (75 из жетонов по 100) — его выигрыш не «26×100 + 25 cash»,
-          // а платится теми жетонами, что стоят на месте, крупные первыми (2 625 = 26×100 + 1×25).
-          const d = Number(kd.slice(2)), whole = kd[0] === "f" ? Math.floor(take / d + 1e-9) * d : take;
-          if (whole > 0) payD[kd] = (payD[kd] || 0) + whole * MULT[p.type];
-          odd += take - whole;
-        });
-        if (odd > 1e-9) {
-          // v76 (заказчик): из жетона 500 на сплите при Max 100 играет 200 — это как 2 жетона по 100, выплата 3 400 = 34×100, сдача 300.
-          // Играющий кусок считаем самыми крупными жетонами, которыми он набирается ровно (200 → по 100, 75 → по 25).
-          const D = DENOMS.slice().reverse().find(d => d <= odd + 1e-9 && Math.abs(odd / d - Math.round(odd / d)) < 1e-9) || 1;
-          payD["f:" + D] = (payD["f:" + D] || 0) + odd * MULT[p.type];
-        }
-        const base = partsText(p) + (p.over > 0 ? ` → ${T().maxS} ${fmt(paid)}` : "");
-        // v83: коротко «Corner 17/21: 525 → 400 × 8», состав ставки — мелко второй строкой.
-        payLines.push({ t: `${lab}: ${fmt(p.amt)}` + (p.over > 0 ? ` → ${fmt(paid)}` : "") + ` × ${MULT[p.type]}`, sub: p.parts.join(" + "), v: fmt(paid * MULT[p.type]) });
-      }
-    }
-    // Жетоны выплаты по номиналам, крупные сначала: [[25, 103], [2, 32]] + остаток кэшем.
-    // Отдельно: жетоны комплитов и жетоны поля, каждые по номиналам: { comp: [[25, 392]], field: [[25, 103], [2, 32]] }.
-    let rest = 0; const parts = { comp: [], field: [] };
-    Object.keys(payD).forEach(kd => {
-      const [src, ds] = kd.split(":"), d = Number(ds), c = Math.floor(payD[kd] / d + 1e-6);
-      rest += payD[kd] - c * d; if (c > 0) parts[src === "c" ? "comp" : "field"].push([d, c]);
-    });
-    parts.comp.sort((a, b) => b[0] - a[0]); parts.field.sort((a, b) => b[0] - a[0]);
-    const groups = parts.comp.concat(parts.field);
-    return { pay, ret: ret + compChange, overmax: ret, compChange, payLines, retLines, compLines, posMap, groups, parts, rest: Math.round(rest * 100) / 100 };
-  }
-  const compute = () => st.tab === "quick" ? computeQuick() : computeComp();
-  // Один номинал цветного жетона на всё приложение — «Chips» везде считаются одинаково.
-  const toChips = m => { const v = st.val, c = Math.floor(m / v + 1e-9); return { c, rest: Math.round((m - c * v) * 100) / 100 }; };
-
-  // ---------- Отрисовка поля ----------
-  const NS = "http://www.w3.org/2000/svg";
-  function el(tag, a, p, txt) { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; p.appendChild(e); return e; }
-  const NUMF = "Roboto Condensed, Arial Narrow, sans-serif", SERIF = "Noto Serif, Georgia, serif";
-  const fixedLayout = () => matchMedia("(min-height: 460px)").matches || matchMedia("(min-width: 600px) and (max-height: 459px)").matches;
-  // Высота клетки — так, чтобы поле заполнило свободное место (ширина клетки постоянная).
-  const wideLow = () => matchMedia("(min-width: 600px) and (max-height: 459px)").matches;
-  function fitCells(w) {
-    CH = 80;
-    const wrap = $("bw"), W = wrap.clientWidth, rowsN = w.rows.length + (w.zero ? 0.85 : 0);
-    if (fixedLayout() && !wideLow() && W > 0) {
-      // Высокий экран (телефон, iPad, компьютер): поле на всю ширину, клетки не выше квадрата (92);
-      // если места мало — клетки ниже, табло не меньше 250 px.
-      const sc = W / (BW + PADL + PADR), app = document.querySelector(".app");
-      const avail = app.clientHeight - document.querySelector(".top").offsetHeight - document.querySelector(".bottom").offsetHeight - 18 - 2 * APP_PAD - Math.min(250, Math.max(170, app.clientHeight * 0.36));   // v77: на невысоком экране табло может быть меньше 250
-      CH = Math.max(48, Math.min(92, (avail / sc - 2 * PADY - 4) / rowsN));
-      ZH = Math.round(CH * 0.85);
-      wrap.style.height = Math.round((rowsN * CH + 2 * PADY + 4) * sc) + "px";
-      return;
-    }
-    wrap.style.height = "";
-    const H = wrap.clientHeight;
-    if (fixedLayout() && W > 0 && H > 0) {
-      const units = (H * (BW + PADL + PADR) / W) - 2 * PADY - 4;
-      CH = Math.max(80, Math.min(150, units / rowsN));
-    }
-    ZH = Math.round(CH * 0.85);
-  }
-  function pill(g, x, y, text, fill, color) {
-    const w = Math.max(26, text.length * 7 + 10);
-    x = Math.min(Math.max(x, w / 2 - PADL + 2), BW + PADR - w / 2 - 2);
-    el("rect", { x: x - w / 2, y: y - 9, width: w, height: 18, rx: 9, fill, stroke: "rgba(0,0,0,.6)", "stroke-width": 1, "pointer-events": "none" }, g);
-    el("text", { x, y: y + 4.6, "text-anchor": "middle", "font-family": NUMF, "font-size": 12.5, "font-weight": 700, fill: color, "pointer-events": "none" }, g, text);
-  }
-  function chip(g, x, y, rad, q, over, up) {   // up — цифру чуть выше (снизу жетон закрыт плашкой комплита)
-    // v73: жетон как настоящий — по краю 8 белых вставок, внутри тонкое кольцо, центр с цифрой, лёгкий блеск сверху.
-    const N = { "pointer-events": "none" }, body = over ? "#d4371f" : "#8c1531", ins = rad - 3, C = 2 * Math.PI * ins, seg = C / 8;
-    el("circle", { cx: x, cy: y + 2, r: rad, fill: "rgba(0,0,0,.5)", ...N }, g);
-    el("circle", { cx: x, cy: y, r: rad, fill: body, stroke: "rgba(0,0,0,.6)", "stroke-width": 0.8, ...N }, g);
-    el("circle", { cx: x, cy: y, r: ins, fill: "none", stroke: "#f6f1e6", "stroke-width": 5, "stroke-dasharray": `${(seg * 0.46).toFixed(2)} ${(seg * 0.54).toFixed(2)}`, "stroke-dashoffset": (seg * 0.23).toFixed(2), ...N }, g);
-    el("circle", { cx: x, cy: y, r: rad * 0.64, fill: "rgba(0,0,0,.16)", stroke: "rgba(255,255,255,.8)", "stroke-width": 1, ...N }, g);
-    el("circle", { cx: x, cy: y, r: rad * 0.64 - 2.2, fill: "none", stroke: "rgba(255,255,255,.35)", "stroke-width": 0.6, "stroke-dasharray": "1.2 1.6", ...N }, g);
-    el("circle", { cx: x, cy: y, r: rad - 0.4, fill: "url(#cpShine)", ...N }, g);
-    // v74: номинал крупно и без пробела («1000»); если шире центра жетона — сжимается по ширине, высота остаётся.
-    const t = String(Math.round(q * 100) / 100), L = t.length;
-    const fs = L <= 2 ? (up ? 15 : 17) : L === 3 ? (up ? 14 : 16) : L === 4 ? (up ? 13.5 : 15.5) : (up ? 12.5 : 14.5);
-    const te = el("text", { x, y: y + (up ? 1 : fs * 0.36), "text-anchor": "middle", "font-family": NUMF, "font-size": fs, "font-weight": 700, fill: "#fff", stroke: "rgba(0,0,0,.35)", "stroke-width": 0.6, "paint-order": "stroke", ...N }, g, t);
-    { const maxW = rad * 1.28 - 1.5, w = te.getComputedTextLength ? te.getComputedTextLength() : 0; if (w > maxW) { te.setAttribute("textLength", maxW.toFixed(1)); te.setAttribute("lengthAdjust", "spacingAndGlyphs"); } }
-  }
-  let spotList = [];   // места для жетонов (без Straight up): { key, x, y }
-  function renderBoard(r) {
-    const w = windowOf(st.win), svg = $("board");
-    fitCells(w);
-    svg.innerHTML = "";
-    // v73: блеск жетонов (светлее сверху).
-    { const defs = el("defs", {}, svg), lg = el("linearGradient", { id: "cpShine", x1: 0, y1: 0, x2: 0, y2: 1 }, defs);
-      el("stop", { offset: 0, "stop-color": "#fff", "stop-opacity": 0.32 }, lg); el("stop", { offset: 0.5, "stop-color": "#fff", "stop-opacity": 0 }, lg); el("stop", { offset: 1, "stop-color": "#000", "stop-opacity": 0.12 }, lg); }
-    const g = el("g", {}, svg), gold = "#d9b45a";
-    const zo = w.zero ? ZH : 0, H = zo + CH * w.rows.length;
-    svg.setAttribute("viewBox", `${-PADL} ${-PADY} ${BW + PADL + PADR} ${H + 2 * PADY}`);
-    if (w.zero) {
-      const d = `M0 ${ZH * 0.45} L${BW / 2} 0 L${BW} ${ZH * 0.45} L${BW} ${ZH} L0 ${ZH} Z`;
-      el("path", { d, fill: "#10884a", stroke: gold, "stroke-width": 1.6 }, g);
-      el("text", { x: BW / 2, y: ZH * 0.5, "text-anchor": "middle", "font-family": SERIF, "font-size": 24, "font-weight": 700, fill: "#fff", "pointer-events": "none" }, g, "0");
-      if (st.win === 0) el("path", { d, fill: "none", stroke: "#f1d488", "stroke-width": 4, "pointer-events": "none" }, g);
-    }
-    // v83: тёмная подложка под клетками — в светлой теме невыпавшие числа темнее, а не бледно-розовые.
-    el("rect", { x: 0, y: zo, width: BW, height: CH * w.rows.length, fill: "#0b0a08", "pointer-events": "none" }, g);
-    const nf = Math.min(40, 26 + (CH - 80) * 0.2);
-    w.rows.forEach((row, i) => {
-      for (let c = 0; c < 3; c++) {
-        const n = row * 3 + c + 1, x = c * CW, y = zo + i * CH, win = n === st.win;
-        el("rect", { x, y, width: CW, height: CH, fill: RED.has(n) ? "#a3142a" : "#121212", stroke: gold, "stroke-width": 1.6, opacity: win ? 1 : 0.75 }, g);
-        el("text", { x: x + CW / 2, y: y + CH / 2 + nf * 0.36, "text-anchor": "middle", "font-family": SERIF, "font-size": nf, "font-weight": 700, fill: "#fff", opacity: win ? 0.95 : 0.45, "pointer-events": "none" }, g, String(n));
-        if (win) el("rect", { x: x + 3, y: y + 3, width: CW - 6, height: CH - 6, rx: 4, fill: "none", stroke: "#f1d488", "stroke-width": 3.5, "pointer-events": "none" }, g);
-      }
-    });
-    el("rect", { x: -3, y: -3, width: BW + 6, height: H + 6, rx: 4, fill: "none", stroke: "#b8923a", "stroke-width": 5, "pointer-events": "none" }, g);
-    // Комплиты: клетка обведена золотом (рамка — под жетонами). v68: на поле — только те, что в 3×3 (остальные — в окне выбора числа).
-    const visSet = new Set(visibleNums(w)), compsVis = Object.keys(st.comps).filter(c => visSet.has(Number(c)));
-    for (const n0 of compsVis) {
-      const n = Number(n0), [cx, cy] = pos("straightUp", [n], w);
-      if (n !== 0) el("rect", { x: cx - CW / 2 + 2, y: cy - CH / 2 + 2, width: CW - 4, height: CH - 4, rx: 4, fill: "rgba(241,212,136,.12)", stroke: "#f1d488", "stroke-width": 2.5, "pointer-events": "none" }, g);
-    }
-    const under = el("g", {}, g);   // слой под жетонами (подпись комплита, когда места мало)
-    // Места выигравших ставок: пустые — маленькая точка, с жетонами — жетон с количеством.
-    spotList = []; const chipPts = [];
-    for (const b of betsWith(st.win)) {
-      const k = key(b.type, b.nums), su = b.type === "straightUp";
-      let [x, y] = pos(b.type, b.nums, w);
-      const q = betAmt(k), p = r.posMap.get(k), over = p && p.over > 0;
-      if (su) {   // жетоны Straight up — через окно числа; жетон рисуем над номером
-        if (q > 0) { if (st.win === 0) y = ZH * 0.5 - 8; chip(g, x, y, 18, q, over, false);   /* v75: цифры как на всех жетонах, плашка комплита их прикрывает снизу */ chipPts.push([x, y]); }   // есть комплит — жетон чуть выше, под ним плашка   // по центру числа, того же размера, что и другие
-        continue;
-      }
-      if (q > 0) chip(g, x, y, 18, q, over);
-      else el("circle", { cx: x, cy: y, r: 6.5, fill: "rgba(241,212,136,.28)", stroke: over ? "#ff5a3c" : "rgba(241,212,136,.7)", "stroke-width": 1.4, "pointer-events": "none" }, g);
-      spotList.push({ key: k, x, y });
-      if (q > 0) chipPts.push([x, y]);
-    }
-    // Плашка комплита — посередине числа, в две строки («KOMPLITAS PO» / «25»), узкая: не задевает жетоны на сплитах слева и справа.
-    // Если на числе жетон Straight up — жетон чуть выше, плашка под ним (на зеро — справа от жетона).
-    for (const n0 of compsVis) {
-      const n = Number(n0), ci = compInfo(n0), [cx0, cy0] = pos("straightUp", [n], w);
-      const cy = n === 0 ? ZH * 0.5 - 8 : cy0;
-      const su = n === st.win && betAmt(suKey(n)) > 0;
-      const mx = n === 0 && su ? cx0 + 62 : cx0, my = n !== 0 && su ? cy + 19 : cy;   // v61: жетон остаётся в центре, плашка закрывает его нижнюю часть   // v60: жетон и плашка ближе друг к другу, плашка чуть заходит на жетон
-      const fill = ci.ok ? "#f1d488" : "#ff8a6b", val = ci.ok ? fmt(ci.u) : "?", W2 = 54, H2 = 29;
-      el("rect", { x: mx - W2 / 2, y: my - H2 / 2, width: W2, height: H2, rx: 7, fill, stroke: "#1c1406", "stroke-width": 1, "pointer-events": "none" }, g);
-      const t1 = el("text", { x: mx, y: my - 4.5, "text-anchor": "middle", "font-family": "Roboto, system-ui, sans-serif", "font-size": 7.2, "font-weight": 700, "letter-spacing": 0.2, fill: "#1c1406", "pointer-events": "none" }, g, T().compByL.toUpperCase());
-      { const L = t1.getComputedTextLength ? t1.getComputedTextLength() : 0; if (L > W2 - 6) { t1.setAttribute("textLength", W2 - 6); t1.setAttribute("lengthAdjust", "spacingAndGlyphs"); } }
-      el("text", { x: mx, y: my + 11, "text-anchor": "middle", "font-family": NUMF, "font-size": 16, "font-weight": 700, fill: "#1c1406", "pointer-events": "none" }, g, val);
-    }
-  }
-
-  function renderQuick() {
-    const box = $("quick"); box.innerHTML = "";
-    for (const t of QUICK_ROWS) {
-      const q = st.quick[t] || 0;
-      const b = document.createElement("button"); b.type = "button"; b.className = "qrow"; b.dataset.q = t;
-      b.setAttribute("aria-pressed", String(st.qactive === t));
-      b.innerHTML = '<span class="nm"><b></b><span class="num"></span></span><span class="cnt num"></span><span class="sum num"></span>';
-      b.querySelector(".nm b").textContent = quickName(t);
-      b.querySelector(".nm span").textContent = "× " + MULT[t];
-      b.querySelector(".cnt").textContent = q ? fmt(q) : "—";
-      b.querySelector(".sum").textContent = q ? fmt(q * MULT[t]) : "";
-      box.appendChild(b);
-    }
-  }
-
-  // Крупные числа табло: 88 px (CALC — 52), если не влезают — уменьшаем. Пока табло не видно (ширина 0) — не трогаем.
-  function fitResult() {
-    const quick = st.tab === "quick";
-    ["r-chips", "r-cash"].forEach(id => {
-      const e = $(id); if (!e.clientWidth) return;
-      // Табло большое (компьютер, iPad) — числа ещё крупнее, до 130 px.
-      const rh = document.querySelector(".result").clientHeight;
-      let fs = quick ? (innerHeight < 720 ? 52 : 72) : Math.round(Math.min(130, Math.max(88, rh * (id === "r-cash" ? 0.3 : 0.2)))); e.style.fontSize = fs + "px";
-      // v75: строка CHIPS из многих номиналов: уменьшаем до 40 px, не влезает — переносим на вторую строку (между частями) и уменьшаем дальше.
-      e.classList.remove("wrap");
-      const minOne = e.classList.contains("parts") ? 40 : 24;
-      while (e.scrollWidth > e.clientWidth + 1 && fs > minOne) { fs -= 2; e.style.fontSize = fs + "px"; }
-      if (e.scrollWidth > e.clientWidth + 1 && e.classList.contains("parts")) e.classList.add("wrap");
-      while (e.scrollWidth > e.clientWidth + 1 && fs > 20) { fs -= 2; e.style.fontSize = fs + "px"; }
-    });
-    // v58: всё табло (с остатком и сдачей) должно влезть по высоте — иначе уменьшаем числа.
-    const res = document.querySelector(".result"), ch = $("r-chips"), ca = $("r-cash");
-    if (quick && ch.clientWidth) {
-      // CALC: клавиши не меньше 44 px — если не влезают, уменьшаем числа табло.
-      // v90: клавиши делят оставшееся место; если ряд клавиш ниже 40 px — сначала ниже строки видов ставок (до 26 px), потом меньше числа табло.
-      const keys = $("keys"), qrows = [...document.querySelectorAll(".app.isq .qrow")];
-      const keyH = () => { const b = keys.querySelector("button"); return b ? b.getBoundingClientRect().height : 99; };
-      let qmin = 44; qrows.forEach(q => q.style.minHeight = qmin + "px");  // v92: строки выше (v91 — 40, было 34)
-      let g2 = 40;
-      while (keyH() < 40 && g2--) {
-        if (qmin > 26) { qmin -= 2; qrows.forEach(q => { q.style.minHeight = qmin + "px"; q.style.maxHeight = Math.max(qmin, 92) + "px"; }); continue; }
-        const a = parseFloat(ch.style.fontSize) || 88, b = parseFloat(ca.style.fontSize) || 88;
-        if (Math.max(a, b) <= 30) break;
-        ch.style.fontSize = Math.max(30, a - 4) + "px"; ca.style.fontSize = Math.max(30, b - 4) + "px";
-      }
-      return;
-    }
-    if (!res.clientHeight || !ch.clientWidth) return;
-    let guard = 60;
-    // v77: не влезает по высоте — сначала уменьшаем CASH до размера CHIPS, потом CHIPS до 22 px, CASH держим крупным (до 44 px), дальше оба.
-    guard = 120;
-    while (res.scrollHeight > res.clientHeight + 1 && guard--) {
-      const a = parseFloat(ch.style.fontSize) || 88, b = parseFloat(ca.style.fontSize) || 88;
-      if (b > a + 20 && b > 44) ca.style.fontSize = (b - 2) + "px";
-      else if (a > 22) ch.style.fontSize = (a - 2) + "px";
-      else if (b > 24) ca.style.fontSize = (b - 2) + "px";
-      else break;
-    }
-  }
-  // v82: водяной знак не должен налезать на подписи и цифры табло — если налезает, прячем.
-  function placeWatermark() {
-    const wm = document.querySelector(".result .wm"); if (!wm) return;
-    wm.style.visibility = "visible";
-    const w = wm.getBoundingClientRect(); if (!w.width) return;
-    const hit = [...document.querySelectorAll("#r-chips, #r-cash, #r-rest, #r-change:not([hidden]) .label, #r-change:not([hidden]) .v, .result .label, .result .valbtn, .result .bd-btn")]
-      .some(e => { if (!e.offsetParent) return false; const b = e.getBoundingClientRect(); return b.width && b.left < w.right && b.right > w.left && b.top < w.bottom && b.bottom > w.top; });
-    if (hit) wm.style.visibility = "hidden";
-  }
-  function renderResult(r) {
-    const tx = T(), quick = st.tab === "quick";
-    const pc = toChips(r.pay), rc = toChips(r.ret);
-    $("t-chips").textContent = tx.chips; $("b-val").textContent = "× " + fmt(st.val);
-    $("t-cash").textContent = tx.cash; $("t-change").textContent = tx.change;
-    if (quick || !r.groups.length) {
-      $("r-chips").classList.remove("parts");
-      $("r-chips").textContent = fmt(pc.c);
-      $("r-rest").textContent = pc.rest > 0 ? `+ ${fmt(pc.rest)} ${tx.rest}` : "";
-    } else {
-      // LAYOUT: отдельно жетоны комплита и жетоны поля, под каждой частью подпись: «392×25 + 103×25 + 32×2».
-      const e = $("r-chips"); e.innerHTML = "";
-      const plus = () => { const pl = document.createElement("span"); pl.className = "pl"; pl.textContent = "+"; return pl; };
-      e.classList.add("parts");
-      [["comp", tx.compBy], ["field", tx.fieldS]].filter(([k]) => r.parts[k].length).forEach(([k, cap], pi) => {
-        if (pi) e.appendChild(plus());
-        const seg = document.createElement("span"); seg.className = "cseg " + k;
-        const top = document.createElement("span"); top.className = "segv";
-        r.parts[k].forEach(([d, c], i) => {
-          if (i) { top.appendChild(plus()); top.appendChild(document.createTextNode("\u200b")); }   // v75: здесь можно перенести строку
-          const grp = document.createElement("span"); grp.className = "grp";   // v75: «68×100» не рвётся при переносе
-          grp.appendChild(document.createTextNode(fmt(c)));
-          const dn = document.createElement("span"); dn.className = "dn"; dn.textContent = "×" + fmt(d); grp.appendChild(dn); top.appendChild(grp);
-        });
-        const cp = document.createElement("span"); cp.className = "cap"; cp.textContent = cap;
-        seg.append(top, cp); e.appendChild(seg);
-      });
-      $("r-rest").innerHTML = "";
-      if (r.rest > 0) { const a = document.createElement("span"); a.className = "rv"; a.textContent = `+ ${fmt(r.rest)}`; const b = document.createElement("span"); b.className = "rl"; b.textContent = tx.rest; $("r-rest").append(a, b); }
-    }
-    $("r-cash").textContent = fmt(r.pay);
-    // Крупные числа: 64 px, если не влезают в колонку — уменьшаем, пока не влезут.
-    $("r-change").hidden = quick || r.ret <= 0;   // сдача — только когда она есть
-    $("v-ch-chips").textContent = `${fmt(rc.c)} ${tx.chipsS}` + (rc.rest > 0 ? ` + ${fmt(rc.rest)}` : "");
-    $("v-ch-cash").textContent = `${fmt(r.ret)} ${tx.cash.toLowerCase()}`;
-    // Строка сдачи не влезает — уменьшаем цифры (подпись не режем).
-    const ch = $("r-change");
-    if (!ch.hidden) { let fs = 28; const vs = ch.querySelectorAll(".v"); vs.forEach(v => v.style.fontSize = fs + "px"); while (ch.scrollWidth > ch.clientWidth + 1 && fs > 14) { fs -= 2; vs.forEach(v => v.style.fontSize = fs + "px"); } }
-    fitResult();   // после строки сдачи — чтобы всё влезло по высоте
-    placeWatermark();
-  }
-  function renderBreakdown(r) {
-    const tx = T(), bd = $("bd"); bd.innerHTML = "";
-    const h = document.createElement("h2");
-    h.textContent = st.tab === "quick" ? `${tx.bd} · ${tx.quick}` : `${tx.bd} · ${tx.win} ${st.win} · ${tx.maxS} ${fmt(st.limit)}`;
-    bd.appendChild(h);
-    const list = (title, lines, cls, total) => {
-      const h3 = document.createElement("h3"); h3.textContent = title; bd.appendChild(h3);
-      const ul = document.createElement("ul");
-      const add = (x, c) => { const li = document.createElement("li"); if (c) li.className = c; const a = document.createElement("span"); a.textContent = x.t; if (x.sub) { const sb = document.createElement("small"); sb.className = "sub"; sb.textContent = x.sub; a.appendChild(sb); } const b = document.createElement("span"); b.className = "v num"; b.textContent = x.v; li.append(a, b); ul.appendChild(li); };
-      lines.forEach(x => add(x, cls));
-      if (total) add(total, "tot" + (cls ? " " + cls : ""));
-      bd.appendChild(ul);
-    };
-    const chipsTxt = m => { const c = toChips(m); return `${fmt(c.c)} ${tx.chipsS}` + (c.rest > 0 ? ` + ${fmt(c.rest)}` : ""); };
-    if (r.compLines.length) list(tx.compsS, r.compLines, "");
-    if (r.payLines.length) list(st.tab === "quick" ? tx.chips : tx.payS, r.payLines, "", { t: tx.total, v: st.tab === "quick" ? `${fmt(r.quickChips)} ${tx.chipsS} × ${fmt(st.val)} = ${fmt(r.pay)}` : `${fmt(r.pay)} = ` + (r.groups.length ? [[r.parts.comp, ` (${tx.compBy.toLowerCase()})`], [r.parts.field, ` (${tx.chipsS})`]].filter(x => x[0].length).map(([g, lab]) => g.map(([d, c]) => `${fmt(c)}×${fmt(d)}`).join(" + ") + lab).join(" + ") + (r.rest > 0 ? ` + ${fmt(r.rest)}` : "") : chipsTxt(r.pay)) });
-    else { const d = document.createElement("div"); d.className = "empty"; d.textContent = tx.none; bd.appendChild(d); }
-    const retAll = r.retLines.slice();
-    // v71: сдача с комплита, поставленного суммой, — по каждому: «Komplitas 20: pastatyta 5 000 − 40 × 100 (4 000)» → 1 000.
-    if (st.tab !== "quick") Object.keys(st.comps).forEach(n => {
-      const ci = compInfo(n);
-      if (ci && ci.ok && ci.change > 0) retAll.push({ t: `${tx.compS} ${n}: ${tx.given} ${fmt(ci.given)} − ${ci.chips} × ${fmt(ci.u)} (${fmt(ci.cost)})`, v: fmt(ci.change) });
-    });
-    if (retAll.length) list(tx.retS, retAll, "ret", { t: tx.total, v: `${fmt(r.ret)} ${tx.rest}` });
-    const close = document.createElement("button"); close.type = "button"; close.className = "close"; close.textContent = tx.close;
-    close.addEventListener("click", () => { $("sheet").hidden = true; });
-    bd.appendChild(close);
-  }
-  function renderTexts() {
-    const tx = T(), quick = st.tab === "quick";
-    document.documentElement.lang = st.lang;
-    document.querySelector(".app").classList.toggle("isq", quick);
-    $("quick").hidden = !quick; $("keys").hidden = !quick; $("cpanel").hidden = quick;
-    $("t-win").textContent = tx.win; $("v-win").textContent = st.win;
-    { const vis = new Set(visibleNums(windowOf(st.win))), far = Object.keys(st.comps).filter(c => !vis.has(Number(c))).length;
-      $("v-far").hidden = !far; $("v-far").textContent = "+" + far; $("b-win").title = far ? `${far} ${tx.farT}` : ""; }
-    $("m-quick").textContent = tx.quick; $("m-field").textContent = tx.field;
-    $("m-quick").setAttribute("aria-pressed", String(quick)); $("m-field").setAttribute("aria-pressed", String(!quick));
-    $("b-new").textContent = tx.newp; $("b-undo").textContent = tx.undo; $("b-undo").disabled = !st.hist.length;
-    const clr = $("keys").querySelector('[data-key="c"]'); if (clr) clr.textContent = tx.clr;
-  }
-  function render() {
-    const r = compute();
-    renderTexts();
-    if (st.tab === "quick") renderQuick(); else renderBoard(r);
-    renderResult(r); renderBreakdown(r);
-    if (!$("ns").hidden && nsNum != null) renderNumSheet();
-    if (!$("pk-sheet").hidden) markPicker();
-  }
-
-  // ---------- Действия ----------
-  function snapshot() {
-    st.hist.push(JSON.stringify({ win: st.win, bets: st.bets, comps: st.comps, quick: st.quick, qactive: st.qactive }));
-    if (st.hist.length > 60) st.hist.shift();
-  }
-  function undo() {
-    const s = st.hist.pop(); if (!s) return;
-    const o = JSON.parse(s);
-    Object.assign(st, { win: o.win, bets: o.bets, comps: o.comps, quick: o.quick, qactive: o.qactive, qfresh: true });
-    render();
-  }
-  function leaveExample() { if (st.example) { st.example = false; st.bets = {}; st.comps = {}; st.quick = {}; st.hist = []; } }
-  function setWin(n) {
-    st.win = n;
-    const winKeys = new Set(betsWith(n).map(b => key(b.type, b.nums))), vis = new Set(visibleNums(windowOf(n)));
-    for (const k of Object.keys(st.bets)) if (!winKeys.has(k)) delete st.bets[k];
-    // v68: комплиты по всему полю остаются (их сдача с пересечений — в табло), убирает только New payout / Undo.
-  }
-  function changeBet(k, fn) { leaveExample(); snapshot(); const l = fn((st.bets[k] || []).slice()); if (l.length) st.bets[k] = l; else delete st.bets[k]; render(); }
-  // +1 жетон номинала «× N» (один выбор на всё, v47). Смена номинала не меняет уже поставленное.
-  function tapSpot(k) { changeBet(k, l => { l.push(st.val); return l; }); }
-  function pressQuick(k) {
-    leaveExample();
-    const t = st.qactive; let cur = st.quick[t] || 0;
-    snapshot();   // v61: Undo отменяет каждое нажатие (последнюю цифру)
-    if (k === "c") cur = 0;
-    else if (k === "b") cur = Math.floor(cur / 10);
-    else { cur = st.qfresh ? Number(k) : (cur < 1e6 ? cur * Math.pow(10, k.length) + Number(k) : cur); st.qfresh = false; }   // «00», «000» — сразу два / три нуля
-    if (cur > 0) st.quick[t] = cur; else delete st.quick[t];
-    render();
-  }
-  function reset() {
-    st.bets = {}; st.comps = {}; st.quick = {}; st.example = false; st.hist = [];
-    st.qactive = "straightUp"; st.qfresh = true;
-  }
-
-  // QUICK: клавиатура как на телефоне.
-  const keys = $("keys");
-  ["1","2","3","4","5","6","7","8","9","0","00","000"].forEach(k => {   // v85: 1 2 3 сверху, как в телефоне   // v61: без Clear и ⌫ (исправлять Undo); v65: 0 / 00 / 000
-    const b = document.createElement("button"); b.type = "button"; b.dataset.key = k;
-    b.textContent = k === "b" ? "⌫" : k === "c" ? "" : k;
-    if (k === "c" || k === "b") b.className = "fn";
-    keys.appendChild(b);
-  });
-  keys.addEventListener("click", e => { const b = e.target.closest("[data-key]"); if (b) pressQuick(b.dataset.key); });
-  document.addEventListener("keydown", e => {
-    if (e.target.tagName === "SELECT" || e.target.tagName === "INPUT") return;
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") { undo(); return; }
-    if (!$("kp").hidden) { if (/^[0-9]$/.test(e.key)) kpPress(e.key); else if (e.key === "Backspace") kpPress("b"); else if (e.key === "Enter") kpPress("ok"); return; }
-    if (st.tab !== "quick") return;
-    if (/^[0-9]$/.test(e.key)) pressQuick(e.key); else if (e.key === "Backspace") pressQuick("b");
-  });
-
-  // ---------- Окно ввода числа (сумма комплита / количество жетонов) ----------
-  let kp = null;   // { title, value, hint, onOk, onDel, fresh }
-  const kpKeys = $("kp-keys");
-  ["1","2","3","4","5","6","7","8","9","0","00","000","b","ok"].forEach(k => {   // v85: 1 2 3 сверху   // v65: 0 / 00 / 000
-    const b = document.createElement("button"); b.type = "button"; b.dataset.k = k;
-    b.textContent = k === "b" ? "⌫" : k === "ok" ? "OK" : k;
-    if (k === "ok") b.className = "ok";
-    if (k === "ok") b.style.gridColumn = "span 2";
-    kpKeys.appendChild(b);
-  });
-  function openKeypad(o) {
-    kp = Object.assign({ fresh: true }, o);
-    $("kp-title").textContent = kp.title; $("kp-hint").textContent = kp.hint || "";
-    $("kp-disp").textContent = fmt(kp.value || 0);
-    $("kp-del").textContent = T().remove; $("kp-del").hidden = !kp.onDel;
-    $("kp-cancel").textContent = T().close;
-    kpKeys.querySelector('[data-k="ok"]').textContent = T().ok;
-    $("kp").hidden = false;
-  }
-  function kpPress(k) {
-    if (!kp) return;
-    if (k === "ok") { const v = kp.value; $("kp").hidden = true; const f = kp.onOk; kp = null; f(v); return; }
-    if (k === "b") kp.value = Math.floor(kp.value / 10);
-    else kp.value = kp.fresh ? Number(k) : (kp.value < 1e6 ? kp.value * Math.pow(10, k.length) + Number(k) : kp.value);
-    kp.fresh = false;
-    $("kp-disp").textContent = fmt(kp.value);
-  }
-  kpKeys.addEventListener("click", e => { const b = e.target.closest("[data-k]"); if (b) kpPress(b.dataset.k); });
-  $("kp-del").addEventListener("click", () => { $("kp").hidden = true; const f = kp && kp.onDel; kp = null; if (f) f(); });
-  $("kp-cancel").addEventListener("click", () => { $("kp").hidden = true; kp = null; });
-  $("kp").addEventListener("click", e => { if (e.target === $("kp")) { $("kp").hidden = true; kp = null; } });
-
-  // ---------- Окно числа: комплит одной кнопкой, жетоны Straight up ----------
-  let nsNum = null;
-  let nsOpenedAt = 0;   // v68: после долгого нажатия палец отпускают уже над окном — первое касание не считаем
-  function openNumber(n) { nsNum = n; renderNumSheet(); $("ns").hidden = false; nsOpenedAt = performance.now(); }
-  function closeNumber() { $("ns").hidden = true; nsNum = null; }
-  function renderNumSheet() {
-    const tx = T(), n = nsNum, box = $("nsb"), c = st.comps[n], ci = compInfo(n);
-    box.innerHTML = "";
-    const head = document.createElement("div"); head.className = "nhead";
-    const badge = document.createElement("div"); badge.className = "nbadge " + (n === 0 ? "g" : RED.has(n) ? "r" : "b"); badge.textContent = n;
-    const t = document.createElement("div"); t.className = "t";
-    const tb = document.createElement("b"); tb.textContent = `${tx.compBy} · ${compChips(n)} ${tx.chipsS}`;
-    const ts = document.createElement("span");
-    ts.className = "num";
-    ts.textContent = c ? (ci.ok ? `${tx.compByL} ${fmt(ci.u)} = ${fmt(ci.cost)}` + (ci.change ? ` · ${tx.given} ${fmt(ci.given)} · ${tx.change.toLowerCase()} ${fmt(ci.change)}` : "") : `${tx.given} ${fmt(ci.given)} < ${tx.min} ${fmt(ci.min)}`) : "";   // v83: без «—», когда комплита нет
-    ts.hidden = !c;
-    t.append(tb, ts); head.append(badge, t); box.appendChild(head);
-    const h3 = document.createElement("h3"); h3.textContent = tx.compByL; box.appendChild(h3);
-    // Кнопки комплита: одно касание — поставить и закрыть.
-    const grid = document.createElement("div"); grid.className = "cgrid";
-    COMP_DENOMS.forEach(u => {
-      const b = document.createElement("button"); b.type = "button"; b.dataset.u = u;
-      b.innerHTML = `${u}<small class="num"></small>`;
-      b.querySelector("small").textContent = "= " + fmt(compChips(n) * u);
-      b.setAttribute("aria-pressed", String(!!c && c.given == null && c.u === u));
-      // Max 50 — комплит по 100 нельзя (на номер встало бы 100).
-      if (u > st.limit) { b.disabled = true; b.querySelector("small").textContent = `> ${T().maxS} ${fmt(st.limit)}`; }
-      grid.appendChild(b);
-    });
-    box.appendChild(grid);
-    // v54: «Amount given» видна сразу — ввёл поданную сумму, комплит и сдача считаются сами.
-    {
-      const row = document.createElement("div"); row.className = c ? "row2" : "row2 one";
-      const g = document.createElement("button"); g.type = "button"; g.dataset.act = "given"; g.textContent = tx.givenAmt;
-      row.append(g);
-      if (c) { const d = document.createElement("button"); d.type = "button"; d.className = "warn"; d.dataset.act = "delc"; d.textContent = tx.removeC; row.append(d); }
-      box.appendChild(row);
-    }
-    // v52: жетоны Straight up в окне комплита убраны — их ставят касанием выпавшего числа.
-    if (false) {
-      const q = betAmt(suKey(n));
-      const s = document.createElement("div"); s.className = "stepper";
-      s.innerHTML = '<span class="lab"></span><button type="button" data-act="minus">−</button><button type="button" class="cnt" data-act="type"></button><button type="button" data-act="plus">+</button>';
-      s.querySelector(".lab").textContent = `${tx.chipsOn} · Straight up`;
-      s.querySelector(".cnt").textContent = fmt(q);
-      box.appendChild(s);
-    }
-    const cl = document.createElement("button"); cl.type = "button"; cl.className = "close"; cl.dataset.act = "close"; cl.textContent = tx.close;
-    box.appendChild(cl);
-  }
-  $("ns").addEventListener("click", e => {
-    if (performance.now() - nsOpenedAt < 350) return;
-    if (e.target === $("ns")) { closeNumber(); return; }
-    const n = nsNum; if (n == null) return;
-    const ub = e.target.closest("[data-u]:not(:disabled)");
-    if (ub) { leaveExample(); snapshot(); st.comps[n] = { u: Number(ub.dataset.u), given: null }; closeNumber(); render(); return; }
-    const ab = e.target.closest("[data-act]"); if (!ab) return;
-    const a = ab.dataset.act, k = suKey(n), q = betAmt(k);
-    if (a === "close") closeNumber();
-    else if (a === "delc") { leaveExample(); snapshot(); delete st.comps[n]; closeNumber(); render(); }
-    else if (a === "given") {
-      const c = st.comps[n]; closeNumber();
-      openKeypad({ title: `${T().compS} ${n} · ${T().givenAmt}`, value: c && c.given || 0, hint: `${T().min} ${fmt(compChips(n) * COMP_DENOMS[0])}`,
-        onOk: v => { if (!(v > 0) && !st.comps[n]) return; leaveExample(); snapshot(); st.comps[n] = { u: st.comps[n] ? st.comps[n].u : COMP_DENOMS[0], given: v > 0 ? v : null }; render(); } });
-    }
-    else if (a === "plus") tapSpot(k);
-    else if (a === "minus") { if (q > 0) changeBet(k, l => { l.pop(); return l; }); }
-    else if (a === "type") { closeNumber(); openSpotKeypad(k); }
-  });
-  function openSpotKeypad(k) {
-    const b = parseKey(k);
-    // Сколько ЖЕТОНОВ номинала «× N» прибавить (не деньгами: иначе 250 становилось «жетоном по 250»).
-    const l = st.bets[k], d = st.val;
-    openKeypad({ title: `${NAME[b.type]} ${numsText(b.type, b.nums)} · + ${T().chipsOn} × ${fmt(d)}`, value: 0,
-      hint: l ? `${listText(l)} = ${fmt(listAmt(l))}` : "",
-      onOk: v => { if (v > 0) changeBet(k, x => x.concat(Array(Math.min(v, 9999)).fill(d))); },
-      onDel: l ? () => changeBet(k, () => []) : null });
-  }
-
-  // ---------- Касание поля ----------
-  // Место ставки (сплит, корнер, стрит, сикс-лайн) — +1 жетон; долгое нажатие — ввести количество.
-  // Касание числа — окно числа (комплит, жетоны Straight up).
-  const board = $("board");
-  const toSvg = e => { const m = board.getScreenCTM(); return m ? new DOMPoint(e.clientX, e.clientY).matrixTransform(m.inverse()) : null; };
-  function nearSpot(pt) {
-    let best = null, bd = HIT;
-    for (const s of spotList) { const d = Math.hypot(s.x - pt.x, s.y - pt.y); if (d <= bd) { bd = d; best = s; } }
-    return best;
-  }
-  function cellAt(pt) {
-    const w = windowOf(st.win), zo = w.zero ? ZH : 0;
-    if (pt.x < 0 || pt.x > BW) return null;
-    if (w.zero && pt.y >= 0 && pt.y < zo) return 0;
-    const i = Math.floor((pt.y - zo) / CH), c = Math.floor(pt.x / CW);
-    return (i >= 0 && i < w.rows.length && c >= 0 && c < 3) ? w.rows[i] * 3 + c + 1 : null;
-  }
-  let lpTimer = null, lpDone = false, lpStart = null;
-  board.addEventListener("pointerdown", e => {
-    lpDone = false; lpStart = [e.clientX, e.clientY];
-    const pt = toSvg(e); if (!pt) return;
-    const s = nearSpot(pt), n = s ? null : cellAt(pt);
-    if (!s && n !== st.win) return;
-    // Долгое нажатие: место — ввести количество; выпавшее число — окно комплита.
-    lpTimer = setTimeout(() => { lpTimer = null; lpDone = true; if (s) openSpotKeypad(s.key); else openNumber(n); }, 480);
-  });
-  board.addEventListener("pointermove", e => { if (lpTimer && lpStart && Math.hypot(e.clientX - lpStart[0], e.clientY - lpStart[1]) > 10) { clearTimeout(lpTimer); lpTimer = null; } });
-  ["pointerup", "pointercancel", "pointerleave"].forEach(t => board.addEventListener(t, () => { if (lpTimer) { clearTimeout(lpTimer); lpTimer = null; } }));
-  board.addEventListener("contextmenu", e => e.preventDefault());
-  board.addEventListener("click", e => {
-    if (lpDone) { lpDone = false; return; }
-    const pt = toSvg(e); if (!pt) return;
-    const s = nearSpot(pt); if (s) { tapSpot(s.key); return; }
-    // Выпавшее число — как остальные места: касание = +1 жетон Straight up. Другие числа — окно комплита.
-    const n = cellAt(pt);
-    if (n === st.win) tapSpot(suKey(n)); else if (n != null) openNumber(n);
-  });
-  // Поле подстраивается под размер окна.
-  let lastSize = "";
-  if (window.ResizeObserver) {
-    const ro = new ResizeObserver(() => {
-      const a = document.querySelector(".app"), s = $("bw").clientWidth + "x" + a.clientHeight + "x" + a.clientWidth;
-      if (s !== lastSize) { lastSize = s; if (st.tab !== "quick") renderBoard(compute()); fitResult(); placeWatermark(); }
-    });
-    ro.observe($("bw")); ro.observe(document.querySelector(".app"));
-  }
-
-  $("quick").addEventListener("click", e => {
-    const b = e.target.closest("[data-q]"); if (!b) return;
-    st.qactive = b.dataset.q; st.qfresh = true; render();
-  });
-
-  // ---------- Выпавшее число ----------
-  for (let n = 1; n <= 36; n++) {
-    const b = document.createElement("button"); b.type = "button"; b.dataset.n = n; b.textContent = n;
-    b.className = RED.has(n) ? "r" : "b"; $("pk-grid").appendChild(b);
-  }
-  // v68: на числах окна — выпавшее (обводка) и комплиты (золотая рамка + плашка «25»).
-  function markPicker() {
-    document.querySelectorAll("#pk-sheet [data-n]").forEach(b => {
-      const n = Number(b.dataset.n), ci = compInfo(n);
-      b.setAttribute("aria-pressed", String(n === st.win));
-      b.classList.toggle("hasc", !!ci);
-      let tag = b.querySelector(".pk-c");
-      if (ci) { if (!tag) { tag = document.createElement("span"); tag.className = "pk-c"; b.appendChild(tag); } tag.textContent = ci.ok ? fmt(ci.u) : "?"; }
-      else if (tag) tag.remove();
-    });
-  }
-  function openPicker() {
-    $("pk-title").textContent = T().win; $("pk-close").textContent = T().close; $("pk-hint").textContent = T().pkHint;
-    markPicker();
-    $("pk-sheet").hidden = false;
-  }
-  // Касание числа — выпавшее число, окно закрывается. Долгое нажатие — комплит на это число, окно остаётся открытым.
-  let pkTimer = null, pkLong = false, pkStart = null;
-  $("pk-sheet").addEventListener("pointerdown", e => {
-    pkLong = false; const b = e.target.closest("[data-n]"); if (!b) return;
-    pkStart = [e.clientX, e.clientY];
-    pkTimer = setTimeout(() => { pkTimer = null; pkLong = true; openNumber(Number(b.dataset.n)); }, 480);
-  });
-  $("pk-sheet").addEventListener("pointermove", e => { if (pkTimer && pkStart && Math.hypot(e.clientX - pkStart[0], e.clientY - pkStart[1]) > 10) { clearTimeout(pkTimer); pkTimer = null; } });
-  ["pointerup", "pointercancel", "pointerleave"].forEach(t => $("pk-sheet").addEventListener(t, () => { if (pkTimer) { clearTimeout(pkTimer); pkTimer = null; } }));
-  $("pk-sheet").addEventListener("contextmenu", e => e.preventDefault());
-  $("pk-sheet").addEventListener("click", e => {
-    if (pkLong) { pkLong = false; return; }
-    const b = e.target.closest("[data-n]");
-    if (b) { snapshot(); setWin(Number(b.dataset.n)); $("pk-sheet").hidden = true; render(); return; }
-    if (e.target === $("pk-sheet") || e.target === $("pk-close")) $("pk-sheet").hidden = true;   // v79: везде одинаково — касание мимо окна или Close
-  });
-  $("b-win").addEventListener("click", openPicker);
-  $("mode").addEventListener("click", e => {
-    const b = e.target.closest("[data-m]"); if (!b) return;
-    st.tab = b.dataset.m === "quick" ? "quick" : "field"; store.set("tab", st.tab);
-    render();
-  });
-  $("b-undo").addEventListener("click", undo);
-  $("b-new").addEventListener("click", () => { reset(); render(); if (st.tab === "field") openPicker(); });
-  $("b-bd").addEventListener("click", () => { $("sheet").hidden = false; });
-  $("sheet").addEventListener("click", () => { $("sheet").hidden = true; });   // v79: разбор — только чтение, касание в любом месте закрывает
-
-  // ---------- Настройки: номинал жетона, Max, язык, логотип ----------
-  DENOMS.forEach(d => { const b = document.createElement("button"); b.type = "button"; b.dataset.d = d; b.className = "num"; b.textContent = d; $("set-val").appendChild(b); });
-  LIMITS.forEach(d => { const b = document.createElement("button"); b.type = "button"; b.dataset.d = d; b.className = "num"; b.textContent = fmt(d); $("set-max").appendChild(b); });
-  function renderSettings() {
-    const tx = T();
-    $("t-set").textContent = tx.set; $("t-val").textContent = tx.val; $("t-max").textContent = tx.maxPer; $("t-lang").textContent = tx.lang;
-    $("t-logo").textContent = tx.logo; $("t-logo-note").textContent = tx.logoNote; $("t-logo-load").textContent = tx.logoLoad;
-    $("b-logo-del").textContent = tx.logoDel; $("b-set-close").textContent = tx.close; $("b-val-close").textContent = tx.close;
-    document.querySelectorAll("#set-val [data-d]").forEach(b => b.setAttribute("aria-pressed", String(Number(b.dataset.d) === st.val)));
-    document.querySelectorAll("#set-max [data-d]").forEach(b => b.setAttribute("aria-pressed", String(Number(b.dataset.d) === st.limit)));
-    document.querySelectorAll("#set-lang [data-l]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.l === st.lang)));
-    $("t-theme").textContent = tx.theme; $("th-dark").textContent = tx.dark; $("th-light").textContent = tx.light;
-    const lightOn = document.documentElement.classList.contains("light");
-    $("th-dark").setAttribute("aria-pressed", String(!lightOn)); $("th-light").setAttribute("aria-pressed", String(lightOn));
-    showLogo();
-  }
-  const openSettings = () => { renderSettings(); $("set-sheet").hidden = false; };
-  $("b-logo").addEventListener("click", openSettings);
-  $("b-val").addEventListener("click", () => { renderSettings(); $("val-sheet").hidden = false; });
-  $("b-val-close").addEventListener("click", () => { $("val-sheet").hidden = true; });
-  $("val-sheet").addEventListener("click", e => { if (e.target === $("val-sheet")) $("val-sheet").hidden = true; });
-  $("b-set-close").addEventListener("click", () => { $("set-sheet").hidden = true; });
-  // v79: везде одинаково — окно закрывается касанием мимо окна (как и кнопкой Close).
-  $("set-sheet").addEventListener("click", e => { if (e.target === $("set-sheet")) $("set-sheet").hidden = true; });
-  $("set-val").addEventListener("click", e => { const b = e.target.closest("[data-d]"); if (!b) return; st.val = Number(b.dataset.d); $("val-sheet").hidden = true; render(); renderSettings(); });
-  $("set-max").addEventListener("click", e => { const b = e.target.closest("[data-d]"); if (!b) return; st.limit = Number(b.dataset.d); store.set("limit", st.limit); render(); renderSettings(); });
-  // Тема запоминается на этом устройстве.
-  const applyTheme = t => document.documentElement.classList.toggle("light", t === "light");
-  applyTheme(store.get("theme", "dark"));
-  $("set-theme").addEventListener("click", e => { const b = e.target.closest("[data-t]"); if (!b) return; store.set("theme", b.dataset.t); applyTheme(b.dataset.t); renderSettings(); });
-  $("set-lang").addEventListener("click", e => { const b = e.target.closest("[data-l]"); if (!b) return; st.lang = b.dataset.l; store.set("lang", st.lang); render(); renderSettings(); });
-
-  function showLogo() {
-    let src = null; try { src = localStorage.getItem("cpt_logo"); } catch (e) {}
-    ["logo", "lp"].forEach(p => {
-      $(p + "-img").hidden = !src; $(p + "-txt").hidden = !!src;
-      if (src) $(p + "-img").src = src; else $(p + "-img").removeAttribute("src");
-    });
-    { const w2 = document.querySelector(".wm2"), i2 = w2.querySelector("img"); i2.hidden = !src; w2.querySelector(".wm-txt").hidden = !!src; if (src) i2.src = src; else i2.removeAttribute("src"); }
-    $("b-logo-del").hidden = !src;
-  }
-  $("b-logo-del").addEventListener("click", () => { try { localStorage.removeItem("cpt_logo"); } catch (e) {} showLogo(); });
-  $("in-logo").addEventListener("change", e => {
-    const f = e.target.files && e.target.files[0]; if (!f) return;
-    const rd = new FileReader();
-    rd.onload = () => {
-      const img = new Image();
-      img.onload = () => {
-        // Уменьшаем до 360×160, чтобы картинка влезла в память браузера.
-        const k = Math.min(1, 360 / img.width, 160 / img.height);
-        const c = document.createElement("canvas"); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
-        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
-        try { localStorage.setItem("cpt_logo", c.toDataURL("image/png")); } catch (err) {}
-        showLogo(); e.target.value = "";
-      };
-      img.src = rd.result;
-    };
-    rd.readAsDataURL(f);
-  });
-  showLogo();
-
-  reset();   // v69 (заказчик): при включении ничего не показываем — без примера, всё по нулям
-  render();
-})();
-</script>
+<script>(()=>{const t={en:{set:"Settings",val:"Chip value",maxPer:"Max per number",lang:"Language",theme:"Theme",dark:"Dark",light:"Light",logo:"Logo",logoNote:"Your casino logo is stored only on this device. Any picture: PNG, JPG.",logoLoad:"Load logo",logoDel:"Remove logo",win:"Number",quick:"Calc",field:"Layout",chips:"Chips",cash:"Cash",change:"Change",rest:"cash",newp:"New payout",bd:"Breakdown",close:"Close",clr:"Clear",undo:"Undo",ok:"OK",remove:"Remove",compBy:"Complete",compByL:"Complete by",byW:"by",removeC:"Remove complete",givenAmt:"Amount placed",chipsOn:"Chips",fieldS:"Chips",payS:"Payout (CASH)",retS:"Change (CASH)",none:"No winning bets",total:"TOTAL",compsS:"Completes",notWin:"not winning",compS:"Complete",chipsS:"chips",maxS:"max",pkHint:"Tap \u2014 winning number \xb7 long press \u2014 complete",farT:"completes outside the layout",stations:"spots",given:"placed",min:"min",line:"Six line",place:"place on the field (they stay)",house:"stake \u2014 taken by the casino"},lt:{set:"Nustatymai",val:"\u017detono vert\u0117",maxPer:"Maks. ant skai\u010diaus",lang:"Kalba",theme:"Tema",dark:"Tamsi",light:"\u0160viesi",logo:"Logotipas",logoNote:"Kazino logotipas saugomas tik \u0161iame \u012frenginyje. Bet koks paveiksl\u0117lis: PNG, JPG.",logoLoad:"\u012ekelti logotip\u0105",logoDel:"Pa\u0161alinti logotip\u0105",win:"Skai\u010dius",quick:"Calc",field:"Layout",chips:"\u017detonai",cash:"Cash",change:"Gr\u0105\u017ea",rest:"cash",newp:"Nauja i\u0161moka",bd:"Paai\u0161kinimas",close:"U\u017edaryti",clr:"I\u0161trinti",undo:"At\u0161aukti",ok:"Gerai",remove:"Pa\u0161alinti",compBy:"Komplitas",compByL:"Komplitas po",byW:"po",removeC:"Pa\u0161alinti komplit\u0105",givenAmt:"Pastatyta suma",chipsOn:"\u017detonai",fieldS:"\u017detonai",payS:"I\u0161moka (CASH)",retS:"Gr\u0105\u017ea (CASH)",none:"Laim\u0117jusi\u0173 statym\u0173 n\u0117ra",total:"I\u0160 VISO",compsS:"Komplitai",notWin:"nelaim\u0117jo",compS:"Komplitas",chipsS:"\u017eet.",maxS:"maks.",pkHint:"Paspausk \u2014 i\u0161krit\u0119s skai\u010dius \xb7 ilgai \u2014 komplitas",farT:"komplitai u\u017e lauko rib\u0173",stations:"vietos",given:"pastatyta",min:"min.",line:"Six line",place:"i\u0161statyti ant lauko (lieka)",house:"statymas \u2014 pasiima kazino"}},e={straightUp:35,split:17,street:11,corner:8,sixLine:5},n={straightUp:"Straight up",split:"Split",street:"Street",corner:"Corner",sixLine:"Sixline"},o=["sixLine","street","corner","split","straightUp"],s=["corner","street","split","straightUp"],i=["straightUp","split","street","corner","sixLine"],a=[1,2,5,10,25,100,500,1e3],c=[5,10,25,100],r=[50,100,200,300,500],l=new Set([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]);let d=80,p=80;const u=t=>[Math.floor((t-1)/3),(t-1)%3],h=(t,e)=>t+":"+[...e].sort((t,e)=>t-e).join("-"),m=t=>{const[e,n]=t.split(":");return{type:e,nums:n.split("-").map(Number)}};function g(t){if(t<=3)return{start:0,rows:[0,1],zero:!0};const e=u(t)[0],n=Math.min(Math.max(e-1,0),9);return{start:n,rows:[n,n+1,n+2],zero:!1}}const f=t=>(t.zero?[0]:[]).concat(...t.rows.map(t=>[3*t+1,3*t+2,3*t+3]));function k(t,e,n){const o=n.zero?p:0,s=t=>{const[e,s]=u(t);return[92*s+46,o+d*(e-n.start)+d/2]};if("straightUp"===t)return 0===e[0]?[138,.62*o]:s(e[0]);if(e.includes(0)){if("split"===t)return[s(e.find(t=>0!==t))[0],o];if("corner"===t)return[0,o];if("street"===t)return[e.includes(1)?92:184,o]}const i=e.map(s),a=i.reduce((t,e)=>t+e[0],0)/i.length,c=i.reduce((t,e)=>t+e[1],0)/i.length;return"street"===t||"sixLine"===t?[0,c]:[a,c]}function y(t){const e=[],n=(t,n)=>e.push({type:t,nums:n});if(n("straightUp",[t]),0===t)return n("split",[0,1]),n("split",[0,2]),n("split",[0,3]),n("street",[0,1,2]),n("street",[0,2,3]),n("corner",[0,1,2,3]),e;const[o,s]=u(t),i=t=>t>=1&&t<=36;s>0&&n("split",[t-1,t]),s<2&&n("split",[t,t+1]),o>0&&i(t-3)&&n("split",[t-3,t]),o<11&&i(t+3)&&n("split",[t,t+3]),s<=1&&o<=10&&n("corner",[t,t+1,t+3,t+4]),s>=1&&o<=10&&n("corner",[t-1,t,t+2,t+3]),s<=1&&o>=1&&n("corner",[t-3,t-2,t,t+1]),s>=1&&o>=1&&n("corner",[t-4,t-3,t-1,t]);const a=3*o+1;if(n("street",[a,a+1,a+2]),o>0){const t=3*(o-1)+1;n("sixLine",[t,t+1,t+2,t+3,t+4,t+5])}return o<11&&n("sixLine",[a,a+1,a+2,a+3,a+4,a+5]),1===t&&(n("split",[0,1]),n("street",[0,1,2]),n("corner",[0,1,2,3])),2===t&&(n("split",[0,2]),n("street",[0,1,2]),n("street",[0,2,3]),n("corner",[0,1,2,3])),3===t&&(n("split",[0,3]),n("street",[0,2,3]),n("corner",[0,1,2,3])),e}const b=t=>y(t).reduce((t,e)=>t+e.nums.length,0),v=(t,e)=>{const n=[...e].sort((t,e)=>t-e);return n.length<=2||n.includes(0)?n.join("/"):n[0]+"/"+n[n.length-1]},x=t=>h("straightUp",[t]),C=t=>(t||[]).reduce((t,e)=>t+e,0),w=t=>C(E.bets[t]),S=t=>{const e={};return(t||[]).forEach(t=>e[t]=(e[t]||0)+1),Object.keys(e).map(Number).sort((t,e)=>e-t).map(t=>[t,e[t]])},$=t=>S(t).map(([t,e])=>`${e}\xd7${N(t)}`).join(" + "),L={get(t,e){try{const n=localStorage.getItem("cpt_"+t);return null==n?e:JSON.parse(n)}catch(n){return e}},set(t,e){try{localStorage.setItem("cpt_"+t,JSON.stringify(e))}catch(n){}}},E={lang:"en",val:1,cd:1,limit:100,tab:"field",win:17,bets:{},comps:{},quick:{},qactive:"straightUp",qfresh:!0,hist:[],example:!0};!function(){E.lang=L.get("lang","en"),t[E.lang]||(E.lang="en"),E.val=1,E.limit=L.get("limit",100),r.includes(E.limit)||(E.limit=100);const e=L.get("tab","field");E.tab="quick"===e?"quick":"field"}();const q=()=>t[E.lang],N=t=>(Math.round(100*t)/100).toLocaleString("en-US").replace(/,/g,"\xa0"),M=t=>document.getElementById(t),A=t=>"sixLine"===t?q().line:n[t];function z(t){const e=E.comps[t];if(!e)return null;const n=b(Number(t));if(null==e.given)return{chips:n,u:e.u,cost:n*e.u,given:n*e.u,change:0,ok:!0};const o=c.filter(t=>n*t<=e.given&&t<=E.limit),s=o.length?o[o.length-1]:0;return{chips:n,u:s,cost:n*s,given:e.given,change:s?e.given-n*s:0,ok:s>0,min:n*c[0]}}const T=()=>"quick"===E.tab?function(){let t=0;const n=[];for(const o of i){const s=E.quick[o]||0;s&&(t+=s*e[o],n.push({t:`${A(o)}: ${N(s)} \xd7 ${e[o]}`,v:`${N(s*e[o])} ${q().chipsS}`}))}return{pay:t*E.val,ret:0,overmax:0,compChange:0,payLines:n,retLines:[],compLines:[],posMap:new Map,quickChips:t}}():function(){const t=new Map,i=(e,n,o,s,i,a,c)=>{if(o<=0)return;const r=h(e,n),l=t.get(r)||{key:r,type:e,nums:n,amt:0,comp:0,partial:0,parts:[],dm:{}};l.amt+=o,s&&(l.comp+=o),i&&(l.partial+=o),a&&l.parts.push(a),t.set(r,l);for(const t in c)l.dm[t]=(l.dm[t]||0)+c[t]},c=t=>t.parts.join(" + ")+(t.parts.length>1||!/^1\xd7[^+]*$/.test(t.parts[0]||"")?` = ${N(t.amt)}`:"");for(const[e,n]of Object.entries(E.bets)){const t=m(e),o={};S(n).forEach(([t,e])=>o["f:"+t]=t*e),i(t.type,t.nums,C(n),!1,!1,`${$(n)} (${q().chipsS})`,o)}let r=0;const l=[];for(const e of Object.keys(E.comps)){const t=z(e);if(!t.ok){l.push({t:`${q().compS} ${e}: ${q().given} ${N(t.given)} < ${q().min} ${N(t.min)}`,v:"?"});continue}const n=y(Number(e)).filter(t=>t.nums.includes(E.win)).length,o=Number(e)!==E.win;for(const s of y(Number(e)))i(s.type,s.nums,s.nums.length*t.u,!0,o,`${s.nums.length}\xd7${N(t.u)} (${e} ${q().compBy.toLowerCase()})`,{["c:"+t.u]:s.nums.length*t.u});r+=t.change,l.push({t:`${q().compS} ${e} ${q().byW} ${N(t.u)}: ${t.chips} \xd7 ${t.u}`+(t.change?` \xb7 ${q().given} ${N(t.given)}`:""),v:N(t.cost)}),o&&n>0&&y(Number(e)).filter(t=>t.nums.includes(E.win))}const d=0===E.win?s:o,p=[...t.values()].sort((t,e)=>d.indexOf(t.type)-d.indexOf(e.type)||t.nums[0]-e.nums[0]);let u=0,g=0;const f=[],k=[],b={};for(const o of p){o.cap=E.limit*o.nums.length;const t=Math.min(o.amt,o.cap);o.over=o.amt-t,o.wins=o.nums.includes(E.win);const s=`${n[o.type]} ${v(o.type,o.nums)}`;if(o.over>0&&(g+=o.over,k.push({t:`${s}: ${N(o.amt)}, ${q().maxS} ${N(o.cap)}${o.wins?"":" \xb7 "+q().notWin}`,v:N(o.over)})),o.wins&&t>0){u+=t*e[o.type];let n=t,i=0;if(Object.keys(o.dm).sort((t,e)=>("c"===t[0]?0:1)-("c"===e[0]?0:1)||Number(e.slice(2))-Number(t.slice(2))).forEach(t=>{const s=Math.min(o.dm[t],n);if(n-=s,s<=0)return;const a=Number(t.slice(2)),c="f"===t[0]?Math.floor(s/a+1e-9)*a:s;c>0&&(b[t]=(b[t]||0)+c*e[o.type]),i+=s-c}),i>1e-9){const t=a.slice().reverse().find(t=>t<=i+1e-9&&Math.abs(i/t-Math.round(i/t))<1e-9)||1;b["f:"+t]=(b["f:"+t]||0)+i*e[o.type]}c(o),o.over>0&&(q().maxS,N(t)),f.push({t:`${s}: ${N(o.amt)}`+(o.over>0?` \u2192 ${N(t)}`:"")+` \xd7 ${e[o.type]}`,sub:o.parts.join(" + "),v:N(t*e[o.type])})}}let x=0;const w={comp:[],field:[]};Object.keys(b).forEach(t=>{const[e,n]=t.split(":"),o=Number(n),s=Math.floor(b[t]/o+1e-6);x+=b[t]-s*o,s>0&&w["c"===e?"comp":"field"].push([o,s])}),w.comp.sort((t,e)=>e[0]-t[0]),w.field.sort((t,e)=>e[0]-t[0]);const L=w.comp.concat(w.field);return{pay:u,ret:g+r,overmax:g,compChange:r,payLines:f,retLines:k,compLines:l,posMap:t,groups:L,parts:w,rest:Math.round(100*x)/100}}(),O=t=>{const e=E.val,n=Math.floor(t/e+1e-9);return{c:n,rest:Math.round(100*(t-n*e))/100}};function H(t,e,n,o){const s=document.createElementNS("http://www.w3.org/2000/svg",t);for(const i in e)s.setAttribute(i,e[i]);return null!=o&&(s.textContent=o),n.appendChild(s),s}const j="Roboto Condensed, Arial Narrow, sans-serif",B="Noto Serif, Georgia, serif",U=()=>matchMedia("(min-height: 460px)").matches||matchMedia("(min-width: 600px) and (max-height: 459px)").matches;function W(t,e,n,o,s,i,a){const c={"pointer-events":"none"},r=i?"#d4371f":"#8c1531",l=o-3,d=2*Math.PI*l/8;H("circle",{cx:e,cy:n+2,r:o,fill:"rgba(0,0,0,.5)",...c},t),H("circle",{cx:e,cy:n,r:o,fill:r,stroke:"rgba(0,0,0,.6)","stroke-width":.8,...c},t),H("circle",{cx:e,cy:n,r:l,fill:"none",stroke:"#f6f1e6","stroke-width":5,"stroke-dasharray":`${(.46*d).toFixed(2)} ${(.54*d).toFixed(2)}`,"stroke-dashoffset":(.23*d).toFixed(2),...c},t),H("circle",{cx:e,cy:n,r:.64*o,fill:"rgba(0,0,0,.16)",stroke:"rgba(255,255,255,.8)","stroke-width":1,...c},t),H("circle",{cx:e,cy:n,r:.64*o-2.2,fill:"none",stroke:"rgba(255,255,255,.35)","stroke-width":.6,"stroke-dasharray":"1.2 1.6",...c},t),H("circle",{cx:e,cy:n,r:o-.4,fill:"url(#cpShine)",...c},t);const p=String(Math.round(100*s)/100),u=p.length,h=u<=2?a?15:17:3===u?a?14:16:4===u?a?13.5:15.5:a?12.5:14.5,m=H("text",{x:e,y:n+(a?1:.36*h),"text-anchor":"middle","font-family":j,"font-size":h,"font-weight":700,fill:"#fff",stroke:"rgba(0,0,0,.35)","stroke-width":.6,"paint-order":"stroke",...c},t,p);{const t=1.28*o-1.5;(m.getComputedTextLength?m.getComputedTextLength():0)>t&&(m.setAttribute("textLength",t.toFixed(1)),m.setAttribute("lengthAdjust","spacingAndGlyphs"))}}let P=[];function I(t){const e=g(E.win),n=M("board");(function(t){d=80;const e=M("bw"),n=e.clientWidth,o=t.rows.length+(t.zero?.85:0);if(U()&&!matchMedia("(min-width: 600px) and (max-height: 459px)").matches&&n>0){const t=n/288,s=document.querySelector(".app"),i=s.clientHeight-document.querySelector(".top").offsetHeight-document.querySelector(".bottom").offsetHeight-18-14-Math.min(250,Math.max(170,.36*s.clientHeight));return d=Math.max(48,Math.min(92,(i/t-12-4)/o)),p=Math.round(.85*d),void(e.style.height=Math.round((o*d+12+4)*t)+"px")}e.style.height="";const s=e.clientHeight;if(U()&&n>0&&s>0){const t=288*s/n-12-4;d=Math.max(80,Math.min(150,t/o))}p=Math.round(.85*d)})(e),n.innerHTML="";{const t=H("defs",{},n),e=H("linearGradient",{id:"cpShine",x1:0,y1:0,x2:0,y2:1},t);H("stop",{offset:0,"stop-color":"#fff","stop-opacity":.32},e),H("stop",{offset:.5,"stop-color":"#fff","stop-opacity":0},e),H("stop",{offset:1,"stop-color":"#000","stop-opacity":.12},e)}const o=H("g",{},n),s="#d9b45a",i=e.zero?p:0,a=i+d*e.rows.length;if(n.setAttribute("viewBox",`-6 -6 288 ${a+12}`),e.zero){const t=`M0 ${.45*p} L138 0 L276 ${.45*p} L276 ${p} L0 ${p} Z`;H("path",{d:t,fill:"#10884a",stroke:s,"stroke-width":1.6},o),H("text",{x:138,y:.5*p,"text-anchor":"middle","font-family":B,"font-size":24,"font-weight":700,fill:"#fff","pointer-events":"none"},o,"0"),0===E.win&&H("path",{d:t,fill:"none",stroke:"#f1d488","stroke-width":4,"pointer-events":"none"},o)}H("rect",{x:0,y:i,width:276,height:d*e.rows.length,fill:"#0b0a08","pointer-events":"none"},o);const c=Math.min(40,26+.2*(d-80));e.rows.forEach((t,e)=>{for(let n=0;n<3;n++){const a=3*t+n+1,r=92*n,p=i+e*d,u=a===E.win;H("rect",{x:r,y:p,width:92,height:d,fill:l.has(a)?"#a3142a":"#121212",stroke:s,"stroke-width":1.6,opacity:u?1:.75},o),H("text",{x:r+46,y:p+d/2+.36*c,"text-anchor":"middle","font-family":B,"font-size":c,"font-weight":700,fill:"#fff",opacity:u?.95:.45,"pointer-events":"none"},o,String(a)),u&&H("rect",{x:r+3,y:p+3,width:86,height:d-6,rx:4,fill:"none",stroke:"#f1d488","stroke-width":3.5,"pointer-events":"none"},o)}}),H("rect",{x:-3,y:-3,width:282,height:a+6,rx:4,fill:"none",stroke:"#b8923a","stroke-width":5,"pointer-events":"none"},o);const r=new Set(f(e)),u=Object.keys(E.comps).filter(t=>r.has(Number(t)));for(const l of u){const t=Number(l),[n,s]=k("straightUp",[t],e);0!==t&&H("rect",{x:n-46+2,y:s-d/2+2,width:88,height:d-4,rx:4,fill:"rgba(241,212,136,.12)",stroke:"#f1d488","stroke-width":2.5,"pointer-events":"none"},o)}H("g",{},o),P=[];const m=[];for(const l of y(E.win)){const n=h(l.type,l.nums),s="straightUp"===l.type;let[i,a]=k(l.type,l.nums,e);const c=w(n),r=t.posMap.get(n),d=r&&r.over>0;s?c>0&&(0===E.win&&(a=.5*p-8),W(o,i,a,18,c,d,!1),m.push([i,a])):(c>0?W(o,i,a,18,c,d):H("circle",{cx:i,cy:a,r:6.5,fill:"rgba(241,212,136,.28)",stroke:d?"#ff5a3c":"rgba(241,212,136,.7)","stroke-width":1.4,"pointer-events":"none"},o),P.push({key:n,x:i,y:a}),c>0&&m.push([i,a]))}for(const l of u){const t=Number(l),n=z(l),[s,i]=k("straightUp",[t],e),a=0===t?.5*p-8:i,c=t===E.win&&w(x(t))>0,r=0===t&&c?s+62:s,d=0!==t&&c?a+19:a,u=n.ok?"#f1d488":"#ff8a6b",h=n.ok?N(n.u):"?",m=54,g=29;H("rect",{x:r-m/2,y:d-g/2,width:m,height:g,rx:7,fill:u,stroke:"#1c1406","stroke-width":1,"pointer-events":"none"},o);const f=H("text",{x:r,y:d-4.5,"text-anchor":"middle","font-family":"Roboto, system-ui, sans-serif","font-size":7.2,"font-weight":700,"letter-spacing":.2,fill:"#1c1406","pointer-events":"none"},o,q().compByL.toUpperCase());(f.getComputedTextLength?f.getComputedTextLength():0)>m-6&&(f.setAttribute("textLength",m-6),f.setAttribute("lengthAdjust","spacingAndGlyphs")),H("text",{x:r,y:d+11,"text-anchor":"middle","font-family":j,"font-size":16,"font-weight":700,fill:"#1c1406","pointer-events":"none"},o,h)}}function R(){const t="quick"===E.tab;["r-chips","r-cash"].forEach(e=>{const n=M(e);if(!n.clientWidth)return;const o=document.querySelector(".result").clientHeight;let s=t?innerHeight<720?52:72:Math.round(Math.min(130,Math.max(88,o*("r-cash"===e?.3:.2))));n.style.fontSize=s+"px",n.classList.remove("wrap");const i=n.classList.contains("parts")?40:24;for(;n.scrollWidth>n.clientWidth+1&&s>i;)s-=2,n.style.fontSize=s+"px";for(n.scrollWidth>n.clientWidth+1&&n.classList.contains("parts")&&n.classList.add("wrap");n.scrollWidth>n.clientWidth+1&&s>20;)s-=2,n.style.fontSize=s+"px"});const e=document.querySelector(".result"),n=M("r-chips"),o=M("r-cash");if(t&&n.clientWidth){const t=M("keys"),e=[...document.querySelectorAll(".app.isq .qrow")],s=()=>{const e=t.querySelector("button");return e?e.getBoundingClientRect().height:99};let i=44;e.forEach(t=>t.style.minHeight=i+"px");let a=40;for(;s()<40&&a--;){if(i>26){i-=2,e.forEach(t=>{t.style.minHeight=i+"px",t.style.maxHeight=Math.max(i,92)+"px"});continue}const t=parseFloat(n.style.fontSize)||88,s=parseFloat(o.style.fontSize)||88;if(Math.max(t,s)<=30)break;n.style.fontSize=Math.max(30,t-4)+"px",o.style.fontSize=Math.max(30,s-4)+"px"}return}if(!e.clientHeight||!n.clientWidth)return;let s=60;for(s=120;e.scrollHeight>e.clientHeight+1&&s--;){const t=parseFloat(n.style.fontSize)||88,e=parseFloat(o.style.fontSize)||88;if(e>t+20&&e>44)o.style.fontSize=e-2+"px";else if(t>22)n.style.fontSize=t-2+"px";else{if(!(e>24))break;o.style.fontSize=e-2+"px"}}}function D(){const t=document.querySelector(".result .wm");if(!t)return;t.style.visibility="visible";const e=t.getBoundingClientRect();e.width&&[...document.querySelectorAll("#r-chips, #r-cash, #r-rest, #r-change:not([hidden]) .label, #r-change:not([hidden]) .v, .result .label, .result .valbtn, .result .bd-btn")].some(t=>{if(!t.offsetParent)return!1;const n=t.getBoundingClientRect();return n.width&&n.left<e.right&&n.right>e.left&&n.top<e.bottom&&n.bottom>e.top})&&(t.style.visibility="hidden")}function G(){const t=T();!function(){const t=q(),e="quick"===E.tab;document.documentElement.lang=E.lang,document.querySelector(".app").classList.toggle("isq",e),M("quick").hidden=!e,M("keys").hidden=!e,M("cpanel").hidden=e,M("t-win").textContent=t.win,M("v-win").textContent=E.win;{const e=new Set(f(g(E.win))),n=Object.keys(E.comps).filter(t=>!e.has(Number(t))).length;M("v-far").hidden=!n,M("v-far").textContent="+"+n,M("b-win").title=n?`${n} ${t.farT}`:""}M("m-quick").textContent=t.quick,M("m-field").textContent=t.field,M("m-quick").setAttribute("aria-pressed",String(e)),M("m-field").setAttribute("aria-pressed",String(!e)),M("b-new").textContent=t.newp,M("b-undo").textContent=t.undo,M("b-undo").disabled=!E.hist.length;const n=M("keys").querySelector('[data-key="c"]');n&&(n.textContent=t.clr)}(),"quick"===E.tab?function(){const t=M("quick");t.innerHTML="";for(const n of i){const o=E.quick[n]||0,s=document.createElement("button");s.type="button",s.className="qrow",s.dataset.q=n,s.setAttribute("aria-pressed",String(E.qactive===n)),s.innerHTML='<span class="nm"><b></b><span class="num"></span></span><span class="cnt num"></span><span class="sum num"></span>',s.querySelector(".nm b").textContent=A(n),s.querySelector(".nm span").textContent="\xd7 "+e[n],s.querySelector(".cnt").textContent=o?N(o):"\u2014",s.querySelector(".sum").textContent=o?N(o*e[n]):"",t.appendChild(s)}}():I(t),function(t){const e=q(),n="quick"===E.tab,o=O(t.pay),s=O(t.ret);if(M("t-chips").textContent=e.chips,M("b-val").textContent="\xd7 "+N(E.val),M("t-cash").textContent=e.cash,M("t-change").textContent=e.change,n||!t.groups.length)M("r-chips").classList.remove("parts"),M("r-chips").textContent=N(o.c),M("r-rest").textContent=o.rest>0?`+ ${N(o.rest)} ${e.rest}`:"";else{const n=M("r-chips");n.innerHTML="";const o=()=>{const t=document.createElement("span");return t.className="pl",t.textContent="+",t};if(n.classList.add("parts"),[["comp",e.compBy],["field",e.fieldS]].filter(([e])=>t.parts[e].length).forEach(([e,s],i)=>{i&&n.appendChild(o());const a=document.createElement("span");a.className="cseg "+e;const c=document.createElement("span");c.className="segv",t.parts[e].forEach(([t,e],n)=>{n&&(c.appendChild(o()),c.appendChild(document.createTextNode("\u200b")));const s=document.createElement("span");s.className="grp",s.appendChild(document.createTextNode(N(e)));const i=document.createElement("span");i.className="dn",i.textContent="\xd7"+N(t),s.appendChild(i),c.appendChild(s)});const r=document.createElement("span");r.className="cap",r.textContent=s,a.append(c,r),n.appendChild(a)}),M("r-rest").innerHTML="",t.rest>0){const n=document.createElement("span");n.className="rv",n.textContent=`+ ${N(t.rest)}`;const o=document.createElement("span");o.className="rl",o.textContent=e.rest,M("r-rest").append(n,o)}}M("r-cash").textContent=N(t.pay),M("r-change").hidden=n||t.ret<=0,M("v-ch-chips").textContent=`${N(s.c)} ${e.chipsS}`+(s.rest>0?` + ${N(s.rest)}`:""),M("v-ch-cash").textContent=`${N(t.ret)} ${e.cash.toLowerCase()}`;const i=M("r-change");if(!i.hidden){let t=28;const e=i.querySelectorAll(".v");for(e.forEach(e=>e.style.fontSize=t+"px");i.scrollWidth>i.clientWidth+1&&t>14;)t-=2,e.forEach(e=>e.style.fontSize=t+"px")}R(),D()}(t),function(t){const e=q(),n=M("bd");n.innerHTML="";const o=document.createElement("h2");o.textContent="quick"===E.tab?`${e.bd} \xb7 ${e.quick}`:`${e.bd} \xb7 ${e.win} ${E.win} \xb7 ${e.maxS} ${N(E.limit)}`,n.appendChild(o);const s=(t,e,o,s)=>{const i=document.createElement("h3");i.textContent=t,n.appendChild(i);const a=document.createElement("ul"),c=(t,e)=>{const n=document.createElement("li");e&&(n.className=e);const o=document.createElement("span");if(o.textContent=t.t,t.sub){const e=document.createElement("small");e.className="sub",e.textContent=t.sub,o.appendChild(e)}const s=document.createElement("span");s.className="v num",s.textContent=t.v,n.append(o,s),a.appendChild(n)};e.forEach(t=>c(t,o)),s&&c(s,"tot"+(o?" "+o:"")),n.appendChild(a)};if(t.compLines.length&&s(e.compsS,t.compLines,""),t.payLines.length)s("quick"===E.tab?e.chips:e.payS,t.payLines,"",{t:e.total,v:"quick"===E.tab?`${N(t.quickChips)} ${e.chipsS} \xd7 ${N(E.val)} = ${N(t.pay)}`:`${N(t.pay)} = `+(t.groups.length?[[t.parts.comp,` (${e.compBy.toLowerCase()})`],[t.parts.field,` (${e.chipsS})`]].filter(t=>t[0].length).map(([t,e])=>t.map(([t,e])=>`${N(e)}\xd7${N(t)}`).join(" + ")+e).join(" + ")+(t.rest>0?` + ${N(t.rest)}`:""):(t=>{const n=O(t);return`${N(n.c)} ${e.chipsS}`+(n.rest>0?` + ${N(n.rest)}`:"")})(t.pay))});else{const t=document.createElement("div");t.className="empty",t.textContent=e.none,n.appendChild(t)}const i=t.retLines.slice();"quick"!==E.tab&&Object.keys(E.comps).forEach(t=>{const n=z(t);n&&n.ok&&n.change>0&&i.push({t:`${e.compS} ${t}: ${e.given} ${N(n.given)} \u2212 ${n.chips} \xd7 ${N(n.u)} (${N(n.cost)})`,v:N(n.change)})}),i.length&&s(e.retS,i,"ret",{t:e.total,v:`${N(t.ret)} ${e.rest}`});const a=document.createElement("button");a.type="button",a.className="close",a.textContent=e.close,a.addEventListener("click",()=>{M("sheet").hidden=!0}),n.appendChild(a)}(t),M("ns").hidden||null==ot||ct(),M("pk-sheet").hidden||kt()}function K(){E.hist.push(JSON.stringify({win:E.win,bets:E.bets,comps:E.comps,quick:E.quick,qactive:E.qactive})),E.hist.length>60&&E.hist.shift()}function F(){const t=E.hist.pop();if(!t)return;const e=JSON.parse(t);Object.assign(E,{win:e.win,bets:e.bets,comps:e.comps,quick:e.quick,qactive:e.qactive,qfresh:!0}),G()}function J(){E.example&&(E.example=!1,E.bets={},E.comps={},E.quick={},E.hist=[])}function Y(t,e){J(),K();const n=e((E.bets[t]||[]).slice());n.length?E.bets[t]=n:delete E.bets[t],G()}function X(t){Y(t,t=>(t.push(E.val),t))}function _(t){J();const e=E.qactive;let n=E.quick[e]||0;K(),"c"===t?n=0:"b"===t?n=Math.floor(n/10):(n=E.qfresh?Number(t):n<1e6?n*Math.pow(10,t.length)+Number(t):n,E.qfresh=!1),n>0?E.quick[e]=n:delete E.quick[e],G()}function V(){E.bets={},E.comps={},E.quick={},E.example=!1,E.hist=[],E.qactive="straightUp",E.qfresh=!0}const Z=M("keys");["1","2","3","4","5","6","7","8","9","0","00","000"].forEach(t=>{const e=document.createElement("button");e.type="button",e.dataset.key=t,e.textContent="b"===t?"\u232b":"c"===t?"":t,"c"!==t&&"b"!==t||(e.className="fn"),Z.appendChild(e)}),Z.addEventListener("click",t=>{const e=t.target.closest("[data-key]");e&&_(e.dataset.key)}),document.addEventListener("keydown",t=>{"SELECT"!==t.target.tagName&&"INPUT"!==t.target.tagName&&(!t.ctrlKey&&!t.metaKey||"z"!==t.key.toLowerCase()?M("kp").hidden?"quick"===E.tab&&(/^[0-9]$/.test(t.key)?_(t.key):"Backspace"===t.key&&_("b")):/^[0-9]$/.test(t.key)?nt(t.key):"Backspace"===t.key?nt("b"):"Enter"===t.key&&nt("ok"):F())});let Q=null;const tt=M("kp-keys");function et(t){Q=Object.assign({fresh:!0},t),M("kp-title").textContent=Q.title,M("kp-hint").textContent=Q.hint||"",M("kp-disp").textContent=N(Q.value||0),M("kp-del").textContent=q().remove,M("kp-del").hidden=!Q.onDel,M("kp-cancel").textContent=q().close,tt.querySelector('[data-k="ok"]').textContent=q().ok,M("kp").hidden=!1}function nt(t){if(Q){if("ok"===t){const t=Q.value;M("kp").hidden=!0;const e=Q.onOk;return Q=null,void e(t)}Q.value="b"===t?Math.floor(Q.value/10):Q.fresh?Number(t):Q.value<1e6?Q.value*Math.pow(10,t.length)+Number(t):Q.value,Q.fresh=!1,M("kp-disp").textContent=N(Q.value)}}["1","2","3","4","5","6","7","8","9","0","00","000","b","ok"].forEach(t=>{const e=document.createElement("button");e.type="button",e.dataset.k=t,e.textContent="b"===t?"\u232b":"ok"===t?"OK":t,"ok"===t&&(e.className="ok"),"ok"===t&&(e.style.gridColumn="span 2"),tt.appendChild(e)}),tt.addEventListener("click",t=>{const e=t.target.closest("[data-k]");e&&nt(e.dataset.k)}),M("kp-del").addEventListener("click",()=>{M("kp").hidden=!0;const t=Q&&Q.onDel;Q=null,t&&t()}),M("kp-cancel").addEventListener("click",()=>{M("kp").hidden=!0,Q=null}),M("kp").addEventListener("click",t=>{t.target===M("kp")&&(M("kp").hidden=!0,Q=null)});let ot=null,st=0;function it(t){ot=t,ct(),M("ns").hidden=!1,st=performance.now()}function at(){M("ns").hidden=!0,ot=null}function ct(){const t=q(),e=ot,n=M("nsb"),o=E.comps[e],s=z(e);n.innerHTML="";const i=document.createElement("div");i.className="nhead";const a=document.createElement("div");a.className="nbadge "+(0===e?"g":l.has(e)?"r":"b"),a.textContent=e;const r=document.createElement("div");r.className="t";const d=document.createElement("b");d.textContent=`${t.compBy} \xb7 ${b(e)} ${t.chipsS}`;const p=document.createElement("span");p.className="num",p.textContent=o?s.ok?`${t.compByL} ${N(s.u)} = ${N(s.cost)}`+(s.change?` \xb7 ${t.given} ${N(s.given)} \xb7 ${t.change.toLowerCase()} ${N(s.change)}`:""):`${t.given} ${N(s.given)} < ${t.min} ${N(s.min)}`:"",p.hidden=!o,r.append(d,p),i.append(a,r),n.appendChild(i);const u=document.createElement("h3");u.textContent=t.compByL,n.appendChild(u);const h=document.createElement("div");h.className="cgrid",c.forEach(t=>{const n=document.createElement("button");n.type="button",n.dataset.u=t,n.innerHTML=`${t}<small class="num"></small>`,n.querySelector("small").textContent="= "+N(b(e)*t),n.setAttribute("aria-pressed",String(!!o&&null==o.given&&o.u===t)),t>E.limit&&(n.disabled=!0,n.querySelector("small").textContent=`> ${q().maxS} ${N(E.limit)}`),h.appendChild(n)}),n.appendChild(h);{const e=document.createElement("div");e.className=o?"row2":"row2 one";const s=document.createElement("button");if(s.type="button",s.dataset.act="given",s.textContent=t.givenAmt,e.append(s),o){const n=document.createElement("button");n.type="button",n.className="warn",n.dataset.act="delc",n.textContent=t.removeC,e.append(n)}n.appendChild(e)}const m=document.createElement("button");m.type="button",m.className="close",m.dataset.act="close",m.textContent=t.close,n.appendChild(m)}function rt(t){const e=m(t),o=E.bets[t],s=E.val;et({title:`${n[e.type]} ${v(e.type,e.nums)} \xb7 + ${q().chipsOn} \xd7 ${N(s)}`,value:0,hint:o?`${$(o)} = ${N(C(o))}`:"",onOk:e=>{e>0&&Y(t,t=>t.concat(Array(Math.min(e,9999)).fill(s)))},onDel:o?()=>Y(t,()=>[]):null})}M("ns").addEventListener("click",t=>{if(performance.now()-st<350)return;if(t.target===M("ns"))return void at();const e=ot;if(null==e)return;const n=t.target.closest("[data-u]:not(:disabled)");if(n)return J(),K(),E.comps[e]={u:Number(n.dataset.u),given:null},at(),void G();const o=t.target.closest("[data-act]");if(!o)return;const s=o.dataset.act,i=x(e),a=w(i);if("close"===s)at();else if("delc"===s)J(),K(),delete E.comps[e],at(),G();else if("given"===s){const t=E.comps[e];at(),et({title:`${q().compS} ${e} \xb7 ${q().givenAmt}`,value:t&&t.given||0,hint:`${q().min} ${N(b(e)*c[0])}`,onOk:t=>{(t>0||E.comps[e])&&(J(),K(),E.comps[e]={u:E.comps[e]?E.comps[e].u:c[0],given:t>0?t:null},G())}})}else"plus"===s?X(i):"minus"===s?a>0&&Y(i,t=>(t.pop(),t)):"type"===s&&(at(),rt(i))});const lt=M("board"),dt=t=>{const e=lt.getScreenCTM();return e?new DOMPoint(t.clientX,t.clientY).matrixTransform(e.inverse()):null};function pt(t){let e=null,n=26;for(const o of P){const s=Math.hypot(o.x-t.x,o.y-t.y);s<=n&&(n=s,e=o)}return e}function ut(t){const e=g(E.win),n=e.zero?p:0;if(t.x<0||t.x>276)return null;if(e.zero&&t.y>=0&&t.y<n)return 0;const o=Math.floor((t.y-n)/d),s=Math.floor(t.x/92);return o>=0&&o<e.rows.length&&s>=0&&s<3?3*e.rows[o]+s+1:null}let ht=null,mt=!1,gt=null;lt.addEventListener("pointerdown",t=>{mt=!1,gt=[t.clientX,t.clientY];const e=dt(t);if(!e)return;const n=pt(e),o=n?null:ut(e);(n||o===E.win)&&(ht=setTimeout(()=>{ht=null,mt=!0,n?rt(n.key):it(o)},480))}),lt.addEventListener("pointermove",t=>{ht&&gt&&Math.hypot(t.clientX-gt[0],t.clientY-gt[1])>10&&(clearTimeout(ht),ht=null)}),["pointerup","pointercancel","pointerleave"].forEach(t=>lt.addEventListener(t,()=>{ht&&(clearTimeout(ht),ht=null)})),lt.addEventListener("contextmenu",t=>t.preventDefault()),lt.addEventListener("click",t=>{if(mt)return void(mt=!1);const e=dt(t);if(!e)return;const n=pt(e);if(n)return void X(n.key);const o=ut(e);o===E.win?X(x(o)):null!=o&&it(o)});let ft="";if(window.ResizeObserver){const t=new ResizeObserver(()=>{const t=document.querySelector(".app"),e=M("bw").clientWidth+"x"+t.clientHeight+"x"+t.clientWidth;e!==ft&&(ft=e,"quick"!==E.tab&&I(T()),R(),D())});t.observe(M("bw")),t.observe(document.querySelector(".app"))}M("quick").addEventListener("click",t=>{const e=t.target.closest("[data-q]");e&&(E.qactive=e.dataset.q,E.qfresh=!0,G())});for(let $t=1;$t<=36;$t++){const t=document.createElement("button");t.type="button",t.dataset.n=$t,t.textContent=$t,t.className=l.has($t)?"r":"b",M("pk-grid").appendChild(t)}function kt(){document.querySelectorAll("#pk-sheet [data-n]").forEach(t=>{const e=Number(t.dataset.n),n=z(e);t.setAttribute("aria-pressed",String(e===E.win)),t.classList.toggle("hasc",!!n);let o=t.querySelector(".pk-c");n?(o||(o=document.createElement("span"),o.className="pk-c",t.appendChild(o)),o.textContent=n.ok?N(n.u):"?"):o&&o.remove()})}function yt(){M("pk-title").textContent=q().win,M("pk-close").textContent=q().close,M("pk-hint").textContent=q().pkHint,kt(),M("pk-sheet").hidden=!1}let bt=null,vt=!1,xt=null;function Ct(){const t=q();M("t-set").textContent=t.set,M("t-val").textContent=t.val,M("t-max").textContent=t.maxPer,M("t-lang").textContent=t.lang,M("t-logo").textContent=t.logo,M("t-logo-note").textContent=t.logoNote,M("t-logo-load").textContent=t.logoLoad,M("b-logo-del").textContent=t.logoDel,M("b-set-close").textContent=t.close,M("b-val-close").textContent=t.close,document.querySelectorAll("#set-val [data-d]").forEach(t=>t.setAttribute("aria-pressed",String(Number(t.dataset.d)===E.val))),document.querySelectorAll("#set-max [data-d]").forEach(t=>t.setAttribute("aria-pressed",String(Number(t.dataset.d)===E.limit))),document.querySelectorAll("#set-lang [data-l]").forEach(t=>t.setAttribute("aria-pressed",String(t.dataset.l===E.lang))),M("t-theme").textContent=t.theme,M("th-dark").textContent=t.dark,M("th-light").textContent=t.light;const e=document.documentElement.classList.contains("light");M("th-dark").setAttribute("aria-pressed",String(!e)),M("th-light").setAttribute("aria-pressed",String(e)),St()}M("pk-sheet").addEventListener("pointerdown",t=>{vt=!1;const e=t.target.closest("[data-n]");e&&(xt=[t.clientX,t.clientY],bt=setTimeout(()=>{bt=null,vt=!0,it(Number(e.dataset.n))},480))}),M("pk-sheet").addEventListener("pointermove",t=>{bt&&xt&&Math.hypot(t.clientX-xt[0],t.clientY-xt[1])>10&&(clearTimeout(bt),bt=null)}),["pointerup","pointercancel","pointerleave"].forEach(t=>M("pk-sheet").addEventListener(t,()=>{bt&&(clearTimeout(bt),bt=null)})),M("pk-sheet").addEventListener("contextmenu",t=>t.preventDefault()),M("pk-sheet").addEventListener("click",t=>{if(vt)return void(vt=!1);const e=t.target.closest("[data-n]");if(e)return K(),function(t){E.win=t;const e=new Set(y(t).map(t=>h(t.type,t.nums)));new Set(f(g(t)));for(const n of Object.keys(E.bets))e.has(n)||delete E.bets[n]}(Number(e.dataset.n)),M("pk-sheet").hidden=!0,void G();t.target!==M("pk-sheet")&&t.target!==M("pk-close")||(M("pk-sheet").hidden=!0)}),M("b-win").addEventListener("click",yt),M("mode").addEventListener("click",t=>{const e=t.target.closest("[data-m]");e&&(E.tab="quick"===e.dataset.m?"quick":"field",L.set("tab",E.tab),G())}),M("b-undo").addEventListener("click",F),M("b-new").addEventListener("click",()=>{V(),G(),"field"===E.tab&&yt()}),M("b-bd").addEventListener("click",()=>{M("sheet").hidden=!1}),M("sheet").addEventListener("click",()=>{M("sheet").hidden=!0}),a.forEach(t=>{const e=document.createElement("button");e.type="button",e.dataset.d=t,e.className="num",e.textContent=t,M("set-val").appendChild(e)}),r.forEach(t=>{const e=document.createElement("button");e.type="button",e.dataset.d=t,e.className="num",e.textContent=N(t),M("set-max").appendChild(e)}),M("b-logo").addEventListener("click",()=>{Ct(),M("set-sheet").hidden=!1}),M("b-val").addEventListener("click",()=>{Ct(),M("val-sheet").hidden=!1}),M("b-val-close").addEventListener("click",()=>{M("val-sheet").hidden=!0}),M("val-sheet").addEventListener("click",t=>{t.target===M("val-sheet")&&(M("val-sheet").hidden=!0)}),M("b-set-close").addEventListener("click",()=>{M("set-sheet").hidden=!0}),M("set-sheet").addEventListener("click",t=>{t.target===M("set-sheet")&&(M("set-sheet").hidden=!0)}),M("set-val").addEventListener("click",t=>{const e=t.target.closest("[data-d]");e&&(E.val=Number(e.dataset.d),M("val-sheet").hidden=!0,G(),Ct())}),M("set-max").addEventListener("click",t=>{const e=t.target.closest("[data-d]");e&&(E.limit=Number(e.dataset.d),L.set("limit",E.limit),G(),Ct())});const wt=t=>document.documentElement.classList.toggle("light","light"===t);function St(){let t=null;try{t=localStorage.getItem("cpt_logo")}catch(e){}["logo","lp"].forEach(e=>{M(e+"-img").hidden=!t,M(e+"-txt").hidden=!!t,t?M(e+"-img").src=t:M(e+"-img").removeAttribute("src")});{const e=document.querySelector(".wm2"),n=e.querySelector("img");n.hidden=!t,e.querySelector(".wm-txt").hidden=!!t,t?n.src=t:n.removeAttribute("src")}M("b-logo-del").hidden=!t}wt(L.get("theme","dark")),M("set-theme").addEventListener("click",t=>{const e=t.target.closest("[data-t]");e&&(L.set("theme",e.dataset.t),wt(e.dataset.t),Ct())}),M("set-lang").addEventListener("click",t=>{const e=t.target.closest("[data-l]");e&&(E.lang=e.dataset.l,L.set("lang",E.lang),G(),Ct())}),M("b-logo-del").addEventListener("click",()=>{try{localStorage.removeItem("cpt_logo")}catch(t){}St()}),M("in-logo").addEventListener("change",t=>{const e=t.target.files&&t.target.files[0];if(!e)return;const n=new FileReader;n.onload=()=>{const e=new Image;e.onload=()=>{const n=Math.min(1,360/e.width,160/e.height),o=document.createElement("canvas");o.width=Math.round(e.width*n),o.height=Math.round(e.height*n),o.getContext("2d").drawImage(e,0,0,o.width,o.height);try{localStorage.setItem("cpt_logo",o.toDataURL("image/png"))}catch(s){}St(),t.target.value=""},e.src=n.result},n.readAsDataURL(e)}),St(),V(),G()})();</script>
 
 
-<script>
-// Работа без интернета: после первого открытия страница берётся из памяти планшета.
-if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
-</script>
+
+<style>.lic-bg { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 100; background: var(--bg); display: flex; align-items: center; justify-content: center; padding: 16px; }
+.lic-box { width: 100%; max-width: 380px; display: grid; gap: 12px; padding: 22px 18px; border: 1.5px solid rgba(217,180,90,.55); border-radius: 16px; background: linear-gradient(180deg, var(--res-top), var(--panel)); }
+.lic-box h2 { margin: 0; font: 700 22px var(--f-serif); color: var(--gold-hi); text-align: center; }
+.lic-box p { margin: 0; font-size: 15px; line-height: 1.35; color: var(--fg); text-align: center; }
+.lic-box textarea { width: 100%; min-height: 84px; resize: none; padding: 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--disp); color: var(--fg); font: 500 14px var(--f-num); word-break: break-all; -webkit-user-select: text; user-select: text; }
+.lic-box button { min-height: 48px; border: 0; border-radius: 10px; background: var(--btn); color: var(--on-gold); font: 700 16px var(--f-body); letter-spacing: .4px; }
+.lic-err { min-height: 20px; color: var(--warn) !important; font-weight: 700; }
+.lic-line { margin: 4px 0 0; font-size: 12.5px; color: var(--muted); text-align: center; }
+</style>
+<div class="lic-bg" id="lic-bg" hidden>
+  <form class="lic-box" id="lic-form" autocomplete="off">
+    <h2>Croupier Pro Table</h2>
+    <p id="lic-msg">Įveskite aktyvavimo kodą<br>Enter activation code</p>
+    <textarea id="lic-in" spellcheck="false" autocapitalize="off" autocorrect="off" aria-label="Activation code"></textarea>
+    <p class="lic-err" id="lic-err"></p>
+    <button type="submit">Aktyvuoti / Activate</button>
+  </form>
+</div>
+<script>!function(){var e={kty:"EC",crv:"P-256",x:"Bjorza64xE8SGVbMbvzqqh8jFmvcbZ5xgbb7ziKFlDw",y:"n5cLMopmUyX_fwdvU5nKkKMO1Bjn4hSgZra8iegOuXE",ext:!0},t="cpt_lic",n=document.getElementById("lic-bg"),c=document.getElementById("lic-in"),i=document.getElementById("lic-err"),r=(document.getElementById("lic-msg"),null);function o(){try{return localStorage.getItem(t)||r}catch(e){return r}}function a(e){r=e;try{localStorage.setItem(t,e)}catch(n){}}function l(e){for(e=e.replace(/-/g,"+").replace(/_/g,"/");e.length%4;)e+="=";for(var t=atob(e),n=new Uint8Array(t.length),c=0;c<t.length;c++)n[c]=t.charCodeAt(c);return n}function d(t){var n=(t=String(t||"").replace(/\s+/g,"")).match(/#?lic=(.+)$/);n&&(t=n[1]);var c=t.split(".");if(2!==c.length)return Promise.reject("bad");var i,r,o,a=window.crypto&&(window.crypto.subtle||window.crypto.webkitSubtle);if(!a)return Promise.reject("nocrypto");try{i=l(c[0]),r=l(c[1]),o=decodeURIComponent(escape(String.fromCharCode.apply(null,i)))}catch(d){return Promise.reject("bad")}return a.importKey("jwk",e,{name:"ECDSA",namedCurve:"P-256"},!1,["verify"]).then(function(e){return a.verify({name:"ECDSA",hash:{name:"SHA-256"}},e,r,i)}).then(function(e){if(!e)throw"bad";var n=o.split("|");if(n.length<2)throw"bad";var c,i={name:n[0],exp:"0"===n[1]?"":n[1],code:t};if(i.exp&&(c=new Date).getFullYear()+"-"+("0"+(c.getMonth()+1)).slice(-2)+"-"+("0"+c.getDate()).slice(-2)>i.exp)throw i.expired=!0,i;return i},function(){throw"bad"})}function u(e){return e&&e.expired?"Licencija baig\u0117si "+e.exp+" / License expired":"nocrypto"===e?"Nar\u0161ykl\u0117 per sena / Browser too old":"Neteisingas kodas / Invalid code"}function m(e){e&&(i.textContent=u(e)),n.hidden=!1}function h(e){n.hidden=!0,i.textContent="",c.value="",function(e){var t=document.querySelector("#set-sheet .bd"),n=document.getElementById("b-set-close");if(t&&n){var c=document.getElementById("lic-line");c||((c=document.createElement("p")).id="lic-line",c.className="lic-line",t.insertBefore(c,n)),c.textContent="Licencija / License: "+e.name+(e.exp?" \xb7 iki / until "+e.exp:"")}}(e)}document.getElementById("lic-form").addEventListener("submit",function(e){e.preventDefault(),i.textContent="",d(c.value).then(function(e){a(e.code),h(e)},function(e){i.textContent=u(e)})});var f,s=location.hash.match(/lic=([^&]+)/),p=s?decodeURIComponent(s[1]):null;if(p)try{history.replaceState(null,"",location.pathname+location.search)}catch(v){}n.hidden=!1,p?d(p).then(function(e){a(e.code),h(e)},function(e){var t=o();t?d(t).then(h,function(){m(e)}):m(e)}):(f=o())?d(f).then(h,m):m();var g=function(){var e=o();e&&d(e).then(function(){},m)};setInterval(g,36e5),document.addEventListener("visibilitychange",function(){document.hidden||g()})}();</script>
+
+<script>"serviceWorker"in navigator&&addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));</script>
 </body>
 </html>
