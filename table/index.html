@@ -23,7 +23,8 @@ img { max-width: 100%; }
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@700&family=Roboto+Condensed:wght@500;700&family=Roboto:wght@400;500;700&display=swap">
 <style>
-/* v89 (03.11): общий корпус-рамка вокруг всего калькулятора.
+/* v90 (04.11): клавиши CALC не налезают на нижние кнопки; верхние кнопки меньше, отступ от края.
+   v89 (03.11): общий корпус-рамка вокруг всего калькулятора.
    v88 (03.11): «+N» внутри кнопки Number, рядом с числом.
    v87 (03.11): кнопки растут под крупный системный шрифт (не жёсткая высота).
    v86 (03.11): водяной знак в LAYOUT как в CALC — мелко, в одну строку.
@@ -406,6 +407,21 @@ html.light .app { border-color: rgba(160,122,28,.55); background: linear-gradien
 .top .logo, .seg, .qrow, .keys button, .bottom .ghost { border-color: rgba(217,180,90,.18); }
 html.light .top .logo, html.light .seg, html.light .qrow, html.light .keys button, html.light .bottom .ghost { border-color: rgba(160,122,28,.25); }
 .result { border-color: rgba(217,180,90,.5); }
+
+/* v90 (по фото с iPad): клавиши CALC никогда не налезают на Undo / New payout — 4 ряда делят место, которое есть;
+   строки видов ставок ниже; верхние кнопки чуть меньше и дальше от края экрана. */
+@media (min-height: 460px) {
+  .app.isq .keys { grid-template-rows: repeat(4, minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); overflow: hidden; }
+  .app.isq .keys button { min-height: 0; height: auto; overflow: hidden; font-size: clamp(18px, 4.2vh, 26px); line-height: 1; padding: 0; }
+  .app.isq .qrow { min-height: 34px; }
+  body { padding-top: max(12px, env(safe-area-inset-top, 0px)); padding-bottom: max(10px, env(safe-area-inset-bottom, 0px)); }
+}
+.top { min-height: 40px; }
+.seg button { font-size: 14px; }
+.logo { width: 42px; }
+.logo svg { width: 24px; height: 24px; }
+.win .v { font-size: 22px; line-height: 22px; }
+.bottom button { min-height: 42px; }
 </style>
 
 <div class="app">
@@ -875,11 +891,16 @@ html.light .top .logo, html.light .seg, html.light .qrow, html.light .keys butto
     const res = document.querySelector(".result"), ch = $("r-chips"), ca = $("r-cash");
     if (quick && ch.clientWidth) {
       // CALC: клавиши не меньше 44 px — если не влезают, уменьшаем числа табло.
-      const keys = $("keys"); let g2 = 30;
-      while (keys.scrollHeight > keys.clientHeight + 1 && g2--) {
+      // v90: клавиши делят оставшееся место; если ряд клавиш ниже 40 px — сначала ниже строки видов ставок (до 26 px), потом меньше числа табло.
+      const keys = $("keys"), qrows = [...document.querySelectorAll(".app.isq .qrow")];
+      const keyH = () => { const b = keys.querySelector("button"); return b ? b.getBoundingClientRect().height : 99; };
+      let qmin = 34; qrows.forEach(q => q.style.minHeight = qmin + "px");
+      let g2 = 40;
+      while (keyH() < 40 && g2--) {
+        if (qmin > 26) { qmin -= 2; qrows.forEach(q => { q.style.minHeight = qmin + "px"; q.style.maxHeight = Math.max(qmin, 66) + "px"; }); continue; }
         const a = parseFloat(ch.style.fontSize) || 88, b = parseFloat(ca.style.fontSize) || 88;
-        if (Math.max(a, b) <= 34) break;
-        ch.style.fontSize = Math.max(34, a - 4) + "px"; ca.style.fontSize = Math.max(34, b - 4) + "px";
+        if (Math.max(a, b) <= 30) break;
+        ch.style.fontSize = Math.max(30, a - 4) + "px"; ca.style.fontSize = Math.max(30, b - 4) + "px";
       }
       return;
     }
