@@ -334,7 +334,8 @@ body { padding-top: max(12px, env(safe-area-inset-top, 0px)); padding-bottom: ma
 .app.isq .qrow .cnt { font-size: 31px; }
 .app.isq .keys { flex: 1.35 1 0; }
 }
-.app.isq .top > .win { display: flex; visibility: hidden; pointer-events: none; }
+.app.isq .top > .win { display: none; }
+.app.isq .seg button[data-m="field"] { -webkit-box-flex: 0; flex: 0 0 auto; width: calc(50% + 24px); }
 .seg button { -webkit-box-flex: 1; flex: 1 1 0; min-width: 0; }
 .top > .logo svg { position: absolute; left: 50%; top: 50%; -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%); }
 @media (max-height: 719px) {
